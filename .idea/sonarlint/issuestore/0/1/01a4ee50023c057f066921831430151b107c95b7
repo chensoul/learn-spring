@@ -1,0 +1,39 @@
+
+K
+java:S3740‹"/Provide the parametrized type for this generic.(¨ÿä—ÿÿÿÿÿ
+K
+java:S3740‹"/Provide the parametrized type for this generic.(¨ÿä—ÿÿÿÿÿ
+F
+java:S3740¦"/Provide the parametrized type for this generic.(…ô°
+F
+java:S3740¦"/Provide the parametrized type for this generic.(…ô°
+K
+java:S3740Ä"/Provide the parametrized type for this generic.(±ğÙıùÿÿÿÿ
+K
+java:S3740Å"/Provide the parametrized type for this generic.(Ï®Æˆûÿÿÿÿ
+K
+java:S3740Å"/Provide the parametrized type for this generic.(Ï®Æˆûÿÿÿÿ
+F
+java:S3740é"/Provide the parametrized type for this generic.(üÁª
+K
+java:S3740î"/Provide the parametrized type for this generic.(ü›ñŞüÿÿÿÿ
+F
+java:S3740ˆ"/Provide the parametrized type for this generic.(ƒÆà‘
+z
+java:S1149Q"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(‰©ƒŞùÿÿÿÿ
+u
+java:S1149t"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(­¡‰ÿ
+v
+java:S1149Ù"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+v
+java:S1149í"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+{
+java:S1149å"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ş¬íßûÿÿÿÿ
+U
+java:S1118.":Add a private constructor to hide the implicit public one.(­ ãÍûÿÿÿÿ
+V
+java:S16599"@Declare "pos" and all following declarations on a separate line.(Øâïº
+p
+java:S3012È"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(¡›ÀÑ
+>
+java:S1125¾"'Remove the unnecessary boolean literal.(åû½

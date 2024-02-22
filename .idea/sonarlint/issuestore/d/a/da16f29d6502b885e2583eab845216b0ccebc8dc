@@ -1,0 +1,25 @@
+
+:
+java:S29253"$Remove this use of "Thread.sleep()".(Ë°
+:
+java:S2925="$Remove this use of "Thread.sleep()".(Òû‰
+4
+java:S5785B"Use assertEquals instead.(ÖöÓøÿÿÿÿ
+2
+java:S5785D"Use assertNotEquals instead.(ı€•¾
+7
+java:S5785E"Use assertNotEquals instead.(Ö÷İúÿÿÿÿ
+/
+java:S5785H"Use assertEquals instead.(ñ‡é©
+4
+java:S5785I"Use assertEquals instead.(€Çàçøÿÿÿÿ
+4
+java:S5785J"Use assertEquals instead.(•³ßıÿÿÿÿ
+:
+java:S2925Y"$Remove this use of "Thread.sleep()".(Ë°
+:
+java:S2925c"$Remove this use of "Thread.sleep()".(Òû‰
+4
+java:S5785h"Use assertEquals instead.(ÖöÓøÿÿÿÿ
+2
+java:S5785j"Use assertNotEquals instead.(¨¥½€

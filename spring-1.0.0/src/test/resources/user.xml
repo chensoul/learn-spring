@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--
+		bean标签：表示配置bean
+    	id：唯一标识
+    	name：别名，使用逗号、空格、分号分隔
+    	class：类型
+	-->
+
+    <!--方式一：构造方法实例化bean-->
+    <bean id="userDao" name="dao,userDao" class="org.springframework.entity.UserDaoImpl"></bean>
+
+    <!--方式二：使用静态工厂实例化bean-->
+    <!--    <bean id="userDao2" class="org.springframework.entity.UserDaoFactory" factory-method="getUserDao"/>-->
+
+    <!--    &lt;!&ndash;方式三：使用实例工厂实例化bean&ndash;&gt;-->
+    <!--    <bean id="userFactory" class="org.springframework.entity.UserDaoFactory"/>-->
+    <!--    <bean id="userDao3" factory-method="getUserDao" factory-bean="userFactory"/>-->
+
+    <!--方式四：使用FactoryBean实例化bean-->
+    <bean id="userDao4" class="org.springframework.entity.UserDaoFactoryBean"/>
+
+    <!--init-method：设置bean初始化生命周期回调函数,此处填写init方法名-->
+    <!--destroy-method：设置bean销毁生命周期回调函数，仅适用于单例对象，此处填写destory方法名-->
+    <bean id="userService" name="userService1,userService2" class="org.springframework.entity.UserServiceImpl"
+          singleton="true" autowire="autodetect" init-method="init" destroy-method="destroy">
+        <!--配置server与dao的关系
+			property标签：表示配置当前bean的属性
+        	name属性：表示配置哪一个具体的属性
+        	ref属性：表示参照哪一个bean
+		-->
+        <property name="dao">
+            <ref bean="userDao"/>
+        </property>
+    </bean>
+
+</beans>

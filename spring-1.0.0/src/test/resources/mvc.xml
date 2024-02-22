@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="dataSource" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.RuntimeException">re.html</prop>
+                <prop key="com.cj.ServiceException">se.html</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!--    <bean id="handler1" class="com.MyHandler1"/>
+        <bean id="handler2" class="com.MyHandler2"/>
+        <bean id="dataSource" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+            <property name="mappings">
+                <props>
+                    <prop key="/first">handler1</prop>
+                    <prop key="second">handler2</prop>
+                </props>
+            </property>
+        </bean>-->
+</beans>

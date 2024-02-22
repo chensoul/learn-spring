@@ -1,0 +1,43 @@
+
+E
+java:S37409"/Provide the parametrized type for this generic.(²êØç
+E
+java:S3740;"/Provide the parametrized type for this generic.(ÏœîÂ
+E
+java:S3740;"/Provide the parametrized type for this generic.(ÏœîÂ
+J
+java:S3740I"/Provide the parametrized type for this generic.(¦»Ö¦ıÿÿÿÿ
+E
+java:S3740P"/Provide the parametrized type for this generic.(è¬æ
+E
+java:S3740P"/Provide the parametrized type for this generic.(è¬æ
+D
+java:S3740v"/Provide the parametrized type for this generic.(¦Şás
+F
+java:S3740ú"/Provide the parametrized type for this generic.(²Æº
+F
+java:S3740ü"/Provide the parametrized type for this generic.(ç•¼
+F
+java:S3740ƒ"/Provide the parametrized type for this generic.(ùüóÂ
+F
+java:S3740ƒ"/Provide the parametrized type for this generic.(ùüóÂ
+F
+java:S3740„"/Provide the parametrized type for this generic.(âÃƒ½
+
+java:S1319P"kThe type of "boundObjects" should be an interface such as "Map" rather than the implementation "Hashtable".(è¬æ
+€
+java:S1319P"jThe type of "environment" should be an interface such as "Map" rather than the implementation "Hashtable".(è¬æ
+
+java:S1186·"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—µ±şıÿÿÿÿ
+l
+java:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(²êØç
+l
+java:S1149;"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ÏœîÂ
+l
+java:S1149P"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(è¬æ
+l
+java:S1149P"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(è¬æ
+\
+java:S1124ú"EReorder the modifiers to comply with the Java Language Specification.(²Æº
+n
+java:S3776ş"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(æôÑÿÿÿÿÿÿ

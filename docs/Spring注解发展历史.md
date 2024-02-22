@@ -1,0 +1,46 @@
+Spring注解发展历史
+
+-  2004-03-24：Spring1.0
+  - @Transaction
+- 2006-10-03：
+- 2007-11-19：Spring2.5，
+  - @Required 
+  - @Repository 
+  - @Aspect 
+  - @Autowired 
+  - @Qualifier
+  - @Component
+  - @Service
+  - @Controller
+  - @RequestMapping
+  - @Scope
+- 2009-12-16：Spring3.0
+  - @Bean
+  - @DependsOn
+  - @Primary
+  - @Profile
+  - @PropertySource
+  - @Role
+  - @Configuration
+  - @ImportResource
+  - @Import
+  - @ComponentScan
+  - @Lazy
+  - @EnableXXX
+  - @Validated
+  - @Async
+  - @Scheduled
+  - @DateTimeFormat
+  - @NumberFormat
+
+- 2013-11-01：Spring4.0
+  - @ComponentScans
+  - @PropertySources
+  - @Schedules
+  - @Conditional
+  - @EventListener
+  - @AliasFor
+  - @Description
+  - @CrossOrigin
+- 2017-09-28：Spring5.0
+  - @Indexed

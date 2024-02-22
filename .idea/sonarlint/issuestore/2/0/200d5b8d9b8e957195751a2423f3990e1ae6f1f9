@@ -1,0 +1,33 @@
+
+E
+java:S3740>"/Provide the parametrized type for this generic.(ÂÓèþ
+E
+java:S3740?"/Provide the parametrized type for this generic.(´í¤¾
+F
+java:S3740Á"/Provide the parametrized type for this generic.(©‰¹¬
+K
+java:S3740Â"/Provide the parametrized type for this generic.(ÔòŸùûÿÿÿÿ
+K
+java:S3740Â"/Provide the parametrized type for this generic.(ÔòŸùûÿÿÿÿ
+F
+java:S1066Ð"/Merge this if statement with the enclosing one.(Û§±Ô
+E
+java:S1066à"/Merge this if statement with the enclosing one.(¦ÀÈC
+F
+java:S1066õ"/Merge this if statement with the enclosing one.(ø“¿‘
+F
+java:S1066 "/Merge this if statement with the enclosing one.(þôÞÝ
+U
+java:S1118/":Add a private constructor to hide the implicit public one.(ã®­Øùÿÿÿÿ
+m
+java:S37768"RRefactor this method to reduce its Cognitive Complexity from 52 to the 15 allowed.(—ñòÉÿÿÿÿÿ
+W
+java:S1119‹";Refactor the code to remove this label and the need for it.(ˆ™Éžþÿÿÿÿ
+n
+java:S3776·"RRefactor this method to reduce its Cognitive Complexity from 71 to the 15 allowed.(Çþ¼ßøÿÿÿÿ
+W
+java:S1119›";Refactor the code to remove this label and the need for it.(ˆ™Éžþÿÿÿÿ
+á
+java:S65418"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 94 to 64, Complexity from 28 to 14, Nesting Level from 4 to 2, Number of Variables from 22 to 6.(—ñòÉÿÿÿÿÿ
+ã
+java:S6541·"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 107 to 64, Complexity from 35 to 14, Nesting Level from 5 to 2, Number of Variables from 22 to 6.(Çþ¼ßøÿÿÿÿ

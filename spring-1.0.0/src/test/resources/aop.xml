@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--1. ProxyFactoryBean创建AOP-->
+    <!--业务处理类，也就是被代理的类-->
+    <!--<bean id="userService" class="aop.UserServiceImpl"/>
+
+    &lt;!&ndash;通知类&ndash;&gt;
+    <bean id="myMethodBeforeAdvice" class="aop.MyMethodBeforeAdvice"/>
+
+    &lt;!&ndash;代理类&ndash;&gt;
+    <bean id="userServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        &lt;!&ndash;要代理的接口,不设置也可以,就用cglib方式代理&ndash;&gt;
+        <property name="proxyInterfaces">
+            <value>aop.UserService</value>
+        </property>
+        &lt;!&ndash;拦截器名字，也就是我们定义的通知类&ndash;&gt;
+        <property name="interceptorNames">
+            <list>
+                <value>myMethodBeforeAdvice</value>
+            </list>
+        </property>
+        &lt;!&ndash;目标类，就是我们业务的实现类&ndash;&gt;
+        <property name="target">
+            <ref bean="userService"/>
+        </property>
+    </bean>-->
+
+    <!-- 2. ProxyFactoryBean+ Advisor-->
+    <!-- 业务处理类，也就是被代理的类-->
+    <!-- <bean id="userService" class="aop.UserServiceImpl"/>
+
+     &lt;!&ndash;通知类&ndash;&gt;
+     <bean id="myMethodBeforeAdvice" class="aop.MyMethodBeforeAdvice"/>
+
+     &lt;!&ndash;advisor也就是切面类:advisor是只有一个通知方法的切面类&ndash;&gt;
+     <bean id="userServiceAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+         <property name="advice">
+             <ref bean="myMethodBeforeAdvice"/>
+         </property>
+         <property name="pattern">
+             <value>aop.UserService.doSth*</value>
+         </property>
+     </bean>
+     &lt;!&ndash;代理类&ndash;&gt;
+     <bean id="userServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+         &lt;!&ndash;如果这里配置了接口,那么上面的pattern值应该设置成aop.UserService.doSth
+         如果不配置接口,那么pattern值应该设置为aop.userServiceImpl.doSth.
+         原因就是进行匹配的时候是依据方法声明的类来进行匹配的,见RegexpMethodPointcut matches方法(大约107行)
+         &ndash;&gt;
+         <property name="proxyInterfaces">
+             <value>aop.UserService</value>
+         </property>
+         &lt;!&ndash;拦截器名字，也就是我们定义的通知类&ndash;&gt;
+         <property name="interceptorNames">
+             <list>
+                 <value>userServiceAdvisor</value>
+             </list>
+         </property>
+         &lt;!&ndash;目标类，就是我们业务的实现类&ndash;&gt;
+         <property name="target">
+             <ref bean="userService"/>
+         </property>
+     </bean>
+ -->
+    <!--3.自动代理: BeanNameAutoProxyCreator-->
+    <!--业务处理类，也就是被代理的类-->
+    <!--    <bean id="userService" class="aop.UserServiceImpl"/>
+
+        &lt;!&ndash;通知类&ndash;&gt;
+        <bean id="myMethodBeforeAdvice" class="aop.MyMethodBeforeAdvice"/>
+
+        &lt;!&ndash;代理类&ndash;&gt;
+        <bean id="nameAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+
+            <property name="interceptorNames">
+                <list>
+                    <value>myMethodBeforeAdvice</value>
+                </list>
+            </property>
+            <property name="beanNames">
+                <value>userService*</value>
+            </property>
+        </bean>-->
+    <!--4. 自动代理:DefaultAdvisorAutoProxyCreator-->
+
+    <!--业务处理类，也就是被代理的类-->
+    <bean id="userService" class="org.springframework.aop.UserServiceImpl2"/>
+
+    <!--通知类-->
+    <bean id="myMethodBeforeAdvice" class="org.springframework.aop.MyMethodBeforeAdvice"/>
+
+    <!--切面类-->
+    <bean id="abc.userServiceAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="myMethodBeforeAdvice"/>
+        </property>
+        <property name="mappedName">
+            <value>doSth</value>
+        </property>
+    </bean>
+
+    <!--代理类-->
+    <bean id="defaultAdvisorAutoProxyCreator"
+          class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <property name="usePrefix">
+            <value>true</value>
+        </property>
+        <property name="advisorBeanNamePrefix">
+            <value>abc</value>
+        </property>
+
+    </bean>
+
+    <!--5. ProxyFactoryBean源码测试研究用配置 对应ProxyFactoryTest类的testProxyFactoryBeanForSourceCodeResearch方法-->
+    <!-- <bean id="userService" class="aop.UserServiceImpl"/>
+     <bean id="myMethodBeforeAdvice" class="aop.MyMethodBeforeAdvice"/>
+
+     <bean id="userServiceAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+         <property name="advice">
+             <ref bean="myMethodBeforeAdvice"/>
+         </property>
+         <property name="pattern">
+             <value>aop.UserService.doSth*</value>
+         </property>
+     </bean>
+
+     <bean id="userServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+         <property name="singleton">
+             <value>true</value>
+         </property>
+         <property name="proxyInterfaces">
+             <value>aop.UserService</value>
+         </property>
+         &lt;!&ndash;不配置interceptorNames是无所谓的 最后一个条目可以是target&ndash;&gt;
+         <property name="interceptorNames">
+             <list>
+                 <value>myMethodBeforeAdvice</value>
+             </list>
+         </property>
+         &lt;!&ndash;不配置target时在执行目标方法时报空引用异常&ndash;&gt;
+         <property name="target">
+             <ref bean="userService"/>
+         </property>
+     </bean>
+ -->
+</beans>

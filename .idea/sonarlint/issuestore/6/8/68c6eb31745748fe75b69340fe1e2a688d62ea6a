@@ -1,0 +1,15 @@
+
+v
+java:S1149¡"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ÉãÀÒ
+P
+java:S1161o":Add the "@Override" annotation above this method signature(Ô›ûö
+V
+java:S1161€":Add the "@Override" annotation above this method signature(´‘øüÿÿÿÿ
+Q
+java:S1161ˆ":Add the "@Override" annotation above this method signature(ôœù²
+B
+java:S1075Œ"&Remove this hard-coded path-delimiter.(ƒ–çÿÿÿÿÿ
+Q
+java:S1161”":Add the "@Override" annotation above this method signature(¸ƒŠÈ
+Q
+java:S1161 ":Add the "@Override" annotation above this method signature(Á»›ê
