@@ -3,15 +3,14 @@ package org.springframework.beans;
 import java.lang.reflect.Constructor;
 import org.junit.Test;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
-import org.springframework.entity.User;
-import org.springframework.entity.UserServiceImpl;
+import org.springframework.config.TestBean;
 
 public class BeanWrapperTest {
 
 
 	@Test
 	public void testBeanWrapper() {
-		BeanWrapper beanWrapper = new BeanWrapperImpl(User.class);
+		BeanWrapper beanWrapper = new BeanWrapperImpl(TestBean.class);
 
 		Object instance = beanWrapper.getWrappedInstance();
 		System.out.println(instance);
@@ -19,7 +18,7 @@ public class BeanWrapperTest {
 
 	@Test
 	public void testBeanWrapperTypeConversion() {
-		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(User.class);
+		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(TestBean.class);
 		Object o = beanWrapper.doTypeConversionIfNecessary("11", Double.class);
 		System.out.println(o); //输出11.0
 		System.out.println(o.getClass().getName());//输出:java.lang.Double
@@ -29,15 +28,15 @@ public class BeanWrapperTest {
 	public void testBeanWrapperPropertyEditor() {
 		BeanWrapperImpl beanWrapper = new BeanWrapperImpl();
 		//A.class.getClass()得到的是A的Class对象
-		Object o = beanWrapper.doTypeConversionIfNecessary("org.springframework.entity.UserDaoImpl", UserServiceImpl.class.getClass());
+		Object o = beanWrapper.doTypeConversionIfNecessary("org.springframework.config.TestBean", TestBean.class.getClass());
 		System.out.println(o);
 		System.out.println(o.getClass().getName());
 	}
 
 	@Test
 	public void testBeanWrapperPropertyEditor2() {
-		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(UserServiceImpl.class);
-		PropertyValue p1 = new PropertyValue("dao", "org.springframework.entity.UserDaoImpl");
+		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(TestBean.class);
+		PropertyValue p1 = new PropertyValue("name", "111");
 
 		MutablePropertyValues pvs = new MutablePropertyValues();
 		pvs.addPropertyValue(p1);
@@ -49,20 +48,14 @@ public class BeanWrapperTest {
 
 	@Test
 	public void testPropertyValue() {
-		PropertyValue p1 = new PropertyValue("id", 100);
 		PropertyValue p2 = new PropertyValue("name", "cj");
 
 		MutablePropertyValues pvs = new MutablePropertyValues();
-		pvs.addPropertyValue(p1);
 		pvs.addPropertyValue(p2);
 
-		PropertyValue p3 = new PropertyValue("id", 20);
-
-
-		System.out.println(pvs.getPropertyValue("id"));
 		System.out.println(pvs.getPropertyValue("name"));
 
-		BeanWrapper beanWrapper = new BeanWrapperImpl(User.class);
+		BeanWrapper beanWrapper = new BeanWrapperImpl(TestBean.class);
 		beanWrapper.setPropertyValues(pvs);
 
 		Object instance = beanWrapper.getWrappedInstance();
@@ -72,17 +65,14 @@ public class BeanWrapperTest {
 
 	@Test
 	public void testMutablePropertyValues() {
-		PropertyValue p1 = new PropertyValue("id", 100);
 		PropertyValue p2 = new PropertyValue("name", "cj");
 
 		MutablePropertyValues pvs = new MutablePropertyValues();
-		pvs.addPropertyValue(p1);
 		pvs.addPropertyValue(p2);
 
 		PropertyValue p3 = new PropertyValue("id", 20);
 		pvs.setPropertyValueAt(p3, 0);
 
-		System.out.println(pvs.getPropertyValue("id"));
 		System.out.println(pvs.getPropertyValue("name"));
 	}
 
@@ -124,13 +114,12 @@ public class BeanWrapperTest {
 
 	@Test
 	public void testBeanUtils() throws Exception {
-		//    BeanUtils.instantiateClass
-		Object o = BeanUtils.instantiateClass(User.class);
+		Object o = BeanUtils.instantiateClass(TestBean.class);
 		System.out.println(o);
 
-		Class<User> userClass = User.class;
-		Constructor<User> constructor = userClass.getConstructor(Integer.TYPE, String.class);
-		Object[] constructorArgValues = {100, "cj"};
+		Class<TestBean> userClass = TestBean.class;
+		Constructor<TestBean> constructor = userClass.getConstructor(String.class);
+		Object[] constructorArgValues = {"test"};
 		Object o1 = BeanUtils.instantiateClass(constructor, constructorArgValues);
 		System.out.println(o1);
 	}
@@ -139,12 +128,11 @@ public class BeanWrapperTest {
 	public void testBeanUtilsAndConstructorArgumentValues() throws Exception {
 
 		ConstructorArgumentValues cargs = new ConstructorArgumentValues();
-		cargs.addIndexedArgumentValue(0, 10, "int");
-		cargs.addGenericArgumentValue("cj");
+		cargs.addGenericArgumentValue("test");
 
-		Class<User> userClass = User.class;
-		Constructor<User> constructor = userClass.getConstructor(Integer.TYPE, String.class);
-		Object[] constructorArgValues = {cargs.getArgumentValue(0, Integer.TYPE).getValue(), cargs.getArgumentValue(1, String.class).getValue()};
+		Class<TestBean> userClass = TestBean.class;
+		Constructor<TestBean> constructor = userClass.getConstructor(String.class);
+		Object[] constructorArgValues = {cargs.getArgumentValue(0, String.class).getValue()};
 		Object o1 = BeanUtils.instantiateClass(constructor, constructorArgValues);
 		System.out.println(o1);
 
@@ -154,13 +142,12 @@ public class BeanWrapperTest {
 	public void testBeanUtilsAndConstructorArgumentValues2() throws Exception {
 
 		ConstructorArgumentValues cargs = new ConstructorArgumentValues();
-		cargs.addIndexedArgumentValue(1, 10, "int");
-		cargs.addGenericArgumentValue("cj");
+		cargs.addGenericArgumentValue("test");
 
-		Class<User> userClass = User.class;
-		Constructor<User> constructor = userClass.getConstructor(String.class, Integer.TYPE);
+		Class<TestBean> userClass = TestBean.class;
+		Constructor<TestBean> constructor = userClass.getConstructor(String.class);
 		//查找第一个参数值时,由于索引位置0没有索引类型参数,就查通用类型参数,所以可以找到cj这个参数值
-		Object[] constructorArgValues = {cargs.getArgumentValue(0, String.class).getValue(), cargs.getArgumentValue(1, Integer.TYPE).getValue()};
+		Object[] constructorArgValues = {cargs.getArgumentValue(0, String.class).getValue()};
 		Object o1 = BeanUtils.instantiateClass(constructor, constructorArgValues);
 		System.out.println(o1);
 

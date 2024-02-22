@@ -249,11 +249,14 @@ ApplicationContext 的子类主要包含两个方面：
 
 
 ```java
-public static void main(String[] args) {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
-        TestBean testBean = (TestBean) applicationContext.getBean("testBean");
-        testBean.print();
-    }
+public class IocTest {
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		TestBean testBean = (TestBean) context.getBean("testBean");
+		testBean.print();
+		context.close();
+	}
+}
 ```
 
 ## Spring Bean 生命周期

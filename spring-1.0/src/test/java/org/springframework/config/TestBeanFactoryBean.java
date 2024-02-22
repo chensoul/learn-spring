@@ -1,16 +1,16 @@
-package org.springframework.entity;
+package org.springframework.config;
 
 import org.springframework.beans.factory.FactoryBean;
 
-public class UserDaoFactoryBean implements FactoryBean {
-	public UserDao getObject() throws Exception {
+public class TestBeanFactoryBean implements FactoryBean {
+	public TestBean getObject() throws Exception {
 		System.out.println("FactoryBean getObject....");
 
-		return new UserDaoImpl();
+		return new TestBean();
 	}
 
 	public Class<?> getObjectType() {
-		return UserDao.class;
+		return TestBean.class;
 	}
 
 	@Override

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--
+		bean标签：表示配置bean
+    	id：唯一标识
+    	name：别名，使用逗号、空格、分号分隔
+    	class：类型
+	-->
+
+    <!--方式二：使用构造方法实例化bean-->
+    <bean id="testBean" name="testBean,test" class="org.springframework.config.TestBean" lazy-init="false"
+          singleton="true"
+          init-method="init" destroy-method="destroy" autowire="autodetect">
+        <property name="name">
+            <value>test</value>
+        </property>
+    </bean>
+
+    <!--方式二：使用静态工厂实例化bean-->
+    <!--    <bean id="testBean2" class="org.springframework.config.TestBeanFactory" factory-method="getTestBean"/>-->
+
+    <!--    &lt;!&ndash;方式三：使用实例工厂实例化bean&ndash;&gt;-->
+    <!--    <bean id="testBeanFactory" class="org.springframework.config.TestBeanFactory"/>-->
+    <!--    <bean id="testBean3" factory-method="getTestBean" factory-bean="testBeanFactory"/>-->
+
+    <!--方式四：使用FactoryBean实例化bean-->
+    <bean id="testBean4" class="org.springframework.config.TestBeanFactoryBean"/>
+
+    <!--后置处理器-->
+    <bean id="testBeanPostProcessor" class="org.springframework.config.TestBeanPostProcessor"/>
+    <bean id="testBeanFactoryPostProcessor" class="org.springframework.config.TestBeanFactoryPostProcessor"/>
+</beans>
