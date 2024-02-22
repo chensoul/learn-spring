@@ -1,6 +1,6 @@
-# spring-1.0.0
+# spring-1.0
 
-spring-framework 1.0.0 源码，删除了以下包：
+spring-framework 1.0 源码，删除了以下包：
 - org.springframework.ejb
 - org.springframework.remoting.jaxrpc
 - org.springframework.remoting.caucho
