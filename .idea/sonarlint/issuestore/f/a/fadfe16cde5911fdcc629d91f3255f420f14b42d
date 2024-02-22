@@ -1,6 +1,0 @@
-
-s
-java:S1450"VRemove the "bookDao" field and declare it as a local variable in the relevant methods.(ÒÍè8íûÔÜ1
-G	java:S106"+Replace this use of System.out by a logger.(ÎÄœ8şùúÔÜ1
-H
-java:S1068"+Remove this unused "bookDao" private field.(ÒÍè8şùúÔÜ1
