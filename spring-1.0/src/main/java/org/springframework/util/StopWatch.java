@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.util;
 
@@ -33,8 +33,8 @@ import java.util.List;
  * and in development, rather than as part of production applications.
  *
  * @author Rod Johnson
- * @since May 2, 2001
  * @version $Id: StopWatch.java,v 1.6 2004/03/18 02:46:10 trisberg Exp $
+ * @since May 2, 2001
  */
 public class StopWatch {
 
@@ -42,19 +42,29 @@ public class StopWatch {
 	// Instance data
 	//---------------------------------------------------------------------
 
-	/** Start time of the current task */
+	/**
+	 * Start time of the current task
+	 */
 	private long startTime;
 
-	/** Total running time */
+	/**
+	 * Total running time
+	 */
 	private long runningTime;
 
-	/** List of TaskInfo objects */
+	/**
+	 * List of TaskInfo objects
+	 */
 	private List taskList = new LinkedList();
 
-	/** Name of the current task */
+	/**
+	 * Name of the current task
+	 */
 	private String currentTask;
 
-	/** Is the stopwatch currently running? */
+	/**
+	 * Is the stopwatch currently running?
+	 */
 	private boolean running;
 
 	/**
@@ -63,11 +73,11 @@ public class StopWatch {
 	 * and need to distinguish between them in log or console output.
 	 */
 	private String id = "";
-	
+
 	private boolean keepTaskList = true;
-	
+
 	private TaskInfo lastTaskInfo;
-	
+
 	private int taskCount;
 
 
@@ -85,25 +95,27 @@ public class StopWatch {
 	/**
 	 * Construct a new stop watch with the given id.
 	 * Does not start any task.
+	 *
 	 * @param id identifier for this stop watch.
-	 * Handy when we have output from multiple stop watches and need to distinguish between them.
+	 *           Handy when we have output from multiple stop watches and need to distinguish between them.
 	 */
 	public StopWatch(String id) {
 		this.id = id;
 	}
-	
+
+	public boolean getKeepTaskList() {
+		return this.keepTaskList;
+	}
+
 	/**
 	 * Determines whether TaskInfo array is built over time. Set this to false
 	 * when using a stopwatch for millions of intervals, or the task info structure
 	 * will consume excessive memory. Default is true.
+	 *
 	 * @param keepTaskList
 	 */
 	public void setKeepTaskList(boolean keepTaskList) {
 		this.keepTaskList = keepTaskList;
-	}
-	
-	public boolean getKeepTaskList() {
-		return this.keepTaskList;
 	}
 
 
@@ -114,6 +126,7 @@ public class StopWatch {
 	/**
 	 * Start a named task. The results are undefined if stop() or timing
 	 * methods are called without invoking this method.
+	 *
 	 * @param task name of the task to start
 	 */
 	public void start(String task) throws IllegalStateException {
@@ -206,8 +219,7 @@ public class StopWatch {
 		StringBuffer sb = new StringBuffer(shortSummary());
 		if (!this.keepTaskList) {
 			sb.append("No task info kept");
-		}
-		else {
+		} else {
 			TaskInfo[] tasks = getTaskInfo();
 			sb.append("-----------------------------------------\n");
 			sb.append("ms     %     Task name\n");
@@ -242,8 +254,7 @@ public class StopWatch {
 				long percent = Math.round((100.0 * tasks[i].getTimeSecs()) / getTotalTimeSecs());
 				sb.append("=" + percent + "%");
 			}
-		}
-		else {
+		} else {
 			sb.append("Not keeping task info");
 		}
 		return sb.toString();

@@ -55,8 +55,7 @@ public class PropertiesEditor extends PropertyEditorSupport {
 		try {
 			props.load(new ByteArrayInputStream(text.getBytes()));
 			dropComments(props);
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			// shouldn't happen
 			throw new IllegalArgumentException("Failed to parse [" + text + "] into Properties");
 		}
@@ -81,7 +80,7 @@ public class PropertiesEditor extends PropertyEditorSupport {
 				commentKeys.add(key);
 			}
 		}
-		for (Iterator it = commentKeys.iterator(); it.hasNext();) {
+		for (Iterator it = commentKeys.iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			props.remove(key);
 		}

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view.freemarker;
 
@@ -52,7 +52,6 @@ import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
  * <p>Note: Spring's FreeMarker support requires FreeMarker 2.3 or higher.
  *
  * @author Darren Davison
- * @since 3/3/2004
  * @version $Id: FreeMarkerConfigurer.java,v 1.1 2004/03/20 15:41:33 trisberg Exp $
  * @see #setConfigLocation
  * @see #setFreemarkerSettings
@@ -60,26 +59,17 @@ import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
  * @see #setConfiguration
  * @see org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean
  * @see FreeMarkerView
+ * @since 3/3/2004
  */
 public class FreeMarkerConfigurer extends FreeMarkerConfigurationFactory
-		implements FreeMarkerConfig, InitializingBean, ResourceLoaderAware {
+	implements FreeMarkerConfig, InitializingBean, ResourceLoaderAware {
 
 	private Configuration configuration;
 
 	/**
-	 * Set a preconfigured Configuration to use for the FreeMarker web config, e.g. a
-	 * shared one for web and email usage, set up via FreeMarkerConfigurationFactoryBean.
-	 * If this is not set, FreeMarkerConfigurationFactory's properties (inherited by
-	 * this class) have to be specified.
-	 * @see org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean
-	 */
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
-	}
-
-	/**
 	 * Initialize FreeMarkerConfigurationFactory's Configuration
 	 * if not overridden by a preconfigured FreeMarker Configuation.
+	 *
 	 * @see #createConfiguration
 	 * @see #setConfiguration
 	 */
@@ -91,6 +81,18 @@ public class FreeMarkerConfigurer extends FreeMarkerConfigurationFactory
 
 	public Configuration getConfiguration() {
 		return this.configuration;
+	}
+
+	/**
+	 * Set a preconfigured Configuration to use for the FreeMarker web config, e.g. a
+	 * shared one for web and email usage, set up via FreeMarkerConfigurationFactoryBean.
+	 * If this is not set, FreeMarkerConfigurationFactory's properties (inherited by
+	 * this class) have to be specified.
+	 *
+	 * @see org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean
+	 */
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 
 }

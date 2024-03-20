@@ -27,6 +27,7 @@ import org.springframework.aop.MethodBeforeAdvice;
  * create a MethodInvocation object.
  * <br>Used internally by the AOP framework: application developers should not need
  * to use this class directly.
+ *
  * @author Rod Johnson
  * @version $Id: MethodBeforeAdviceInterceptor.java,v 1.2 2004/03/18 02:46:10 trisberg Exp $
  */
@@ -42,7 +43,7 @@ final class MethodBeforeAdviceInterceptor implements MethodInterceptor {
 	 * @see MethodInterceptor#invoke(MethodInvocation)
 	 */
 	public Object invoke(MethodInvocation mi) throws Throwable {
-		advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );
+		advice.before(mi.getMethod(), mi.getArguments(), mi.getThis());
 		return mi.proceed();
 	}
 

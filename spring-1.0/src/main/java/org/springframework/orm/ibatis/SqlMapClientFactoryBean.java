@@ -16,14 +16,12 @@
 
 package org.springframework.orm.ibatis;
 
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
-
-import com.ibatis.sqlmap.client.SqlMapClient;
-import com.ibatis.sqlmap.client.SqlMapClientBuilder;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -36,8 +34,8 @@ import org.springframework.core.io.Resource;
  * With SQL Maps 1.x, the SqlMap/MappedStatement API has to be used.
  *
  * @author Juergen Hoeller
- * @since 24.02.2004
  * @see SqlMapClientTemplate#setSqlMapClient
+ * @since 24.02.2004
  */
 public class SqlMapClientFactoryBean implements FactoryBean, InitializingBean {
 
@@ -57,6 +55,7 @@ public class SqlMapClientFactoryBean implements FactoryBean, InitializingBean {
 
 	/**
 	 * Set optional properties to be passed into the SqlMapClientBuilder.
+	 *
 	 * @see com.ibatis.sqlmap.client.SqlMapClientBuilder#buildSqlMapClient(java.io.Reader, Properties)
 	 */
 	public void setSqlMapClientProperties(Properties sqlMapClientProperties) {
@@ -69,8 +68,8 @@ public class SqlMapClientFactoryBean implements FactoryBean, InitializingBean {
 		}
 		InputStream is = this.configLocation.getInputStream();
 		this.sqlMapClient = (this.sqlMapClientProperties != null) ?
-				SqlMapClientBuilder.buildSqlMapClient(new InputStreamReader(is), this.sqlMapClientProperties) :
-				SqlMapClientBuilder.buildSqlMapClient(new InputStreamReader(is));
+			SqlMapClientBuilder.buildSqlMapClient(new InputStreamReader(is), this.sqlMapClientProperties) :
+			SqlMapClientBuilder.buildSqlMapClient(new InputStreamReader(is));
 	}
 
 	public Object getObject() {

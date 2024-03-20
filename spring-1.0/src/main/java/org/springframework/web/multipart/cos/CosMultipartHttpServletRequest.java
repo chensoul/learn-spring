@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.multipart.cos;
 
@@ -43,9 +43,9 @@ import org.springframework.web.multipart.support.AbstractMultipartHttpServletReq
  * if it ever needs to.
  *
  * @author Juergen Hoeller
- * @since 06.10.2003
  * @see CosMultipartResolver
  * @see com.oreilly.servlet.MultipartRequest
+ * @since 06.10.2003
  */
 public class CosMultipartHttpServletRequest extends AbstractMultipartHttpServletRequest {
 
@@ -145,25 +145,23 @@ public class CosMultipartHttpServletRequest extends AbstractMultipartHttpServlet
 				}
 				if (dest.exists() && !dest.delete()) {
 					throw new IOException("Destination file [" + dest.getAbsolutePath() +
-					                      "] already exists and could not be deleted");
+										  "] already exists and could not be deleted");
 				}
 				if (tempFile.renameTo(dest)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Multipart file [" + getName() + "] with original file name [" +
-												 getOriginalFilename() + "], stored at [" + tempFile.getAbsolutePath() +
-												 "]: moved to [" + dest.getAbsolutePath() + "]");
+									 getOriginalFilename() + "], stored at [" + tempFile.getAbsolutePath() +
+									 "]: moved to [" + dest.getAbsolutePath() + "]");
 					}
-				}
-				else {
+				} else {
 					FileCopyUtils.copy(tempFile, dest);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Multipart file [" + getName() + "] with original file name [" +
-												 getOriginalFilename() + "], stored at [" + tempFile.getAbsolutePath() +
-												 "]: copied to [" + dest.getAbsolutePath() + "]");
+									 getOriginalFilename() + "], stored at [" + tempFile.getAbsolutePath() +
+									 "]: copied to [" + dest.getAbsolutePath() + "]");
 					}
 				}
-			}
-			else {
+			} else {
 				dest.createNewFile();
 			}
 		}

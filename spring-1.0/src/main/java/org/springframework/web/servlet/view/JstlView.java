@@ -35,8 +35,8 @@ import org.springframework.web.servlet.support.JstlUtils;
  * in InternalResourceView itself.
  *
  * @author Juergen Hoeller
- * @since 27.02.2003
  * @see JstlUtils#exposeLocalizationContext
+ * @since 27.02.2003
  */
 public class JstlView extends InternalResourceView {
 

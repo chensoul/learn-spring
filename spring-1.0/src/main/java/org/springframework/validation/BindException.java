@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.validation;
 
@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -63,8 +62,9 @@ public class BindException extends Exception implements Errors {
 
 	/**
 	 * Create a new BindException instance.
+	 *
 	 * @param target target object to bind onto
-	 * @param name name of the target object
+	 * @param name   name of the target object
 	 */
 	public BindException(Object target, String name) {
 		this.beanWrapper = new BeanWrapperImpl(target);
@@ -147,7 +147,7 @@ public class BindException extends Exception implements Errors {
 
 	public List getGlobalErrors() {
 		List result = new ArrayList();
-		for (Iterator it = this.errors.iterator(); it.hasNext();) {
+		for (Iterator it = this.errors.iterator(); it.hasNext(); ) {
 			ObjectError fe = (ObjectError) it.next();
 			if (!(fe instanceof FieldError)) {
 				result.add(fe);
@@ -157,7 +157,7 @@ public class BindException extends Exception implements Errors {
 	}
 
 	public ObjectError getGlobalError() {
-		for (Iterator it = this.errors.iterator(); it.hasNext();) {
+		for (Iterator it = this.errors.iterator(); it.hasNext(); ) {
 			ObjectError fe = (ObjectError) it.next();
 			if (!(fe instanceof FieldError)) {
 				return fe;
@@ -177,7 +177,7 @@ public class BindException extends Exception implements Errors {
 	public List getFieldErrors(String field) {
 		List result = new ArrayList();
 		field = fixedField(field);
-		for (Iterator it = this.errors.iterator(); it.hasNext();) {
+		for (Iterator it = this.errors.iterator(); it.hasNext(); ) {
 			ObjectError fe = (ObjectError) it.next();
 			if (fe instanceof FieldError && field.equals(((FieldError) fe).getField())) {
 				result.add(fe);
@@ -188,7 +188,7 @@ public class BindException extends Exception implements Errors {
 
 	public FieldError getFieldError(String field) {
 		field = fixedField(field);
-		for (Iterator it = this.errors.iterator(); it.hasNext();) {
+		for (Iterator it = this.errors.iterator(); it.hasNext(); ) {
 			ObjectError fe = (ObjectError) it.next();
 			if (fe instanceof FieldError && field.equals(((FieldError) fe).getField())) {
 				return (FieldError) fe;
@@ -219,6 +219,10 @@ public class BindException extends Exception implements Errors {
 		return (fe == null ? getBeanWrapper().findCustomEditor(null, field) : null);
 	}
 
+	public String getNestedPath() {
+		return nestedPath;
+	}
+
 	public void setNestedPath(String nestedPath) {
 		if (nestedPath == null) {
 			nestedPath = "";
@@ -229,16 +233,13 @@ public class BindException extends Exception implements Errors {
 		this.nestedPath = nestedPath;
 	}
 
-	public String getNestedPath() {
-		return nestedPath;
-	}
-
 	/**
 	 * Return a model Map for the obtained state, exposing an Errors
 	 * instance as '{@link #ERROR_KEY_PREFIX ERROR_KEY_PREFIX} + objectName'
 	 * and the object itself.
 	 * <p>Note that the Map is constructed each time you're calling this method,
 	 * adding things to the map and then re-calling it will not do...
+	 *
 	 * @see #getObjectName
 	 * @see #ERROR_KEY_PREFIX
 	 */

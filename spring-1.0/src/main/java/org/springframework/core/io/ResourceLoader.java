@@ -24,14 +24,16 @@ package org.springframework.core.io;
  * usable outside an ApplicationContext, also used by ResourceEditor.
  *
  * @author Juergen Hoeller
- * @since 10.03.2004
  * @see DefaultResourceLoader
  * @see ResourceEditor
  * @see org.springframework.context.ApplicationContext
+ * @since 10.03.2004
  */
 public interface ResourceLoader {
 
-	/** Pseudo URL prefix for loading from the class path */
+	/**
+	 * Pseudo URL prefix for loading from the class path
+	 */
 	String CLASSPATH_URL_PREFIX = "classpath:";
 
 	/**
@@ -47,6 +49,7 @@ public interface ResourceLoader {
 	 * </ul>
 	 * <p>Note that a Resource handle does not imply an existing resource;
 	 * you need to invoke Resource's "exists" to check for existence.
+	 *
 	 * @param location resource location
 	 * @return Resource handle
 	 * @see #CLASSPATH_URL_PREFIX

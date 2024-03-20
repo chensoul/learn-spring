@@ -1,25 +1,24 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.orm.jdo;
 
 import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -66,9 +65,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * JNDI binding isn't supported by some application servers (e.g. Tomcat).
  *
  * @author Juergen Hoeller
- * @since 03.06.2003
  * @see JdoCallback
  * @see JdoTransactionManager
+ * @since 03.06.2003
  */
 public class JdoTemplate extends JdoAccessor {
 
@@ -82,23 +81,12 @@ public class JdoTemplate extends JdoAccessor {
 
 	/**
 	 * Create a new JdoTemplate instance.
+	 *
 	 * @param pmf PersistenceManagerFactory to create PersistenceManagers
 	 */
 	public JdoTemplate(PersistenceManagerFactory pmf) {
 		setPersistenceManagerFactory(pmf);
 		afterPropertiesSet();
-	}
-
-	/**
-	 * Set if a new PersistenceManager should be created if no thread-bound found.
-	 * <p>JdoTemplate is aware of a respective PersistenceManager bound to the
-	 * current thread, for example when using JdoTransactionManager.
-	 * If allowCreate is true, a new PersistenceManager will be created if none
-	 * found. If false, an IllegalStateException will get thrown in this case.
-	 * @see PersistenceManagerFactoryUtils#getPersistenceManager
-	 */
-	public void setAllowCreate(boolean allowCreate) {
-		this.allowCreate = allowCreate;
 	}
 
 	/**
@@ -109,6 +97,19 @@ public class JdoTemplate extends JdoAccessor {
 	}
 
 	/**
+	 * Set if a new PersistenceManager should be created if no thread-bound found.
+	 * <p>JdoTemplate is aware of a respective PersistenceManager bound to the
+	 * current thread, for example when using JdoTransactionManager.
+	 * If allowCreate is true, a new PersistenceManager will be created if none
+	 * found. If false, an IllegalStateException will get thrown in this case.
+	 *
+	 * @see PersistenceManagerFactoryUtils#getPersistenceManager
+	 */
+	public void setAllowCreate(boolean allowCreate) {
+		this.allowCreate = allowCreate;
+	}
+
+	/**
 	 * Execute the action specified by the given action object within a
 	 * PersistenceManager. Application exceptions thrown by the action object
 	 * get propagated to the caller (can only be unchecked). JDO exceptions
@@ -116,6 +117,7 @@ public class JdoTemplate extends JdoAccessor {
 	 * result object, i.e. a domain object or a collection of domain objects.
 	 * <p>Note: Callback code is not supposed to handle transactions itself!
 	 * Use an appropriate transaction manager like JdoTransactionManager.
+	 *
 	 * @param action action object that specifies the JDO action
 	 * @return a result object returned by the action, or null
 	 * @throws DataAccessException in case of JDO errors
@@ -130,15 +132,12 @@ public class JdoTemplate extends JdoAccessor {
 			Object result = action.doInJdo(pm);
 			flushIfNecessary(pm, existingTransaction);
 			return result;
-		}
-		catch (JDOException ex) {
+		} catch (JDOException ex) {
 			throw convertJdoAccessException(ex);
-		}
-		catch (RuntimeException ex) {
+		} catch (RuntimeException ex) {
 			// callback code threw application exception
 			throw ex;
-		}
-		finally {
+		} finally {
 			PersistenceManagerFactoryUtils.closePersistenceManagerIfNecessary(pm, getPersistenceManagerFactory());
 		}
 	}

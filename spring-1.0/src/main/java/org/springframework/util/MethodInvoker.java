@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.util;
 
@@ -34,11 +34,11 @@ import java.lang.reflect.Modifier;
  *
  * @author Colin Sampaleanu
  * @author Juergen Hoeller
- * @since 19.02.2004
  * @see #prepare
  * @see #invoke
  * @see org.springframework.beans.factory.config.MethodInvokingFactoryBean
  * @see org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean
+ * @since 19.02.2004
  */
 public class MethodInvoker {
 
@@ -56,18 +56,6 @@ public class MethodInvoker {
 	// the method we will call
 	private Method methodObject;
 
-
-	/**
-	 * Set the target class on which to call the target method.
-	 * Only necessary when the target method is static; else,
-	 * a target object needs to be specified anyway.
-	 * @see #setTargetObject
-	 * @see #setTargetMethod
-	 */
-	public void setTargetClass(Class targetClass) {
-		this.targetClass = targetClass;
-	}
-
 	/**
 	 * Return the target class on which to call the target method.
 	 */
@@ -76,14 +64,15 @@ public class MethodInvoker {
 	}
 
 	/**
-	 * Set the target object on which to call the target method.
-	 * Only necessary when the target method is not static;
-	 * else, a target class is sufficient.
-	 * @see #setTargetClass
+	 * Set the target class on which to call the target method.
+	 * Only necessary when the target method is static; else,
+	 * a target object needs to be specified anyway.
+	 *
+	 * @see #setTargetObject
 	 * @see #setTargetMethod
 	 */
-	public void setTargetObject(Object targetObject) {
-		this.targetObject = targetObject;
+	public void setTargetClass(Class targetClass) {
+		this.targetClass = targetClass;
 	}
 
 	/**
@@ -94,14 +83,15 @@ public class MethodInvoker {
 	}
 
 	/**
-	 * Set the name of the method to be invoked.
-	 * Refers to either a static method or a non-static method,
-	 * depending on a target object being set.
+	 * Set the target object on which to call the target method.
+	 * Only necessary when the target method is not static;
+	 * else, a target class is sufficient.
+	 *
 	 * @see #setTargetClass
-	 * @see #setTargetObject
+	 * @see #setTargetMethod
 	 */
-	public void setTargetMethod(String targetMethod) {
-		this.targetMethod = targetMethod;
+	public void setTargetObject(Object targetObject) {
+		this.targetObject = targetObject;
 	}
 
 	/**
@@ -112,9 +102,22 @@ public class MethodInvoker {
 	}
 
 	/**
+	 * Set the name of the method to be invoked.
+	 * Refers to either a static method or a non-static method,
+	 * depending on a target object being set.
+	 *
+	 * @see #setTargetClass
+	 * @see #setTargetObject
+	 */
+	public void setTargetMethod(String targetMethod) {
+		this.targetMethod = targetMethod;
+	}
+
+	/**
 	 * Set a fully qualified static method name to invoke,
 	 * e.g. "example.MyExampleClass.myExampleMethod".
 	 * Convenient alternative to specifying targetClass and targetMethod.
+	 *
 	 * @see #setTargetClass
 	 * @see #setTargetMethod
 	 */
@@ -122,12 +125,16 @@ public class MethodInvoker {
 		int lastDotIndex = staticMethod.lastIndexOf('.');
 		if (lastDotIndex == -1 || lastDotIndex == staticMethod.length()) {
 			throw new IllegalArgumentException("staticMethod must be a fully qualified class plus method name: " +
-																				 "e.g. 'example.MyExampleClass.myExampleMethod'");
+											   "e.g. 'example.MyExampleClass.myExampleMethod'");
 		}
 		String className = staticMethod.substring(0, lastDotIndex);
 		String methodName = staticMethod.substring(lastDotIndex + 1);
 		setTargetClass(Class.forName(className, true, Thread.currentThread().getContextClassLoader()));
 		setTargetMethod(methodName);
+	}
+
+	public Object[] getArguments() {
+		return arguments;
 	}
 
 	/**
@@ -138,13 +145,10 @@ public class MethodInvoker {
 		this.arguments = arguments;
 	}
 
-	public Object[] getArguments() {
-		return arguments;
-	}
-
 	/**
 	 * Prepare the specified method.
 	 * The method can be invoked any number of times afterwards.
+	 *
 	 * @see #getPreparedMethod
 	 * @see #invoke
 	 */
@@ -168,8 +172,7 @@ public class MethodInvoker {
 		Class targetClass = (this.targetObject != null) ? this.targetObject.getClass() : this.targetClass;
 		try {
 			this.methodObject = targetClass.getMethod(this.targetMethod, types);
-		}
-		catch (NoSuchMethodException ex) {
+		} catch (NoSuchMethodException ex) {
 			int matches = 0;
 			// then try to get a method with the same number of arguments
 			// we'll fail at runtime if in fact the arguments are not assignment compatible
@@ -194,6 +197,7 @@ public class MethodInvoker {
 	/**
 	 * Return the prepared Method object that will be invoker.
 	 * Can for example be used to determine the return type.
+	 *
 	 * @see #prepare
 	 * @see #invoke
 	 */
@@ -204,6 +208,7 @@ public class MethodInvoker {
 	/**
 	 * Invoke the specified method.
 	 * The invoker needs to have been prepared before.
+	 *
 	 * @return the object returned by the method invocation,
 	 * or VOID if the method returns void
 	 * @see #prepare

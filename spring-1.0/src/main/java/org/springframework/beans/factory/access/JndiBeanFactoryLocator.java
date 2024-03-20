@@ -17,10 +17,8 @@
 package org.springframework.beans.factory.access;
 
 import javax.naming.NamingException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -61,12 +59,11 @@ public class JndiBeanFactoryLocator implements BeanFactoryLocator {
 			beanFactoryPath = (String) (new JndiTemplate()).lookup(factoryKey);
 			logger.info("BeanFactoryPath from JNDI is [" + beanFactoryPath + "]");
 			String[] paths = StringUtils.tokenizeToStringArray(beanFactoryPath,
-					BEAN_FACTORY_PATH_DELIMITERS, true, true);
+				BEAN_FACTORY_PATH_DELIMITERS, true, true);
 			return createBeanFactory(paths);
-		}
-		catch (NamingException ex) {
+		} catch (NamingException ex) {
 			throw new BootstrapException("Define an environment variable 'ejb/BeanFactoryPath' containing " +
-			                             "the class path locations of XML bean definition files", ex);
+										 "the class path locations of XML bean definition files", ex);
 		}
 	}
 
@@ -74,6 +71,7 @@ public class JndiBeanFactoryLocator implements BeanFactoryLocator {
 	 * Actually create the BeanFactory, given an array of classpath resource strings
 	 * which should be combined. This is split out as a separate method so that subclasses
 	 * can override the actual type uses (to be an ApplicationContext, for example).
+	 *
 	 * @param resources an array of Strings representing classpath resource names
 	 * @return the created BeanFactory, wrapped in a BeanFactoryReference
 	 */

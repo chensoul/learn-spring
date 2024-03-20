@@ -1,32 +1,29 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.filter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
@@ -41,8 +38,8 @@ import org.springframework.beans.PropertyValues;
  * <p>This filter leaves actual filtering to subclasses.
  *
  * @author Juergen Hoeller
- * @since 06.12.2003
  * @see #initFilterBean
+ * @since 06.12.2003
  */
 public abstract class GenericFilterBean implements Filter {
 
@@ -61,6 +58,7 @@ public abstract class GenericFilterBean implements Filter {
 	 * Subclasses can invoke this method to specify that this property
 	 * (which must match a JavaBean property they expose) is mandatory,
 	 * and must be supplied as a config parameter.
+	 *
 	 * @param property name of the required property
 	 */
 	protected final void addRequiredProperty(String property) {
@@ -70,8 +68,9 @@ public abstract class GenericFilterBean implements Filter {
 	/**
 	 * Map config parameters onto bean properties of this filter, and
 	 * invoke subclass initialization.
+	 *
 	 * @throws ServletException if bean properties are invalid (or required
-	 * properties are missing), or if subclass initialization fails.
+	 *                          properties are missing), or if subclass initialization fails.
 	 * @see #initFilterBean
 	 */
 	public final void init(FilterConfig filterConfig) throws ServletException {
@@ -83,8 +82,7 @@ public abstract class GenericFilterBean implements Filter {
 			PropertyValues pvs = new FilterConfigPropertyValues(filterConfig, this.requiredProperties);
 			BeanWrapper bw = new BeanWrapperImpl(this);
 			bw.setPropertyValues(pvs);
-		}
-		catch (BeansException ex) {
+		} catch (BeansException ex) {
 			String msg = "Failed to set bean properties on filter '" + filterConfig.getFilterName() + "': " + ex.getMessage();
 			logger.error(msg, ex);
 			throw new ServletException(msg, ex);
@@ -98,6 +96,7 @@ public abstract class GenericFilterBean implements Filter {
 	/**
 	 * Make the FilterConfig of this filter available to subclasses.
 	 * Analogous to GenericServlet's getServletConfig.
+	 *
 	 * @see javax.servlet.GenericServlet#getServletConfig
 	 */
 	protected final FilterConfig getFilterConfig() {
@@ -107,6 +106,7 @@ public abstract class GenericFilterBean implements Filter {
 	/**
 	 * Make the name of this filter available to subclasses.
 	 * Analogous to GenericServlet's getServletName.
+	 *
 	 * @see javax.servlet.GenericServlet#getServletName
 	 */
 	protected final String getFilterName() {
@@ -116,6 +116,7 @@ public abstract class GenericFilterBean implements Filter {
 	/**
 	 * Make the ServletContext of this filter available to subclasses.
 	 * Analogous to GenericServlet's getServletContext.
+	 *
 	 * @see javax.servlet.GenericServlet#getServletContext
 	 */
 	protected final ServletContext getServletContext() {
@@ -126,6 +127,7 @@ public abstract class GenericFilterBean implements Filter {
 	 * Subclasses may override this to perform custom initialization.
 	 * All bean properties of this servlet will have been set before this
 	 * method is invoked. This default implementation does nothing.
+	 *
 	 * @throws ServletException if subclass initialization fails
 	 */
 	protected void initFilterBean() throws ServletException {

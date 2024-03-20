@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.handler;
 
@@ -59,23 +59,23 @@ public class SimpleMappingExceptionResolver implements HandlerExceptionResolver,
 
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
-
-	public void setOrder(int order) {
-	  this.order = order;
+	public int getOrder() {
+		return order;
 	}
 
-	public int getOrder() {
-	  return order;
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	/**
 	 * Set the mappings between exception class names and view names.
+	 *
 	 * @param mappings fully qualified exception class names as keys,
-	 * and view names as values
+	 *                 and view names as values
 	 */
 	public void setExceptionMappings(Properties mappings) throws ClassNotFoundException {
 		this.exceptionMappings = new HashMap();
-		for (Iterator it = mappings.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = mappings.keySet().iterator(); it.hasNext(); ) {
 			String exceptionClassName = (String) it.next();
 			String viewName = mappings.getProperty(exceptionClassName);
 			Class exceptionClass = Class.forName(exceptionClassName, true, Thread.currentThread().getContextClassLoader());
@@ -105,6 +105,7 @@ public class SimpleMappingExceptionResolver implements HandlerExceptionResolver,
 	/**
 	 * Set the name of the model attribute as which the exception should
 	 * be exposed. Default is "exception".
+	 *
 	 * @see #DEFAULT_EXCEPTION_ATTRIBUTE
 	 */
 	public void setExceptionAttribute(String exceptionAttribute) {
@@ -113,11 +114,11 @@ public class SimpleMappingExceptionResolver implements HandlerExceptionResolver,
 
 
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
-	                                     Object handler, Exception ex) {
+										 Object handler, Exception ex) {
 		// check for specific mappings
 		if (this.exceptionMappings != null &&
-		    (this.mappedHandlers == null || this.mappedHandlers.contains(handler))) {
-			for (Iterator it = this.exceptionMappings.keySet().iterator(); it.hasNext();) {
+			(this.mappedHandlers == null || this.mappedHandlers.contains(handler))) {
+			for (Iterator it = this.exceptionMappings.keySet().iterator(); it.hasNext(); ) {
 				Class exceptionClass = (Class) it.next();
 				if (exceptionClass.isInstance(ex)) {
 					String viewName = (String) this.exceptionMappings.get(exceptionClass);
@@ -133,8 +134,9 @@ public class SimpleMappingExceptionResolver implements HandlerExceptionResolver,
 	 * Return a ModelAndView for the given view name and exception.
 	 * Default implementation adds the specified exception attribute.
 	 * Can be overridden in subclasses.
+	 *
 	 * @param viewName the name of the error view
-	 * @param ex the exception that got thrown during handler execution
+	 * @param ex       the exception that got thrown during handler execution
 	 * @return the ModelAndView instance
 	 * @see #setExceptionAttribute
 	 */

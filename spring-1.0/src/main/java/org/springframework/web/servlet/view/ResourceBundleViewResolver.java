@@ -47,14 +47,18 @@ import org.springframework.web.servlet.View;
  */
 public class ResourceBundleViewResolver extends AbstractCachingViewResolver {
 
-	/** Default if no other basename is supplied */
+	/**
+	 * Default if no other basename is supplied
+	 */
 	public final static String DEFAULT_BASENAME = "views";
 
 	private String basename = DEFAULT_BASENAME;
 
 	private String defaultParentView;
 
-	/** Locale -> BeanFactory */
+	/**
+	 * Locale -> BeanFactory
+	 */
 	private Map cachedFactories = new HashMap();
 
 	/**
@@ -62,6 +66,7 @@ public class ResourceBundleViewResolver extends AbstractCachingViewResolver {
 	 * ResourceBundle supports different suffixes. For example, a base name of
 	 * "views" might map to ResourceBundle files "views", "views_en_au" and "views_de".
 	 * <p>The default is "views".
+	 *
 	 * @param basename the ResourceBundle base name
 	 * @see ResourceBundle
 	 */
@@ -76,6 +81,7 @@ public class ResourceBundleViewResolver extends AbstractCachingViewResolver {
 	 * The parent will typically define the view class and common attributes.
 	 * Concrete views might simply consist of an URL definition then:
 	 * a la "yyy1.url=/my.jsp", "yyy2.url=/your.jsp".
+	 *
 	 * @param defaultParentView the default parent view
 	 */
 	public void setDefaultParentView(String defaultParentView) {
@@ -96,7 +102,7 @@ public class ResourceBundleViewResolver extends AbstractCachingViewResolver {
 			return parsedBundle;
 		}
 		ResourceBundle bundle = ResourceBundle.getBundle(this.basename, locale,
-																										 Thread.currentThread().getContextClassLoader());
+			Thread.currentThread().getContextClassLoader());
 		DefaultListableBeanFactory lbf = new DefaultListableBeanFactory(getApplicationContext());
 		PropertiesBeanDefinitionReader reader = new PropertiesBeanDefinitionReader(lbf);
 		reader.setDefaultParentBean(this.defaultParentView);

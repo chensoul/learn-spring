@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jndi;
 
@@ -36,15 +36,15 @@ import org.springframework.beans.factory.InitializingBean;
  *
  * <p>Subclasses must implement the located() method to cache the results
  * of the JNDI lookup. They don't need to worry about error handling.</p>
- * 
+ *
  * <p><b>Assumptions:</b> The resource obtained from JNDI can be cached.
- * 
+ *
  * <p>Subclasses will often be used as singletons in a bean container. This
  * sometiems presents a problem if that bean container pre-instantiates singletons,
  * since this class does the JNDI lookup in its init method, but the resource being
  * pointed to may not exist at that time, even though it may exist at the time of
  * first usage. The solution is to tell the bean container not to pre-instantiate
- * this class (i.e. lazy load it instead).<p> 
+ * this class (i.e. lazy load it instead).<p>
  *
  * @author Rod Johnson
  * @version $Id: AbstractJndiLocator.java,v 1.9 2004/03/18 02:46:17 trisberg Exp $
@@ -54,7 +54,9 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public abstract class AbstractJndiLocator implements InitializingBean {
 
-	/** JNDI prefix used in a J2EE container */
+	/**
+	 * JNDI prefix used in a J2EE container
+	 */
 	public static String CONTAINER_PREFIX = "java:comp/env/";
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -79,20 +81,12 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 	 * doesn't include a java:comp/env/ prefix, it will be prepended.
 	 * <p>As this is a shortcut, it calls afterPropertiesSet to perform
 	 * the JNDI lookup immediately.
+	 *
 	 * @param jndiName JNDI name.
 	 */
 	public AbstractJndiLocator(String jndiName) throws NamingException, IllegalArgumentException {
 		setJndiName(jndiName);
 		afterPropertiesSet();
-	}
-
-	/**
-	 * Set the JNDI template to use for the JNDI lookup.
-	 * You can also specify JNDI environment settings via setJndiEnvironment.
-	 * @see #setJndiEnvironment
-	 */
-	public final void setJndiTemplate(JndiTemplate jndiTemplate) {
-		this.jndiTemplate = jndiTemplate;
 	}
 
 	/**
@@ -103,12 +97,13 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 	}
 
 	/**
-	 * Set the JNDI environment to use for the JNDI lookup.
-	 * Creates a JndiTemplate with the given environment settings.
-	 * @see #setJndiTemplate
+	 * Set the JNDI template to use for the JNDI lookup.
+	 * You can also specify JNDI environment settings via setJndiEnvironment.
+	 *
+	 * @see #setJndiEnvironment
 	 */
-	public final void setJndiEnvironment(Properties jndiEnvironment) {
-		this.jndiTemplate = new JndiTemplate(jndiEnvironment);
+	public final void setJndiTemplate(JndiTemplate jndiTemplate) {
+		this.jndiTemplate = jndiTemplate;
 	}
 
 	/**
@@ -119,8 +114,26 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 	}
 
 	/**
+	 * Set the JNDI environment to use for the JNDI lookup.
+	 * Creates a JndiTemplate with the given environment settings.
+	 *
+	 * @see #setJndiTemplate
+	 */
+	public final void setJndiEnvironment(Properties jndiEnvironment) {
+		this.jndiTemplate = new JndiTemplate(jndiEnvironment);
+	}
+
+	/**
+	 * Return the JNDI name to look up.
+	 */
+	public final String getJndiName() {
+		return jndiName;
+	}
+
+	/**
 	 * Set the JNDI name. If it doesn't begin "java:comp/env/"
 	 * we add this prefix if resourceRef is set to True.
+	 *
 	 * @param jndiName JNDI name of bean to look up
 	 * @see #setResourceRef
 	 */
@@ -129,10 +142,10 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 	}
 
 	/**
-	 * Return the JNDI name to look up.
+	 * Return if the lookup occurs in a J2EE container.
 	 */
-	public final String getJndiName() {
-		return jndiName;
+	public final boolean isResourceRef() {
+		return resourceRef;
 	}
 
 	/**
@@ -144,14 +157,6 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 	public void setResourceRef(boolean resourceRef) {
 		this.resourceRef = resourceRef;
 	}
-
-	/**
-	 * Return if the lookup occurs in a J2EE container.
-	 */
-	public final boolean isResourceRef() {
-		return resourceRef;
-	}
-
 
 	public final void afterPropertiesSet() throws NamingException, IllegalArgumentException {
 		if (this.jndiName == null || this.jndiName.equals("")) {
@@ -173,6 +178,7 @@ public abstract class AbstractJndiLocator implements InitializingBean {
 
 	/**
 	 * Subclasses must implement this to cache the object this class has obtained from JNDI.
+	 *
 	 * @param jndiObject object successfully retrieved from JNDI
 	 */
 	protected abstract void located(Object jndiObject);

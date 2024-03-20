@@ -18,25 +18,22 @@ package org.springframework.beans.factory.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.AbstractBeanDefinitionReader;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.io.Resource;
+import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Bean definition reader for Spring's default XML bean definition format.
@@ -50,11 +47,11 @@ import org.springframework.core.io.Resource;
  * <p>This class registers each bean definition with the given bean factory superclass,
  * and relies on the latter's implementation of the BeanDefinitionRegistry interface.
  * It supports singletons, prototypes, and references to either of these kinds of bean.
-
+ *
  * @author Juergen Hoeller
- * @since 26.11.2003
- * @see #setParserClass
  * @version $Id: XmlBeanDefinitionReader.java,v 1.8 2004/03/18 02:46:12 trisberg Exp $
+ * @see #setParserClass
+ * @since 26.11.2003
  */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
@@ -85,6 +82,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * Set a SAX entity resolver to be used for parsing. By default, BeansDtdResolver
 	 * will be used. Can be overridden for custom entity resolution, e.g. relative
 	 * to some specific base path.
+	 *
 	 * @see BeansDtdResolver
 	 */
 	public void setEntityResolver(EntityResolver entityResolver) {
@@ -94,6 +92,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	/**
 	 * Set the XmlBeanDefinitionParser implementation to use.
 	 * Default is DefaultXmlBeanDefinitionParser.
+	 *
 	 * @see XmlBeanDefinitionParser
 	 * @see DefaultXmlBeanDefinitionParser
 	 */
@@ -106,6 +105,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
 	 * Load bean definitions from the specified XML file.
+	 *
 	 * @param resource the resource descriptor for the XML file
 	 * @throws BeansException in case of loading or parsing errors
 	 */
@@ -125,25 +125,19 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			is = resource.getInputStream();
 			Document doc = docBuilder.parse(is);
 			registerBeanDefinitions(doc, resource);
-		}
-		catch (ParserConfigurationException ex) {
+		} catch (ParserConfigurationException ex) {
 			throw new BeanDefinitionStoreException("Parser configuration exception parsing XML from " + resource, ex);
-		}
-		catch (SAXParseException ex) {
+		} catch (SAXParseException ex) {
 			throw new BeanDefinitionStoreException("Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);
-		}
-		catch (SAXException ex) {
+		} catch (SAXException ex) {
 			throw new BeanDefinitionStoreException("XML document from " + resource + " is invalid", ex);
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new BeanDefinitionStoreException("IOException parsing XML document from " + resource, ex);
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				try {
 					is.close();
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					logger.warn("Could not close InputStream", ex);
 				}
 			}
@@ -153,6 +147,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	/**
 	 * Register the bean definitions contained in the given DOM document.
 	 * All calls go through this.
+	 *
 	 * @param doc the DOM document
 	 * @throws BeansException in case of parsing errors
 	 */

@@ -27,8 +27,8 @@ import org.springframework.core.io.ResourceEditor;
  * specific to the context implementation.
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see ApplicationContext#getResource
+ * @since 28.12.2003
  */
 public class ContextResourceEditor extends ResourceEditor {
 
@@ -36,6 +36,7 @@ public class ContextResourceEditor extends ResourceEditor {
 
 	/**
 	 * Create a new ContextResourceEditor for the given context.
+	 *
 	 * @param applicationContext context to resolve resources with
 	 */
 	public ContextResourceEditor(ApplicationContext applicationContext) {

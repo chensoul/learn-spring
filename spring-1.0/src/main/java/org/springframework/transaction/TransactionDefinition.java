@@ -30,9 +30,9 @@ import java.sql.Connection;
  * when given non-default values.
  *
  * @author Juergen Hoeller
- * @since 08.05.2003
  * @see org.springframework.transaction.support.DefaultTransactionDefinition
  * @see org.springframework.transaction.interceptor.TransactionAttribute
+ * @since 08.05.2003
  */
 public interface TransactionDefinition {
 
@@ -82,17 +82,18 @@ public interface TransactionDefinition {
 	/**
 	 * Use the default isolation level of the underlying datastore.
 	 * All other levels correspond to the JDBC isolation levels.
+	 *
 	 * @see Connection
 	 */
-	int ISOLATION_DEFAULT          = -1;
+	int ISOLATION_DEFAULT = -1;
 
 	int ISOLATION_READ_UNCOMMITTED = Connection.TRANSACTION_READ_UNCOMMITTED;
 
-	int ISOLATION_READ_COMMITTED   = Connection.TRANSACTION_READ_COMMITTED;
+	int ISOLATION_READ_COMMITTED = Connection.TRANSACTION_READ_COMMITTED;
 
-	int ISOLATION_REPEATABLE_READ  = Connection.TRANSACTION_REPEATABLE_READ;
+	int ISOLATION_REPEATABLE_READ = Connection.TRANSACTION_REPEATABLE_READ;
 
-	int ISOLATION_SERIALIZABLE     = Connection.TRANSACTION_SERIALIZABLE;
+	int ISOLATION_SERIALIZABLE = Connection.TRANSACTION_SERIALIZABLE;
 
 
 	/**
@@ -105,6 +106,7 @@ public interface TransactionDefinition {
 	/**
 	 * Return the propagation behavior.
 	 * Must return one of the PROPAGATION constants.
+	 *
 	 * @see #PROPAGATION_REQUIRED
 	 */
 	int getPropagationBehavior();
@@ -116,6 +118,7 @@ public interface TransactionDefinition {
 	 * PROPAGATION_REQUIRES_NEW.
 	 * <p>Note that a transaction manager that does not support custom isolation levels
 	 * will throw an exception when given any other level than ISOLATION_DEFAULT.
+	 *
 	 * @see #ISOLATION_DEFAULT
 	 */
 	int getIsolationLevel();
@@ -127,6 +130,7 @@ public interface TransactionDefinition {
 	 * PROPAGATION_REQUIRES_NEW.
 	 * <p>Note that a transaction manager that does not support timeouts will
 	 * throw an exception when given any other timeout than TIMEOUT_DEFAULT.
+	 *
 	 * @see #TIMEOUT_DEFAULT
 	 */
 	int getTimeout();

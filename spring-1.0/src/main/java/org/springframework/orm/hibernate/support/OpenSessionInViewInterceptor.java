@@ -18,11 +18,9 @@ package org.springframework.orm.hibernate.support;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate.HibernateAccessor;
 import org.springframework.orm.hibernate.SessionFactoryUtils;
@@ -60,17 +58,18 @@ import org.springframework.web.servlet.ModelAndView;
  * set the flushMode of this interceptor to FLUSH_AUTO in such a scenario.
  *
  * @author Juergen Hoeller
- * @since 06.12.2003
  * @see #setFlushMode
  * @see OpenSessionInViewFilter
  * @see org.springframework.orm.hibernate.HibernateInterceptor
  * @see org.springframework.orm.hibernate.HibernateTransactionManager
+ * @since 06.12.2003
  */
 public class OpenSessionInViewInterceptor extends HibernateAccessor implements HandlerInterceptor {
 
 	/**
 	 * Create a new OpenSessionInViewInterceptor,
 	 * turning the default flushMode to FLUSH_NEVER.
+	 *
 	 * @see #setFlushMode
 	 */
 	public OpenSessionInViewInterceptor() {
@@ -80,14 +79,15 @@ public class OpenSessionInViewInterceptor extends HibernateAccessor implements H
 	/**
 	 * Opens a new Hibernate Session according to the settings of this HibernateAccessor
 	 * and binds in to the thread via TransactionSynchronizationManager.
+	 *
 	 * @see SessionFactoryUtils#getSession
 	 * @see TransactionSynchronizationManager
 	 */
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-													 Object handler) throws DataAccessException {
+							 Object handler) throws DataAccessException {
 		logger.debug("Opening Hibernate Session in OpenSessionInViewInterceptor");
 		Session session = SessionFactoryUtils.getSession(getSessionFactory(), getEntityInterceptor(),
-																										 getJdbcExceptionTranslator());
+			getJdbcExceptionTranslator());
 		if (getFlushMode() == FLUSH_NEVER) {
 			session.setFlushMode(FlushMode.NEVER);
 		}
@@ -98,27 +98,28 @@ public class OpenSessionInViewInterceptor extends HibernateAccessor implements H
 	/**
 	 * Flushes the Hibernate Session before view rendering, if necessary.
 	 * Set the flushMode of this HibernateAccessor to FLUSH_NEVER to avoid this extra flushing.
+	 *
 	 * @see #setFlushMode
 	 */
 	public void postHandle(HttpServletRequest request, HttpServletResponse response,
-												 Object handler, ModelAndView modelAndView) throws DataAccessException {
+						   Object handler, ModelAndView modelAndView) throws DataAccessException {
 		logger.debug("Flushing Hibernate Session in OpenSessionInViewInterceptor");
 		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource(getSessionFactory());
 		try {
 			flushIfNecessary(sessionHolder.getSession(), false);
-		}
-		catch (HibernateException ex) {
+		} catch (HibernateException ex) {
 			throw convertHibernateAccessException(ex);
 		}
 	}
 
 	/**
 	 * Unbinds the Hibernate Session from the thread and closes it.
+	 *
 	 * @see SessionFactoryUtils#closeSessionIfNecessary
 	 * @see TransactionSynchronizationManager
 	 */
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-															Object handler, Exception ex) throws DataAccessException {
+								Object handler, Exception ex) throws DataAccessException {
 		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(getSessionFactory());
 		logger.debug("Closing Hibernate Session in OpenSessionInViewInterceptor");
 		SessionFactoryUtils.closeSessionIfNecessary(sessionHolder.getSession(), getSessionFactory());

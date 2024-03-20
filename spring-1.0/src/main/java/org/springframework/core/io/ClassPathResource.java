@@ -33,10 +33,10 @@ import java.net.URLDecoder;
  * Always supports resolution as URL.
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see Thread#getContextClassLoader
  * @see ClassLoader#getResourceAsStream
  * @see Class#getResourceAsStream
+ * @since 28.12.2003
  */
 public class ClassPathResource extends AbstractResource {
 
@@ -48,6 +48,7 @@ public class ClassPathResource extends AbstractResource {
 	 * Create a new ClassPathResource for ClassLoader usage.
 	 * A leading slash will be removed, as the ClassLoader
 	 * resource access methods will not accept it.
+	 *
 	 * @param path the absolute path within the classpath
 	 * @see ClassLoader#getResourceAsStream
 	 */
@@ -62,7 +63,8 @@ public class ClassPathResource extends AbstractResource {
 	 * Create a new ClassPathResource for Class usage.
 	 * The path can be relative to the given class,
 	 * or absolute within the classpath via a leading slash.
-	 * @param path relative or absolute path within the classpath
+	 *
+	 * @param path  relative or absolute path within the classpath
 	 * @param clazz the class to load resources with
 	 * @see Class#getResourceAsStream
 	 */
@@ -75,8 +77,7 @@ public class ClassPathResource extends AbstractResource {
 		InputStream is = null;
 		if (this.clazz != null) {
 			is = this.clazz.getResourceAsStream(this.path);
-		}
-		else {
+		} else {
 			ClassLoader ccl = Thread.currentThread().getContextClassLoader();
 			is = ccl.getResourceAsStream(this.path);
 		}
@@ -90,14 +91,13 @@ public class ClassPathResource extends AbstractResource {
 		URL url = null;
 		if (this.clazz != null) {
 			url = this.clazz.getResource(this.path);
-		}
-		else {
+		} else {
 			ClassLoader ccl = Thread.currentThread().getContextClassLoader();
 			url = ccl.getResource(this.path);
 		}
 		if (url == null) {
 			throw new FileNotFoundException(getDescription() + " cannot be resolved to URL " +
-																			"because it does not exist");
+											"because it does not exist");
 		}
 		return url;
 	}
@@ -106,7 +106,7 @@ public class ClassPathResource extends AbstractResource {
 		URL url = getURL();
 		if (!URL_PROTOCOL_FILE.equals(url.getProtocol())) {
 			throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path " +
-																			"because it does not reside in the file system: URL=[" + url + "]");
+											"because it does not reside in the file system: URL=[" + url + "]");
 		}
 		return new File(URLDecoder.decode(url.getFile()));
 	}

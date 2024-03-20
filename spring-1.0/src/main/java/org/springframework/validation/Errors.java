@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.validation;
 
@@ -43,34 +43,38 @@ public interface Errors {
 
 	/**
 	 * Reject the current object, using the given error description.
-	 * @param errorCode error code, interpretable as message key
+	 *
+	 * @param errorCode      error code, interpretable as message key
 	 * @param defaultMessage fallback default message
 	 */
 	void reject(String errorCode, String defaultMessage);
 
 	/**
 	 * Reject the current object, using the given error description.
-	 * @param errorCode error code, interpretable as message key
-	 * @param errorArgs error arguments, for argument binding via MessageFormat
-	 * (can be null)
+	 *
+	 * @param errorCode      error code, interpretable as message key
+	 * @param errorArgs      error arguments, for argument binding via MessageFormat
+	 *                       (can be null)
 	 * @param defaultMessage fallback default message
 	 */
 	void reject(String errorCode, Object[] errorArgs, String defaultMessage);
 
 	/**
 	 * Reject the given field of the current object, using the given error description.
-	 * @param field field name
-	 * @param errorCode error code, interpretable as message key
+	 *
+	 * @param field          field name
+	 * @param errorCode      error code, interpretable as message key
 	 * @param defaultMessage fallback default message
 	 */
 	void rejectValue(String field, String errorCode, String defaultMessage);
 
 	/**
 	 * Reject the given field of the current object, using the given error description.
-	 * @param field field name
-	 * @param errorCode error code, interpretable as message key
-	 * @param errorArgs error arguments, for argument binding via MessageFormat
-	 * (can be null)
+	 *
+	 * @param field          field name
+	 * @param errorCode      error code, interpretable as message key
+	 * @param errorArgs      error arguments, for argument binding via MessageFormat
+	 *                       (can be null)
 	 * @param defaultMessage fallback default message
 	 */
 	void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage);
@@ -87,6 +91,7 @@ public interface Errors {
 
 	/**
 	 * Get all errors, both global and field ones.
+	 *
 	 * @return List of ObjectError instances
 	 */
 	List getAllErrors();
@@ -103,18 +108,21 @@ public interface Errors {
 
 	/**
 	 * Get all global errors.
+	 *
 	 * @return List of ObjectError instances
 	 */
 	List getGlobalErrors();
 
 	/**
 	 * Get the first global error, if any.
+	 *
 	 * @return the global error, or null
 	 */
 	ObjectError getGlobalError();
 
 	/**
 	 * Return if there are any errors associated with the given field.
+	 *
 	 * @param field field name
 	 * @return if there were any errors associated with the given field
 	 */
@@ -122,6 +130,7 @@ public interface Errors {
 
 	/**
 	 * Return the number of errors associated with the given field.
+	 *
 	 * @param field field name
 	 * @return the number of errors associated with the given field
 	 */
@@ -129,6 +138,7 @@ public interface Errors {
 
 	/**
 	 * Get all errors associated with the given field.
+	 *
 	 * @param field field name
 	 * @return List of FieldError instances
 	 */
@@ -136,6 +146,7 @@ public interface Errors {
 
 	/**
 	 * Get the first error associated with the given field, if any.
+	 *
 	 * @return the field-specific error, or null
 	 */
 	FieldError getFieldError(String field);
@@ -145,21 +156,11 @@ public interface Errors {
 	 * bean property value or a rejected update from the last binding.
 	 * Allows for convenient access to user-specified field values,
 	 * even if there were type mismatches.
+	 *
 	 * @param field field name
 	 * @return the current value of the given field
 	 */
 	Object getFieldValue(String field);
-
-	/**
-	 * Allow context to be changed so that standard validators can validate
-	 * subtrees. Reject calls prepend the given path to the field names.
-	 * <p>For example, an address validator could validate the subobject
-	 * "address" of a customer object.
-	 * @param nestedPath nested path within this object,
-	 * e.g. "address" (defaults to "", null is also acceptable).
-	 * Can end with a dot: both "address" and "address." are valid.
-	 */
-	void setNestedPath(String nestedPath);
 
 	/**
 	 * Return the current nested path of this Errors object.
@@ -167,5 +168,17 @@ public interface Errors {
 	 * building of concatenated paths. Default is an empty String.
 	 */
 	String getNestedPath();
+
+	/**
+	 * Allow context to be changed so that standard validators can validate
+	 * subtrees. Reject calls prepend the given path to the field names.
+	 * <p>For example, an address validator could validate the subobject
+	 * "address" of a customer object.
+	 *
+	 * @param nestedPath nested path within this object,
+	 *                   e.g. "address" (defaults to "", null is also acceptable).
+	 *                   Can end with a dot: both "address" and "address." are valid.
+	 */
+	void setNestedPath(String nestedPath);
 
 }

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.datasource;
 
@@ -56,12 +56,12 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * does not support custom isolation levels!
  *
  * @author Juergen Hoeller
- * @since 02.05.2003
+ * @version $Id: DataSourceTransactionManager.java,v 1.14 2004/03/18 02:46:05 trisberg Exp $
  * @see DataSourceUtils#getConnection
  * @see DataSourceUtils#applyTransactionTimeout
  * @see DataSourceUtils#closeConnectionIfNecessary
  * @see org.springframework.jdbc.core.JdbcTemplate
- * @version $Id: DataSourceTransactionManager.java,v 1.14 2004/03/18 02:46:05 trisberg Exp $
+ * @since 02.05.2003
  */
 public class DataSourceTransactionManager extends AbstractPlatformTransactionManager implements InitializingBean {
 
@@ -70,6 +70,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	/**
 	 * Create a new DataSourceTransactionManager instance.
 	 * A DataSource has to be set to be able to use it.
+	 *
 	 * @see #setDataSource
 	 */
 	public DataSourceTransactionManager() {
@@ -77,6 +78,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 	/**
 	 * Create a new DataSourceTransactionManager instance.
+	 *
 	 * @param dataSource DataSource to manage transactions for
 	 */
 	public DataSourceTransactionManager(DataSource dataSource) {
@@ -85,17 +87,17 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	}
 
 	/**
-	 * Set the J2EE DataSource that this instance should manage transactions for.
-	 */
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	/**
 	 * Return the J2EE DataSource that this instance manages transactions for.
 	 */
 	public DataSource getDataSource() {
 		return dataSource;
+	}
+
+	/**
+	 * Set the J2EE DataSource that this instance should manage transactions for.
+	 */
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	public void afterPropertiesSet() {
@@ -108,8 +110,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		if (TransactionSynchronizationManager.hasResource(this.dataSource)) {
 			ConnectionHolder holder = (ConnectionHolder) TransactionSynchronizationManager.getResource(this.dataSource);
 			return new DataSourceTransactionObject(holder);
-		}
-		else {
+		} else {
 			return new DataSourceTransactionObject();
 		}
 	}
@@ -145,8 +146,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				}
 				try {
 					con.setReadOnly(true);
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					// SQLException or UnsupportedOperationException
 					logger.warn("Could not set JDBC connection read-only", ex);
 				}
@@ -156,7 +156,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			if (definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {
 				if (debugEnabled) {
 					logger.debug("Changing isolation level of JDBC connection [" + con + "] to " +
-											 definition.getIsolationLevel());
+								 definition.getIsolationLevel());
 				}
 				txObject.setPreviousIsolationLevel(new Integer(con.getTransactionIsolation()));
 				con.setTransactionIsolation(definition.getIsolationLevel());
@@ -180,8 +180,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 			// bind the connection holder to the thread
 			TransactionSynchronizationManager.bindResource(this.dataSource, txObject.getConnectionHolder());
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			throw new CannotCreateTransactionException("Could not configure connection", ex);
 		}
 	}
@@ -209,8 +208,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		}
 		try {
 			txObject.getConnectionHolder().getConnection().commit();
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			throw new TransactionSystemException("Could not commit", ex);
 		}
 	}
@@ -222,8 +220,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		}
 		try {
 			txObject.getConnectionHolder().getConnection().rollback();
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			throw new TransactionSystemException("Could not rollback", ex);
 		}
 	}
@@ -241,7 +238,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 		// remove the connection holder from the thread
 		TransactionSynchronizationManager.unbindResource(this.dataSource);
-		
+
 		// reset connection
 		Connection con = txObject.getConnectionHolder().getConnection();
 
@@ -255,7 +252,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			if (txObject.getPreviousIsolationLevel() != null) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Resetting isolation level of connection [" + con + "] to " +
-											 txObject.getPreviousIsolationLevel());
+								 txObject.getPreviousIsolationLevel());
 				}
 				con.setTransactionIsolation(txObject.getPreviousIsolationLevel().intValue());
 			}
@@ -267,8 +264,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				}
 				con.setReadOnly(false);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			// SQLException or UnsupportedOperationException
 			// typically not something to worry about, can be ignored
 			logger.info("Could not reset JDBC connection", ex);
@@ -276,8 +272,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 		try {
 			DataSourceUtils.closeConnectionIfNecessary(con, this.dataSource);
-		}
-		catch (CleanupFailureDataAccessException ex) {
+		} catch (CleanupFailureDataAccessException ex) {
 			// just log it, to keep a transaction-related exception
 			logger.error("Could not close connection after transaction", ex);
 		}

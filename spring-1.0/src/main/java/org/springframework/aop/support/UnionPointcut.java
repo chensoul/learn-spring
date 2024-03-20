@@ -17,7 +17,6 @@
 package org.springframework.aop.support;
 
 import java.lang.reflect.Method;
-
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -26,6 +25,7 @@ import org.springframework.aop.Pointcut;
  * Pointcut unions are tricky, because we can't just
  * OR the MethodMatchers: we need to check that each MethodMatcher's
  * ClassFilter was happy as well.
+ *
  * @author Rod Johnson
  * @version $Id: UnionPointcut.java,v 1.2 2004/03/18 02:46:11 trisberg Exp $
  */
@@ -62,7 +62,7 @@ class UnionPointcut implements Pointcut {
 
 		public boolean matches(Method m, Class targetClass) {
 			return (a.getClassFilter().matches(targetClass) && a.getMethodMatcher().matches(m, targetClass)) ||
-				 (b.getClassFilter().matches(targetClass) && b.getMethodMatcher().matches(m, targetClass));
+				   (b.getClassFilter().matches(targetClass) && b.getMethodMatcher().matches(m, targetClass));
 		}
 
 		public boolean isRuntime() {

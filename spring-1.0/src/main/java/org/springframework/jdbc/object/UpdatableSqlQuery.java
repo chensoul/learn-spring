@@ -49,7 +49,8 @@ public abstract class UpdatableSqlQuery extends SqlQuery {
 
 	/**
 	 * Convenient constructor with DataSource and SQL string.
-	 * @param ds DataSource to use to get connections
+	 *
+	 * @param ds  DataSource to use to get connections
 	 * @param sql SQL to run
 	 */
 	public UpdatableSqlQuery(DataSource ds, String sql) {
@@ -68,17 +69,18 @@ public abstract class UpdatableSqlQuery extends SqlQuery {
 	/**
 	 * Subclasses must implement this method to update each row of the
 	 * ResultSet and optionally create object of the result type.
-	 * @param rs ResultSet we're working through
-	 * @param rowNum row number (from 0) we're up to
+	 *
+	 * @param rs      ResultSet we're working through
+	 * @param rowNum  row number (from 0) we're up to
 	 * @param context passed to the execute() method.
-	 * It can be null if no contextual information is need.  If you
-	 * need to pass in data for each row, you can pass in a HashMap with
-	 * the primary key of the row being the key for the HashMap.  That way
-	 * it is easy to locate the updates for each row
+	 *                It can be null if no contextual information is need.  If you
+	 *                need to pass in data for each row, you can pass in a HashMap with
+	 *                the primary key of the row being the key for the HashMap.  That way
+	 *                it is easy to locate the updates for each row
 	 * @return an object of the result type
 	 * @throws SQLException if there's an error updateing data.
-	 * Subclasses can simply not catch SQLExceptions, relying on the
-	 * framework to clean up.
+	 *                      Subclasses can simply not catch SQLExceptions, relying on the
+	 *                      framework to clean up.
 	 */
 	protected abstract Object updateRow(ResultSet rs, int rowNum, Map context) throws SQLException;
 
@@ -89,7 +91,9 @@ public abstract class UpdatableSqlQuery extends SqlQuery {
 	 */
 	protected class ResultReaderImpl implements ResultReader {
 
-		/** List to save results in */
+		/**
+		 * List to save results in
+		 */
 		private List results;
 
 		private Map context;

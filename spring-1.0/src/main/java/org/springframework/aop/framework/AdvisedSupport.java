@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.aopalliance.intercept.Interceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Advisor;
@@ -71,38 +70,32 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		public void releaseTarget(Object target) {
 		}
 	};
-
-
+	protected TargetSource targetSource = EMPTY_TARGET_SOURCE;
+	protected AdvisorChainFactory advisorChainFactory;
 	/**
 	 * List of Advice. If an Interceptor is added, it will be wrapped
 	 * in an Advice before being added to this List.
 	 */
 	private List advisors = new LinkedList();
-
 	/**
 	 * Array updated on changes to the advisors list,
 	 * which is easier to manipulate internally
 	 */
 	private Advisor[] advisorsArray = new Advisor[0];
-
-	/** Interfaces to be implemented by the proxy */
+	/**
+	 * Interfaces to be implemented by the proxy
+	 */
 	private Set interfaces = new HashSet();
-
-	protected TargetSource targetSource = EMPTY_TARGET_SOURCE;
-
-
 	private MethodInvocationFactory methodInvocationFactory;
-
 	/**
 	 * Set to true when the first AOP proxy has been created, meaning that we must
 	 * track advice changes via onAdviceChange() callback.
 	 */
 	private boolean isActive;
-
-	/** List of AdvisedSupportListener */
+	/**
+	 * List of AdvisedSupportListener
+	 */
 	private LinkedList listeners = new LinkedList();
-
-	protected AdvisorChainFactory advisorChainFactory;
 
 
 	/**
@@ -115,6 +108,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Create a DefaultProxyConfig with the given parameters.
+	 *
 	 * @param interfaces the proxied interfaces
 	 */
 	public AdvisedSupport(Class[] interfaces) {
@@ -131,27 +125,22 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		listeners.remove(l);
 	}
 
-	public void setTargetSource(TargetSource ts) {
-		if (isActive() && getOptimize()) {
-			throw new AopConfigException("Can't change target with an optimized CGLIB proxy: it has it's own target");
-		}
-		this.targetSource = ts;
-	}
-
 	public void setTarget(Object target) {
 		setTargetSource(new SingletonTargetSource(target));
 	}
 
 	/**
-	 *  @return the TargetSource. Never returns null
+	 * @return the TargetSource. Never returns null
 	 */
 	public final TargetSource getTargetSource() {
 		return this.targetSource;
 	}
 
-	public void setAdvisorChainFactory(AdvisorChainFactory advisorChainFactory) {
-		this.advisorChainFactory = advisorChainFactory;
-		addListener(advisorChainFactory);
+	public void setTargetSource(TargetSource ts) {
+		if (isActive() && getOptimize()) {
+			throw new AopConfigException("Can't change target with an optimized CGLIB proxy: it has it's own target");
+		}
+		this.targetSource = ts;
 	}
 
 	/**
@@ -161,12 +150,18 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		return this.advisorChainFactory;
 	}
 
+	public void setAdvisorChainFactory(AdvisorChainFactory advisorChainFactory) {
+		this.advisorChainFactory = advisorChainFactory;
+		addListener(advisorChainFactory);
+	}
+
 	/**
 	 * @return Returns the methodInvocationFactory.
 	 */
 	public final MethodInvocationFactory getMethodInvocationFactory() {
 		return this.methodInvocationFactory;
 	}
+
 	/**
 	 * @param methodInvocationFactory The methodInvocationFactory to set.
 	 */
@@ -181,6 +176,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * Does not copy MethodInvocationFactory; a parameter should be provided to the constructor
 	 * if necessary. Note that the same MethodInvocationFactory should <b>not</b> be used
 	 * for the new instance, or it may not be independent.
+	 *
 	 * @param other DefaultProxyConfig to copy configuration from
 	 */
 	protected void copyConfigurationFrom(AdvisedSupport other) {
@@ -230,6 +226,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * or -1 if no such interceptor is an advice for this proxy.
 	 * The return value of this method can be used to index into
 	 * the Advisors array.
+	 *
 	 * @param interceptor AOP Alliance interceptor to search for
 	 * @return index from 0 of this interceptor, or -1 if there's
 	 * no such advice.
@@ -249,6 +246,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * or -1 if no such advisor applies to this proxy.
 	 * The return value of this method can be used to index into
 	 * the Advisors array.
+	 *
 	 * @param advisor advisor to search for
 	 * @return index from 0 of this advisor, or -1 if there's
 	 * no such advisor.
@@ -261,8 +259,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		int index = indexOf(advisor);
 		if (index == -1) {
 			return false;
-		}
-		else {
+		} else {
 			removeAdvisor(index);
 			return true;
 		}
@@ -273,7 +270,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 			throw new AopConfigException("Cannot remove Advisor: config is frozen");
 		if (index < 0 || index > advisors.size() - 1)
 			throw new AopConfigException("Advisor index " + index + " is out of bounds: " +
-					"Only have " + advisors.size() + " advisors");
+										 "Only have " + advisors.size() + " advisors");
 		Advisor advisor = (Advisor) advisors.get(index);
 		if (advisor instanceof IntroductionAdvisor) {
 			IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
@@ -295,8 +292,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		int index = indexOf(interceptor);
 		if (index == -1) {
 			return false;
-		}
-		else {
+		} else {
 			removeAdvisor(index);
 			return true;
 		}
@@ -304,6 +300,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Set the interfaces to be proxied.
+	 *
 	 * @param interfaces the interfaces to set
 	 */
 	public void setInterfaces(Class[] interfaces) {
@@ -315,6 +312,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Add a new proxied interface.
+	 *
 	 * @param newInterface additional interface to proxy
 	 */
 	public void addInterface(Class newInterface) {
@@ -335,7 +333,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		//return (Class[]) this.interfaces.toArray();
 		Class[] classes = new Class[this.interfaces.size()];
 		int i = 0;
-		for (Iterator itr = this.interfaces.iterator(); itr.hasNext() ;) {
+		for (Iterator itr = this.interfaces.iterator(); itr.hasNext(); ) {
 			Class clazz = (Class) itr.next();
 			classes[i++] = clazz;
 		}
@@ -356,16 +354,15 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 		// If the advisor passed validation we can make the change
 		for (int i = 0; i < advisor.getInterfaces().length; i++) {
-			 addInterface(advisor.getInterfaces()[i]);
-		 }
+			addInterface(advisor.getInterfaces()[i]);
+		}
 		addAdvisorInternal(pos, advisor);
 	}
 
 	public void addAdvisor(int pos, Advisor advisor) throws AopConfigException {
 		if (advisor instanceof IntroductionAdvisor) {
 			addAdvisor(pos, (IntroductionAdvisor) advisor);
-		}
-		else {
+		} else {
 			addAdvisorInternal(pos, advisor);
 		}
 	}
@@ -377,7 +374,6 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Bring the array up to date with the list
-	 *
 	 */
 	private void updateAdvisorsArray() {
 		this.advisorsArray = (Advisor[]) this.advisors.toArray(new Advisor[this.advisors.size()]);
@@ -393,6 +389,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * and the replacement is not or implements different interfaces,
 	 * the proxy will need to be re-obtained or the old interfaces
 	 * won't be supported and the new interface won't be implemented.
+	 *
 	 * @param a advisor to replace
 	 * @param b advisor to replace it with
 	 * @return whether it was replaced. If the advisor wasn't found in the
@@ -409,6 +406,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Is this interceptor included in any advisor?
+	 *
 	 * @param mi interceptor to check inclusion of
 	 * @return whether this interceptor instance could be run in an invocation
 	 */
@@ -425,6 +423,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Count interceptors of the given class
+	 *
 	 * @param interceptorClass class of the interceptor to check
 	 * @return the count of the interceptors of this class or subclasses
 	 */

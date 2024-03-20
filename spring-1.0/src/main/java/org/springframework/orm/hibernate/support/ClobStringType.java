@@ -20,10 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import net.sf.hibernate.UserType;
 import net.sf.hibernate.util.EqualsHelper;
-
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.orm.hibernate.LocalSessionFactoryBean;
@@ -43,9 +41,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * Server, any large enough text type will work.
  *
  * @author Juergen Hoeller
- * @since 12.01.2004
  * @see LocalSessionFactoryBean#setLobHandler
  * @see LobHandler
+ * @since 12.01.2004
  */
 public class ClobStringType implements UserType {
 
@@ -56,7 +54,7 @@ public class ClobStringType implements UserType {
 	}
 
 	public int[] sqlTypes() {
-		return new int[] {Types.CLOB};
+		return new int[]{Types.CLOB};
 	}
 
 	public Class returnedClass() {
@@ -70,7 +68,7 @@ public class ClobStringType implements UserType {
 	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws SQLException {
 		if (this.lobHandler == null) {
 			throw new IllegalStateException("No LobHandler found for configuration - " +
-																			"lobHandler property must be set on LocalSessionFactoryBean");
+											"lobHandler property must be set on LocalSessionFactoryBean");
 		}
 		return this.lobHandler.getClobAsString(rs, rs.findColumn(names[0]));
 	}
@@ -78,7 +76,7 @@ public class ClobStringType implements UserType {
 	public void nullSafeSet(PreparedStatement st, Object value, int index) throws SQLException {
 		if (this.lobHandler == null) {
 			throw new IllegalStateException("No LobHandler found for configuration - " +
-																			"lobHandler property must be set on LocalSessionFactoryBean");
+											"lobHandler property must be set on LocalSessionFactoryBean");
 		}
 		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
 			throw new IllegalStateException("ClobStringType requires active transaction synchronization");
@@ -100,6 +98,7 @@ public class ClobStringType implements UserType {
 	/**
 	 * Callback for resource cleanup at the end of a transaction.
 	 * Invokes LobCreator.close to clean up temporary LOBs that might have been created.
+	 *
 	 * @see LobCreator#close
 	 */
 	private static class LobCreatorSynchronization extends TransactionSynchronizationAdapter {

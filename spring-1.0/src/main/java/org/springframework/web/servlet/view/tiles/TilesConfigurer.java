@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view.tiles;
 
@@ -64,17 +64,24 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
  */
 public class TilesConfigurer extends WebApplicationObjectSupport {
 
-	/** factory class for Tiles */
+	/**
+	 * factory class for Tiles
+	 */
 	private Class factoryClass = I18nFactorySet.class;
 
-	/** validate the Tiles definitions? */
+	/**
+	 * validate the Tiles definitions?
+	 */
 	private boolean validateDefinitions = true;
 
-	/** definition URLs mapped to descriptions */
+	/**
+	 * definition URLs mapped to descriptions
+	 */
 	private String[] definitions;
 
 	/**
 	 * Set the factory class for Tiles. Default is I18nFactorySet.
+	 *
 	 * @see org.apache.struts.tiles.xmlDefinition.I18nFactorySet
 	 */
 	public void setFactoryClass(Class factoryClass) {
@@ -83,8 +90,9 @@ public class TilesConfigurer extends WebApplicationObjectSupport {
 
 	/**
 	 * Validate the Tiles definitions? Default is false.
+	 *
 	 * @param validateDefinitions <code>true</code> to validate,
-	 * <code>false</code> otherwise
+	 *                            <code>false</code> otherwise
 	 */
 	public void setValidateDefinitions(boolean validateDefinitions) {
 		this.validateDefinitions = validateDefinitions;
@@ -92,6 +100,7 @@ public class TilesConfigurer extends WebApplicationObjectSupport {
 
 	/**
 	 * Set the Tiles definitions, i.e. the list of files.
+	 *
 	 * @param definitions the files containing the definitions
 	 */
 	public void setDefinitions(String[] definitions) {
@@ -100,6 +109,7 @@ public class TilesConfigurer extends WebApplicationObjectSupport {
 
 	/**
 	 * Initialization of the Tiles definition factory.
+	 *
 	 * @throws ApplicationContextException if an error occurs
 	 */
 	protected void initApplicationContext() throws ApplicationContextException {
@@ -121,11 +131,10 @@ public class TilesConfigurer extends WebApplicationObjectSupport {
 			DefinitionsFactory factory = TilesUtil.createDefinitionsFactory(getServletContext(), factoryConfig);
 			getWebApplicationContext().getServletContext().setAttribute(
 				TilesUtilImpl.DEFINITIONS_FACTORY, factory);
-			
+
 
 			logger.info("Tiles: initialization done");
-		}
-		catch (DefinitionsFactoryException ex) {
+		} catch (DefinitionsFactoryException ex) {
 			throw new ApplicationContextException("Failed to initialize Tiles definitions factory", ex);
 		}
 	}

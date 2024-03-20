@@ -45,10 +45,10 @@ import javax.servlet.ServletContextListener;
  * this listener in such an environment!
  *
  * @author Juergen Hoeller
- * @since 18.04.2003
  * @see WebUtils#setWebAppRootSystemProperty
  * @see Log4jConfigListener
  * @see System#getProperty
+ * @since 18.04.2003
  */
 public class WebAppRootListener implements ServletContextListener {
 

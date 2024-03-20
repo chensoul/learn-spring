@@ -18,6 +18,7 @@ package org.springframework.aop.framework;
 
 /**
  * Simple implementation of AopProxyFactory
+ *
  * @author Rod Johnson
  * @version $Id: DefaultAopProxyFactory.java,v 1.2 2004/03/18 02:46:05 trisberg Exp $
  */
@@ -30,8 +31,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory {
 		boolean useCglib = advisedSupport.getOptimize() || advisedSupport.getProxyTargetClass() || advisedSupport.getProxiedInterfaces().length == 0;
 		if (useCglib) {
 			return CglibProxyFactory.createCglibProxy(advisedSupport);
-		}
-		else {
+		} else {
 			// Depends on whether we have expose proxy or frozen or static ts
 			return new JdkDynamicAopProxy(advisedSupport);
 		}

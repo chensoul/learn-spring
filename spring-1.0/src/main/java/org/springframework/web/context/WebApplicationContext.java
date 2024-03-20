@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.context;
 
@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ui.context.ThemeSource;
 
-/** 
+/**
  * Interface to provide configuration for a web application. This is read-only while
  * the application is running, but may be reloaded if the implementation supports this.
  *
@@ -39,9 +39,9 @@ import org.springframework.ui.context.ThemeSource;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since January 19, 2001
  * @version $Revision: 1.11 $
  * @see ServletContextAware#setServletContext
+ * @since January 19, 2001
  */
 public interface WebApplicationContext extends ApplicationContext, ThemeSource {
 
@@ -50,6 +50,7 @@ public interface WebApplicationContext extends ApplicationContext, ThemeSource {
 	 * <p>Note: If the startup of the root context fails, this attribute can contain
 	 * an exception or error as value. Use WebApplicationContextUtils for convenient
 	 * lookup of the root WebApplicationContext.
+	 *
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#getWebApplicationContext
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#getRequiredWebApplicationContext
 	 */
@@ -59,5 +60,5 @@ public interface WebApplicationContext extends ApplicationContext, ThemeSource {
 	 * Return the standard Servlet API ServletContext for this application.
 	 */
 	ServletContext getServletContext();
-	
+
 }

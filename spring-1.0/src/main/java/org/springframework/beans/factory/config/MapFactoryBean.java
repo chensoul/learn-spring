@@ -18,7 +18,6 @@ package org.springframework.beans.factory.config;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Simple factory for shared Map instances. Allows for central setup
  * of Maps via the "map" element in XML bean definitions.
+ *
  * @author Juergen Hoeller
  * @since 09.12.2003
  */
@@ -49,6 +49,7 @@ public class MapFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Set the class to use for the target Map.
 	 * Default is <code>java.util.HashMap</code>.
+	 *
 	 * @see HashMap
 	 */
 	public void setTargetMapClass(Class targetMapClass) {
@@ -59,14 +60,6 @@ public class MapFactoryBean implements FactoryBean, InitializingBean {
 			throw new IllegalArgumentException("targetMapClass must implement java.util.Map");
 		}
 		this.targetMapClass = targetMapClass;
-	}
-
-	/**
-	 * Set if a singleton should be created, or a new object
-	 * on each request else. Default is true.
-	 */
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
 	}
 
 	public void afterPropertiesSet() {
@@ -82,8 +75,7 @@ public class MapFactoryBean implements FactoryBean, InitializingBean {
 	public Object getObject() {
 		if (this.singleton) {
 			return this.targetMap;
-		}
-		else {
+		} else {
 			Map result = (Map) BeanUtils.instantiateClass(this.targetMapClass);
 			result.putAll(this.sourceMap);
 			return result;
@@ -96,6 +88,14 @@ public class MapFactoryBean implements FactoryBean, InitializingBean {
 
 	public boolean isSingleton() {
 		return singleton;
+	}
+
+	/**
+	 * Set if a singleton should be created, or a new object
+	 * on each request else. Default is true.
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
 	}
 
 }

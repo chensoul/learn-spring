@@ -31,11 +31,14 @@ import org.springframework.aop.framework.AopConfigException;
  */
 public class HotSwappableTargetSource implements TargetSource {
 
-	/** Target cached and invoked using reflection */
+	/**
+	 * Target cached and invoked using reflection
+	 */
 	private Object target;
 
 	/**
 	 * Create a new HotSwappableTargetSource with the initial target.
+	 *
 	 * @param initialTarget initial target
 	 */
 	public HotSwappableTargetSource(Object initialTarget) {
@@ -55,6 +58,7 @@ public class HotSwappableTargetSource implements TargetSource {
 
 	/**
 	 * Synchronization around something that takes so little time is fine
+	 *
 	 * @see TargetSource#getTarget()
 	 */
 	public final synchronized Object getTarget() {
@@ -69,6 +73,7 @@ public class HotSwappableTargetSource implements TargetSource {
 
 	/**
 	 * Swap the target, returning the old target.
+	 *
 	 * @param newTarget new target
 	 * @return the old target
 	 * @throws AopConfigException if the new target is invalid

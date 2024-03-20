@@ -18,7 +18,6 @@ package org.springframework.context.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -34,9 +33,9 @@ import org.springframework.context.ResourceLoaderAware;
  * underlying bean factory. Applications do not use this directly.
  *
  * @author Juergen Hoeller
- * @since 10.10.2003
  * @see ApplicationContextAware
  * @see AbstractApplicationContext#refresh
+ * @since 10.10.2003
  */
 public class ApplicationContextAwareProcessor implements BeanPostProcessor {
 

@@ -28,9 +28,10 @@ import java.net.URLDecoder;
  * Resource implementation for java.net.URL locators.
  * Obviously supports resolution as URL, and also as File
  * in case of the "file:" protocol.
+ *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see URL
+ * @since 28.12.2003
  */
 public class UrlResource extends AbstractResource {
 
@@ -40,6 +41,7 @@ public class UrlResource extends AbstractResource {
 
 	/**
 	 * Create a new UrlResource.
+	 *
 	 * @param url a URL
 	 */
 	public UrlResource(URL url) {
@@ -48,6 +50,7 @@ public class UrlResource extends AbstractResource {
 
 	/**
 	 * Create a new UrlResource.
+	 *
 	 * @param path a URL path
 	 */
 	public UrlResource(String path) throws MalformedURLException {
@@ -61,10 +64,9 @@ public class UrlResource extends AbstractResource {
 	public File getFile() throws IOException {
 		if (PROTOCOL_FILE.equals(this.url.getProtocol())) {
 			return new File(URLDecoder.decode(this.url.getFile()));
-		}
-		else {
+		} else {
 			throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path - " +
-																			"no 'file:' protocol");
+											"no 'file:' protocol");
 		}
 	}
 

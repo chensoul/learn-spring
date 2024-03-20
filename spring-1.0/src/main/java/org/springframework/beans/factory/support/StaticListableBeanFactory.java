@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans.factory.support;
 
@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
@@ -33,13 +32,16 @@ import org.springframework.util.StringUtils;
 
 /**
  * Static factory that allows to register existing singleton instances programmatically.
+ *
  * @author Rod Johnson
- * @since 06-Jan-03
  * @version $Id: StaticListableBeanFactory.java,v 1.9 2004/03/18 02:46:08 trisberg Exp $
+ * @since 06-Jan-03
  */
 public class StaticListableBeanFactory implements ListableBeanFactory {
 
-	/** Map from bean name to bean instance */
+	/**
+	 * Map from bean name to bean instance
+	 */
 	private Map beans = new HashMap();
 
 	public Object getBean(String name) throws BeansException {
@@ -47,17 +49,16 @@ public class StaticListableBeanFactory implements ListableBeanFactory {
 		if (bean instanceof FactoryBean) {
 			try {
 				return ((FactoryBean) bean).getObject();
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new BeanCreationException("FactoryBean threw exception on object creation", ex);
 			}
 		}
 		if (bean == null)
 			throw new NoSuchBeanDefinitionException(name, "defined beans are [" +
-																										StringUtils.collectionToCommaDelimitedString(this.beans.keySet()) + "]");
+														  StringUtils.collectionToCommaDelimitedString(this.beans.keySet()) + "]");
 		return bean;
 	}
-	
+
 	public Object getBean(String name, Class requiredType) throws BeansException {
 		Object bean = getBean(name);
 		if (!requiredType.isAssignableFrom(bean.getClass())) {
@@ -75,8 +76,7 @@ public class StaticListableBeanFactory implements ListableBeanFactory {
 		// in case of FactoryBean, return singleton status of created object
 		if (bean instanceof FactoryBean) {
 			return ((FactoryBean) bean).isSingleton();
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -122,15 +122,14 @@ public class StaticListableBeanFactory implements ListableBeanFactory {
 				FactoryBean factory = (FactoryBean) bean;
 				Class objectType = factory.getObjectType();
 				if ((objectType == null && factory.isSingleton()) ||
-						((factory.isSingleton() || includePrototypes) &&
-						objectType != null && type.isAssignableFrom(objectType))) {
+					((factory.isSingleton() || includePrototypes) &&
+					 objectType != null && type.isAssignableFrom(objectType))) {
 					Object createdObject = getBean(name);
 					if (type.isInstance(createdObject)) {
 						matches.put(name, createdObject);
 					}
 				}
-			}
-			else if (type.isAssignableFrom(bean.getClass())) {
+			} else if (type.isAssignableFrom(bean.getClass())) {
 				matches.put(name, bean);
 			}
 		}

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.multipart;
 
@@ -39,13 +39,13 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Juergen Hoeller
  * @author Trevor D. Cook
- * @since 29.9.2003
  * @see MultipartHttpServletRequest
  * @see MultipartFile
  * @see org.springframework.web.multipart.commons.CommonsMultipartResolver
  * @see org.springframework.web.multipart.cos.CosMultipartResolver
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.web.servlet.support.RequestContextUtils#getMultipartResolver
+ * @since 29.9.2003
  */
 public interface MultipartResolver {
 
@@ -53,6 +53,7 @@ public interface MultipartResolver {
 	 * Determine if the request contains multipart content.
 	 * <p>Will typically check for content type "multipart/form-data", but the actually
 	 * accepted requests might depend on the capabilities of the resolver implementation.
+	 *
 	 * @param request the servlet request to be evaluated
 	 * @return <code>true</code> if the request contains multipart content;
 	 * <code>false</code> otherwise
@@ -61,16 +62,18 @@ public interface MultipartResolver {
 
 	/**
 	 * Wrap the servlet request inside a MultipartHttpServletRequest.
+	 *
 	 * @param request the servlet request to wrap (must be of a multipart content type)
 	 * @return the wrapped servlet request
 	 * @throws MultipartException if the servlet request is not multipart, or if
-	 * implementation-specific problems are encountered (such as exceeding file size limits)
+	 *                            implementation-specific problems are encountered (such as exceeding file size limits)
 	 */
 	MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException;
 
 	/**
 	 * Cleanup any resources used for the multipart handling,
 	 * like a storage for the uploaded files.
+	 *
 	 * @param request the request to cleanup resources for
 	 */
 	void cleanupMultipart(MultipartHttpServletRequest request);

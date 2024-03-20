@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.transaction.support;
 
@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -53,7 +52,6 @@ import org.apache.commons.logging.LogFactory;
  * close calls allow for proper transactional JVM-level caching even with JTA.
  *
  * @author Juergen Hoeller
- * @since 02.06.2003
  * @see #isSynchronizationActive
  * @see #registerSynchronization
  * @see TransactionSynchronization
@@ -62,18 +60,17 @@ import org.apache.commons.logging.LogFactory;
  * @see org.springframework.jdbc.datasource.DataSourceUtils#getConnection
  * @see org.springframework.orm.hibernate.SessionFactoryUtils#getSession
  * @see org.springframework.orm.jdo.PersistenceManagerFactoryUtils#getPersistenceManager
+ * @since 02.06.2003
  */
 public abstract class TransactionSynchronizationManager {
 
 	private static final Log logger = LogFactory.getLog(TransactionSynchronizationManager.class);
-
+	private static final ThreadLocal synchronizations = new ThreadLocal();
 	private static ThreadLocal resources = new ThreadLocal() {
 		protected Object initialValue() {
 			return new HashMap();
 		}
 	};
-
-	private static final ThreadLocal synchronizations = new ThreadLocal();
 
 
 	//-------------------------------------------------------------------------
@@ -84,6 +81,7 @@ public abstract class TransactionSynchronizationManager {
 	 * Return all resources that are bound to the current thread.
 	 * <p>Mainly for debugging purposes. Resource managers should always invoke
 	 * hasResource for a specific resource key that they are interested in.
+	 *
 	 * @return Map with resource keys and resource objects
 	 * @see #hasResource
 	 */
@@ -93,6 +91,7 @@ public abstract class TransactionSynchronizationManager {
 
 	/**
 	 * Check if there is a resource for the given key bound to the current thread.
+	 *
 	 * @param key key to check
 	 * @return if there is a value bound to the current thread
 	 */
@@ -102,6 +101,7 @@ public abstract class TransactionSynchronizationManager {
 
 	/**
 	 * Retrieve a resource for the given key that is bound to the current thread.
+	 *
 	 * @param key key to check
 	 * @return a value bound to the current thread, or null if none
 	 */
@@ -109,14 +109,15 @@ public abstract class TransactionSynchronizationManager {
 		Object value = getResourceMap().get(key);
 		if (value != null && logger.isDebugEnabled()) {
 			logger.debug("Retrieved value [" + value + "] for key [" + key + "] bound to thread [" +
-									 Thread.currentThread().getName() + "]");
+						 Thread.currentThread().getName() + "]");
 		}
 		return value;
 	}
 
 	/**
 	 * Bind the given resource for the given key to the current thread.
-	 * @param key key to bind the value to
+	 *
+	 * @param key   key to bind the value to
 	 * @param value value to bind
 	 * @throws IllegalStateException if there is already a value bound to the thread
 	 */
@@ -127,12 +128,13 @@ public abstract class TransactionSynchronizationManager {
 		getResourceMap().put(key, value);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Bound value [" + value + "] for key [" + key + "] to thread [" +
-									 Thread.currentThread().getName() + "]");
+						 Thread.currentThread().getName() + "]");
 		}
 	}
 
 	/**
 	 * Unbind a resource for the given key from the current thread.
+	 *
 	 * @param key key to check
 	 * @return the previously bound value
 	 * @throws IllegalStateException if there is no value bound to the thread
@@ -144,7 +146,7 @@ public abstract class TransactionSynchronizationManager {
 		Object value = getResourceMap().remove(key);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Removed value [" + value + "] for key [" + key + "] from thread [" +
-									 Thread.currentThread().getName() + "]");
+						 Thread.currentThread().getName() + "]");
 		}
 		return value;
 	}
@@ -157,6 +159,7 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Return if thread synchronizations are active for the current thread.
 	 * Can be called before register to avoid unnecessary instance creation.
+	 *
 	 * @see #registerSynchronization
 	 */
 	public static boolean isSynchronizationActive() {
@@ -166,6 +169,7 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Activate thread synchronizations for the current thread.
 	 * Called by transaction manager on transaction begin.
+	 *
 	 * @throws IllegalStateException if synchronization is already active
 	 */
 	public static void initSynchronization() throws IllegalStateException {
@@ -179,10 +183,11 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Register a new transaction synchronization for the current thread.
 	 * Called by resource management code.
+	 *
 	 * @throws IllegalStateException if synchronization is not active
 	 */
 	public static void registerSynchronization(TransactionSynchronization synchronization)
-	    throws IllegalStateException {
+		throws IllegalStateException {
 		if (!isSynchronizationActive()) {
 			throw new IllegalStateException("Transaction synchronization is not active");
 		}
@@ -192,6 +197,7 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Return an unmodifiable list of all registered synchronizations
 	 * for the current thread.
+	 *
 	 * @return unmodifiable List of TransactionSynchronization instances
 	 * @throws IllegalStateException if synchronization is not active
 	 * @see TransactionSynchronization
@@ -206,6 +212,7 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Deactivate thread synchronizations for the current thread.
 	 * Called by transaction manager on transaction cleanup.
+	 *
 	 * @throws IllegalStateException if synchronization is not active
 	 */
 	public static void clearSynchronization() throws IllegalStateException {

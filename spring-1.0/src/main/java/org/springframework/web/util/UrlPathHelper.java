@@ -18,9 +18,7 @@ package org.springframework.web.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,9 +29,9 @@ import org.apache.commons.logging.LogFactory;
  * <p>Used by AbstractUrlHandlerMapping and AbstractMethodNameResolver.
  *
  * @author Juergen Hoeller
- * @since 14.01.2004
  * @see org.springframework.web.servlet.handler.AbstractUrlHandlerMapping
  * @see org.springframework.web.servlet.mvc.multiaction.AbstractUrlMethodNameResolver
+ * @since 14.01.2004
  */
 public class UrlPathHelper {
 
@@ -73,6 +71,7 @@ public class UrlPathHelper {
 	 * to the Servlet spec (ISO-8859-1).
 	 * <p>Note: Setting this to true requires J2SE 1.4, as J2SE 1.3's
 	 * URLDecoder class does not offer a way to specify the encoding.
+	 *
 	 * @see #getServletPath
 	 * @see #getContextPath
 	 * @see #getRequestUri
@@ -85,12 +84,20 @@ public class UrlPathHelper {
 	}
 
 	/**
+	 * Return the default character encoding to use for URL decoding.
+	 */
+	protected String getDefaultEncoding() {
+		return defaultEncoding;
+	}
+
+	/**
 	 * Set the default character encoding to use for URL decoding.
 	 * Default is ISO-8859-1, according to the Servlet spec.
 	 * <p>If the request specifies a character encoding itself, the request
 	 * encoding will override this setting. This also allows for generically
 	 * overriding the character encoding in a filter that invokes the
 	 * ServletRequest.setCharacterEncoding method.
+	 *
 	 * @param defaultEncoding the character encoding to use
 	 * @see #determineEncoding
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -102,17 +109,10 @@ public class UrlPathHelper {
 	}
 
 	/**
-	 * Return the default character encoding to use for URL decoding.
-	 */
-	protected String getDefaultEncoding() {
-		return defaultEncoding;
-	}
-
-
-	/**
 	 * Return the mapping lookup path for the given request, within the current
 	 * servlet mapping if applicable, else within the web application.
 	 * <p>Regards include request URL if called within a RequestDispatcher include.
+	 *
 	 * @param request current HTTP request
 	 * @return the lookup path
 	 * @see #getPathWithinApplication
@@ -127,8 +127,7 @@ public class UrlPathHelper {
 		String rest = getPathWithinServletMapping(request);
 		if (!"".equals(rest)) {
 			return rest;
-		}
-		else {
+		} else {
 			return getPathWithinApplication(request);
 		}
 	}
@@ -141,6 +140,7 @@ public class UrlPathHelper {
 	 * <p>E.g.: servlet mapping = "/test/*"; request URI = "/test/a" -> "/a".
 	 * <p>E.g.: servlet mapping = "/test"; request URI = "/test" -> "".
 	 * <p>E.g.: servlet mapping = "/*.test"; request URI = "/a.test" -> "".
+	 *
 	 * @param request current HTTP request
 	 * @return the path within the servlet mapping, or ""
 	 */
@@ -151,6 +151,7 @@ public class UrlPathHelper {
 	/**
 	 * Return the path within the web application for the given request.
 	 * <p>Regards include request URL if called within a RequestDispatcher include.
+	 *
 	 * @param request current HTTP request
 	 * @return the path within the web application
 	 */
@@ -163,6 +164,7 @@ public class UrlPathHelper {
 	 * URL if called within a RequestDispatcher include.
 	 * <p>As the value returned by request.getServletPath() is already decoded by
 	 * the servlet container, this method will not attempt to decode it.
+	 *
 	 * @param request current HTTP request
 	 * @return the servlet path
 	 */
@@ -179,6 +181,7 @@ public class UrlPathHelper {
 	 * URL if called within a RequestDispatcher include.
 	 * <p>As the value returned by request.getContextPath() is <i>not</i> decoded by
 	 * the servlet container, this method will decode it.
+	 *
 	 * @param request current HTTP request
 	 * @return the context path
 	 */
@@ -198,6 +201,7 @@ public class UrlPathHelper {
 	 * <p>The URI that the web container resolves <i>should</i> be correct, but some
 	 * containers like JBoss/Jetty incorrectly include ";" strings like ";jsessionid"
 	 * in the URI. This method cuts off such incorrect appendices.
+	 *
 	 * @param request current HTTP request
 	 * @return the request URI
 	 */
@@ -214,8 +218,9 @@ public class UrlPathHelper {
 	/**
 	 * Decode the given source string with a URLEncoder. The encoding will be taken
 	 * from the request, falling back to the default "ISO-8859-1".
+	 *
 	 * @param request current HTTP request
-	 * @param source the String to decode
+	 * @param source  the String to decode
 	 * @return the decoded String
 	 * @see WebUtils#DEFAULT_CHARACTER_ENCODING
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -226,10 +231,9 @@ public class UrlPathHelper {
 			String enc = determineEncoding(request);
 			try {
 				return URLDecoder.decode(source, enc);
-			}
-			catch (UnsupportedEncodingException ex) {
+			} catch (UnsupportedEncodingException ex) {
 				logger.warn("Could not decode request string [" + source +
-				            "] with encoding '" + enc + "': using platform default");
+							"] with encoding '" + enc + "': using platform default");
 				return URLDecoder.decode(source);
 			}
 		}
@@ -241,6 +245,7 @@ public class UrlPathHelper {
 	 * Can be overridden in subclasses.
 	 * <p>The default implementation checks the request encoding,
 	 * falling back to the default encoding specified for this resolver.
+	 *
 	 * @param request current HTTP request
 	 * @return the encoding for the request (never null)
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding

@@ -68,25 +68,34 @@ public abstract class AbstractXsltView extends AbstractView {
 	private String DEFAULT_ROOT_TAGNAME = "DocRoot";
 
 
-	/** URL of stylesheet */
+	/**
+	 * URL of stylesheet
+	 */
 	private Resource stylesheetLocation;
 
-	/** Document root element name, normally overridden in the view definition config */
+	/**
+	 * Document root element name, normally overridden in the view definition config
+	 */
 	private String root = DEFAULT_ROOT_TAGNAME;
 
-	/** Custom URIResolver, set by subclass or as bean property */
+	/**
+	 * Custom URIResolver, set by subclass or as bean property
+	 */
 	private URIResolver uriResolver;
 
 	private boolean cache = true;
 
 	private TransformerFactory transformerFactory;
 
-	/** XSLT Template */
+	/**
+	 * XSLT Template
+	 */
 	private Templates templates;
 
 
 	/**
 	 * Set the location of the XSLT stylesheet.
+	 *
 	 * @param stylesheetLocation the location of the XSLT stylesheet
 	 * @see org.springframework.context.ApplicationContext#getResource
 	 */
@@ -97,6 +106,7 @@ public abstract class AbstractXsltView extends AbstractView {
 	/**
 	 * Document root element name.
 	 * Only used if we're not passed a single Node as model.
+	 *
 	 * @param root document root element name
 	 */
 	public final void setRoot(String root) {
@@ -107,8 +117,9 @@ public abstract class AbstractXsltView extends AbstractView {
 	 * Set the URIResolver used in the transform. The URIResolver
 	 * handles calls to the XSLT document() function.
 	 * This method can be used by subclasses or as a bean property
+	 *
 	 * @param uriResolver URIResolver to set. No URIResolver
-	 * will be set if this is null (this is the default).
+	 *                    will be set if this is null (this is the default).
 	 */
 	public final void setUriResolver(URIResolver uriResolver) {
 		this.uriResolver = uriResolver;
@@ -116,6 +127,7 @@ public abstract class AbstractXsltView extends AbstractView {
 
 	/**
 	 * Activate or deactivate the cache.
+	 *
 	 * @param cache whether to activate the cache
 	 */
 	public final void setCache(boolean cache) {
@@ -142,8 +154,7 @@ public abstract class AbstractXsltView extends AbstractView {
 			try {
 				this.templates = this.transformerFactory.newTemplates(getStylesheetSource(this.stylesheetLocation));
 				logger.debug("Loaded templates [" + this.templates + "] in XSLT view '" + getBeanName() + "'");
-			}
-			catch (TransformerConfigurationException ex) {
+			} catch (TransformerConfigurationException ex) {
 				throw new ApplicationContextException(
 					"Can't load stylesheet from " + this.stylesheetLocation + " in XSLT view '" + getBeanName() + "'", ex);
 			}
@@ -157,14 +168,13 @@ public abstract class AbstractXsltView extends AbstractView {
 		logger.debug("Loading XSLT stylesheet from " + stylesheetLocation);
 		try {
 			return new StreamSource(stylesheetLocation.getInputStream());
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new ApplicationContextException("Can't load XSLT stylesheet from " + stylesheetLocation, ex);
 		}
 	}
 
 	protected final void renderMergedOutputModel(Map model, HttpServletRequest request,
-	                                             HttpServletResponse response) throws Exception {
+												 HttpServletResponse response) throws Exception {
 		if (!this.cache) {
 			logger.warn("DEBUG SETTING: NOT THREADSAFE AND WILL IMPAIR PERFORMANCE: template will be refreshed");
 			cacheTemplates();
@@ -177,8 +187,7 @@ public abstract class AbstractXsltView extends AbstractView {
 
 			logger.warn("XSLT view is not configured: will copy XML input");
 			response.setContentType("text/xml; charset=ISO-8859-1");
-		}
-		else {
+		} else {
 			// normal case
 			response.setContentType(getContentType());
 		}
@@ -202,8 +211,7 @@ public abstract class AbstractXsltView extends AbstractView {
 			// we leave the Node alone
 			logger.debug("No need to domify: was passed an XML node");
 			dom = (Node) singleModel;
-		}
-		else
+		} else
 			// docRoot local variable takes precedence
 			dom = createDomNode(model, (docRoot == null) ? this.root : docRoot, request, response);
 
@@ -213,27 +221,29 @@ public abstract class AbstractXsltView extends AbstractView {
 	/**
 	 * Return the XML node to transform.
 	 * Subclasses must implement this method.
-	 * @param model the model Map
-	 * @param root name for root element.  This can be supplied as a bean property
-	 * to concrete subclasses within the view definition file, but will be overridden
-	 * in the case of a single object in the model map to be the key for that object.
-	 * If no root property is specified and multiple model objects exist, a default
-	 * root tag name will be supplied.
-	 * @param request HTTP request. Subclasses won't normally use this, as
-	 * request processing should have been complete. However, we might to
-	 * create a RequestContext to expose as part of the model.
+	 *
+	 * @param model    the model Map
+	 * @param root     name for root element.  This can be supplied as a bean property
+	 *                 to concrete subclasses within the view definition file, but will be overridden
+	 *                 in the case of a single object in the model map to be the key for that object.
+	 *                 If no root property is specified and multiple model objects exist, a default
+	 *                 root tag name will be supplied.
+	 * @param request  HTTP request. Subclasses won't normally use this, as
+	 *                 request processing should have been complete. However, we might to
+	 *                 create a RequestContext to expose as part of the model.
 	 * @param response HTTP response. Subclasses won't normally use this,
-	 * however there may sometimes be a need to set cookies.
+	 *                 however there may sometimes be a need to set cookies.
 	 * @throws Exception we let this method throw any exception; the
-	 * AbstractXlstView superclass will catch exceptions
+	 *                   AbstractXlstView superclass will catch exceptions
 	 */
 	protected abstract Node createDomNode(Map model, String root, HttpServletRequest request,
-	                                      HttpServletResponse response) throws Exception;
+										  HttpServletResponse response) throws Exception;
 
 	/**
 	 * Return a <code>Map</code> of parameters to be applied to the stylesheet.  Subclasses
 	 * can override the default implementation (which simply returns null) in order to
 	 * apply one or more parameters to the transformation process.
+	 *
 	 * @return a Map of parameters to apply to the transformation process
 	 * @see Transformer#setParameter
 	 */
@@ -247,13 +257,13 @@ public abstract class AbstractXsltView extends AbstractView {
 	protected void doTransform(HttpServletResponse response, Node dom) throws ServletException, IOException {
 		try {
 			Transformer trans = (this.templates != null) ?
-			    this.templates.newTransformer() : // we have a stylesheet
-						this.transformerFactory.newTransformer(); // just a copy
+				this.templates.newTransformer() : // we have a stylesheet
+				this.transformerFactory.newTransformer(); // just a copy
 
 			// apply any subclass supplied parameters to the transformer
 			Map parameters = getParameters();
 			if (parameters != null) {
-				for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+				for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext(); ) {
 					Map.Entry entry = (Map.Entry) iter.next();
 					trans.setParameter(entry.getKey().toString(), entry.getValue());
 				}
@@ -266,13 +276,11 @@ public abstract class AbstractXsltView extends AbstractView {
 			trans.transform(new DOMSource(dom), new StreamResult(new BufferedOutputStream(response.getOutputStream())));
 
 			logger.debug("XSLT transformed OK with stylesheet [" + this.stylesheetLocation + "]");
-		}
-		catch (TransformerConfigurationException ex) {
+		} catch (TransformerConfigurationException ex) {
 			throw new ServletException(
 				"Couldn't create XSLT transformer for stylesheet [" + this.stylesheetLocation +
 				"] in XSLT view with name [" + getBeanName() + "]", ex);
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			throw new ServletException(
 				"Couldn't perform transform with stylesheet [" + this.stylesheetLocation +
 				"] in XSLT view with name [" + getBeanName() + "]", ex);

@@ -54,6 +54,7 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 	/**
 	 * Set a Map with URLs as keys and handler beans as values.
 	 * Convenient for population with bean references.
+	 *
 	 * @param urlMap map with URLs as keys and beans as values
 	 */
 	public void setUrlMap(Map urlMap) {
@@ -62,6 +63,7 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
 	/**
 	 * Set URL to handler bean name mappings from a Properties object.
+	 *
 	 * @param mappings properties with URL as key and bean name as value
 	 */
 	public void setMappings(Properties mappings) {
@@ -71,8 +73,7 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 	public void initApplicationContext() throws BeansException {
 		if (this.urlMap == null || this.urlMap.isEmpty()) {
 			logger.info("Neither 'urlMap' nor 'mappings' set on SimpleUrlHandlerMapping");
-		}
-		else {
+		} else {
 			Iterator itr = this.urlMap.keySet().iterator();
 			while (itr.hasNext()) {
 				String url = (String) itr.next();

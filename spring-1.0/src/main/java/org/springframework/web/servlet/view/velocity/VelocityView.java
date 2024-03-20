@@ -100,6 +100,12 @@ public class VelocityView extends AbstractUrlBasedView {
 
 	private Template template;
 
+	/**
+	 * Return the encoding for the Velocity template.
+	 */
+	protected String getEncoding() {
+		return encoding;
+	}
 
 	/**
 	 * Set the encoding of the Velocity template file. Default is determined
@@ -112,16 +118,10 @@ public class VelocityView extends AbstractUrlBasedView {
 	}
 
 	/**
-	 * Return the encoding for the Velocity template.
-	 */
-	protected String getEncoding() {
-		return encoding;
-	}
-
-	/**
 	 * Set the name of the VelocityFormatter helper object to expose in the
 	 * Velocity context of this view, or null if not needed.
 	 * VelocityFormatter is part of the standard Velocity distribution.
+	 *
 	 * @see org.apache.velocity.app.tools.VelocityFormatter
 	 */
 	public void setVelocityFormatterAttribute(String velocityFormatterAttribute) {
@@ -131,6 +131,7 @@ public class VelocityView extends AbstractUrlBasedView {
 	/**
 	 * Set the name of the DateTool helper object to expose in the Velocity context
 	 * of this view, or null if not needed. DateTool is part of Velocity Tools 1.0.
+	 *
 	 * @see org.apache.velocity.tools.generic.DateTool
 	 */
 	public void setDateToolAttribute(String dateToolAttribute) {
@@ -140,6 +141,7 @@ public class VelocityView extends AbstractUrlBasedView {
 	/**
 	 * Set the name of the NumberTool helper object to expose in the Velocity context
 	 * of this view, or null if not needed. NumberTool is part of Velocity Tools 1.1.
+	 *
 	 * @see org.apache.velocity.tools.generic.NumberTool
 	 */
 	public void setNumberToolAttribute(String numberToolAttribute) {
@@ -158,9 +160,17 @@ public class VelocityView extends AbstractUrlBasedView {
 	}
 
 	/**
+	 * Return the VelocityEngine used by this view.
+	 */
+	protected VelocityEngine getVelocityEngine() {
+		return velocityEngine;
+	}
+
+	/**
 	 * Set the VelocityEngine to be used by this view.
 	 * If this is not set, the default lookup will occur: A single VelocityConfig
 	 * is expected in the current web application context, with any bean name.
+	 *
 	 * @see VelocityConfig
 	 */
 	public void setVelocityEngine(VelocityEngine velocityEngine) {
@@ -168,49 +178,38 @@ public class VelocityView extends AbstractUrlBasedView {
 	}
 
 	/**
-	 * Return the VelocityEngine used by this view.
+	 * Invoked on startup. Looks for a single VelocityConfig bean to
+	 * find the relevant VelocityEngine for this factory.
 	 */
-	protected VelocityEngine getVelocityEngine() {
-		return velocityEngine;
-	}
-
-
-	/**
- 	 * Invoked on startup. Looks for a single VelocityConfig bean to
- 	 * find the relevant VelocityEngine for this factory.
- 	 */
 	protected void initApplicationContext() throws BeansException {
 		super.initApplicationContext();
 
 		if (this.velocityEngine == null) {
 			try {
 				VelocityConfig velocityConfig = (VelocityConfig)
-						BeanFactoryUtils.beanOfTypeIncludingAncestors(getApplicationContext(),
-																													VelocityConfig.class, true, true);
+					BeanFactoryUtils.beanOfTypeIncludingAncestors(getApplicationContext(),
+						VelocityConfig.class, true, true);
 				this.velocityEngine = velocityConfig.getVelocityEngine();
-			}
-			catch (NoSuchBeanDefinitionException ex) {
+			} catch (NoSuchBeanDefinitionException ex) {
 				throw new ApplicationContextException("Must define a single VelocityConfig bean in this web application " +
-																							"context (may be inherited): VelocityConfigurer is the usual implementation. " +
-																							"This bean may be given any name.", ex);
+													  "context (may be inherited): VelocityConfigurer is the usual implementation. " +
+													  "This bean may be given any name.", ex);
 			}
 		}
 
 		try {
 			// check that we can get the template, even if we might subsequently get it again
 			this.template = getTemplate();
-		}
-		catch (ResourceNotFoundException ex) {
+		} catch (ResourceNotFoundException ex) {
 			throw new ApplicationContextException("Cannot find Velocity template for URL [" + getUrl() +
-																						"]: Did you specify the correct resource loader path?", ex);
-		}
-		catch (Exception ex) {
+												  "]: Did you specify the correct resource loader path?", ex);
+		} catch (Exception ex) {
 			throw new ApplicationContextException("Cannot load Velocity template for URL [" + getUrl() + "]", ex);
 		}
 	}
 
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
-	                                       HttpServletResponse response) throws Exception {
+										   HttpServletResponse response) throws Exception {
 
 		// We already hold a reference to the template, but we might want to load it
 		// if not caching. As Velocity itself caches templates, so our ability to
@@ -246,12 +245,13 @@ public class VelocityView extends AbstractUrlBasedView {
 
 	/**
 	 * Retrieve the Velocity template.
+	 *
 	 * @return the Velocity template to process
 	 * @throws Exception if thrown by Velocity
 	 */
 	protected Template getTemplate() throws Exception {
 		return (this.encoding != null ? this.velocityEngine.getTemplate(getUrl(), this.encoding) :
-				this.velocityEngine.getTemplate(getUrl()));
+			this.velocityEngine.getTemplate(getUrl()));
 	}
 
 	/**
@@ -259,8 +259,9 @@ public class VelocityView extends AbstractUrlBasedView {
 	 * different rendering operations can't overwrite each other's formats etc.
 	 * <p>Called by renderMergedOutputModel. The default implementations is empty.
 	 * This method can be overridden to add custom helpers to the Velocity context.
+	 *
 	 * @param velocityContext Velocity context that will be passed to the template at merge time
-	 * @param request current HTTP request
+	 * @param request         current HTTP request
 	 * @throws Exception if there's a fatal error while we're adding information to the context
 	 * @see #renderMergedOutputModel
 	 */
@@ -270,8 +271,9 @@ public class VelocityView extends AbstractUrlBasedView {
 	/**
 	 * Merge the template with the context.
 	 * Can be overridden to customize the behavior.
+	 *
 	 * @param template the template to merge
-	 * @param context the Velocity context
+	 * @param context  the Velocity context
 	 * @param response servlet response (use this to get the OutputStream or Writer)
 	 * @see org.apache.velocity.Template#merge
 	 */
@@ -283,6 +285,7 @@ public class VelocityView extends AbstractUrlBasedView {
 	/**
 	 * Subclass of DateTool from Velocity tools,
 	 * using the RequestContext Locale instead of the default Locale.
+	 *
 	 * @see RequestContextUtils#getLocale
 	 */
 	private static class LocaleAwareDateTool extends DateTool {
@@ -302,6 +305,7 @@ public class VelocityView extends AbstractUrlBasedView {
 	/**
 	 * Subclass of NumberTool from Velocity tools,
 	 * using the RequestContext Locale instead of the default Locale.
+	 *
 	 * @see RequestContextUtils#getLocale
 	 */
 	private static class LocaleAwareNumberTool extends NumberTool {

@@ -45,10 +45,10 @@ import java.util.List;
  * consider RefreshablePagedListHolder.
  *
  * @author Juergen Hoeller
- * @since 19.05.2003
  * @see #getPageList
  * @see RefreshablePagedListHolder
  * @see MutableSortDefinition
+ * @since 19.05.2003
  */
 public class PagedListHolder implements Serializable {
 
@@ -87,6 +87,12 @@ public class PagedListHolder implements Serializable {
 		setSort(new MutableSortDefinition(true));
 	}
 
+	/**
+	 * Return the source list for this holder.
+	 */
+	public List getSource() {
+		return source;
+	}
 
 	/**
 	 * Set the source list for this holder.
@@ -98,13 +104,6 @@ public class PagedListHolder implements Serializable {
 	}
 
 	/**
-	 * Return the source list for this holder.
-	 */
-	public List getSource() {
-		return source;
-	}
-
-	/**
 	 * Return the last time the list has been fetched from the source provider.
 	 */
 	public Date getRefreshDate() {
@@ -112,8 +111,16 @@ public class PagedListHolder implements Serializable {
 	}
 
 	/**
+	 * Return the sort definition for this holder.
+	 */
+	public SortDefinition getSort() {
+		return sort;
+	}
+
+	/**
 	 * Set the sort definition for this holder.
 	 * Typically an instance of MutableSortDefinition.
+	 *
 	 * @see MutableSortDefinition
 	 */
 	public void setSort(SortDefinition sort) {
@@ -121,10 +128,10 @@ public class PagedListHolder implements Serializable {
 	}
 
 	/**
-	 * Return the sort definition for this holder.
+	 * Return the current page size.
 	 */
-	public SortDefinition getSort() {
-		return sort;
+	public int getPageSize() {
+		return pageSize;
 	}
 
 	/**
@@ -140,25 +147,6 @@ public class PagedListHolder implements Serializable {
 	}
 
 	/**
-	 * Return the current page size.
-	 */
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	/**
-	 * Set the current page number.
-	 * Page numbering starts with 0.
-	 */
-	public void setPage(int page) {
-		if (page >= this.getNrOfPages() ) {
-			this.page = this.getNrOfPages() - 1;
-		} else {
-			this.page = page;
-		}
-	}
-
-	/**
 	 * Return the current page number.
 	 * Page numbering starts with 0.
 	 */
@@ -167,10 +155,15 @@ public class PagedListHolder implements Serializable {
 	}
 
 	/**
-	 * Set the maximum number of page links to a few pages around the current one.
+	 * Set the current page number.
+	 * Page numbering starts with 0.
 	 */
-	public void setMaxLinkedPages(int maxLinkedPages) {
-		this.maxLinkedPages = maxLinkedPages;
+	public void setPage(int page) {
+		if (page >= this.getNrOfPages()) {
+			this.page = this.getNrOfPages() - 1;
+		} else {
+			this.page = page;
+		}
 	}
 
 	/**
@@ -180,6 +173,12 @@ public class PagedListHolder implements Serializable {
 		return maxLinkedPages;
 	}
 
+	/**
+	 * Set the maximum number of page links to a few pages around the current one.
+	 */
+	public void setMaxLinkedPages(int maxLinkedPages) {
+		this.maxLinkedPages = maxLinkedPages;
+	}
 
 	/**
 	 * Return the number of pages for the current source list.
@@ -200,7 +199,7 @@ public class PagedListHolder implements Serializable {
 	 * Return if the current page is the last one.
 	 */
 	public boolean isLastPage() {
-		return this.page == getNrOfPages() -1;
+		return this.page == getNrOfPages() - 1;
 	}
 
 	/**
@@ -244,28 +243,28 @@ public class PagedListHolder implements Serializable {
 	 */
 	public int getLastElementOnPage() {
 		int endIndex = this.pageSize * (this.page + 1);
-		return (endIndex > this.source.size() ? this.source.size() : endIndex) -1;
+		return (endIndex > this.source.size() ? this.source.size() : endIndex) - 1;
 	}
 
 	/**
 	 * Return a sub-list representing the current page.
 	 */
 	public List getPageList() {
-		return this.source.subList(getFirstElementOnPage(), getLastElementOnPage() +1);
+		return this.source.subList(getFirstElementOnPage(), getLastElementOnPage() + 1);
 	}
 
 	/**
 	 * Return the first page to which create a link around the current page.
 	 */
 	public int getFirstLinkedPage() {
-		return Math.max(0, this.getPage() - (this.maxLinkedPages /2));
+		return Math.max(0, this.getPage() - (this.maxLinkedPages / 2));
 	}
 
 	/**
 	 * Return the first page to which create a link around the current page.
 	 */
 	public int getLastLinkedPage() {
-		return Math.min(getFirstLinkedPage() + this.maxLinkedPages -1, this.getNrOfPages() -1);
+		return Math.min(getFirstLinkedPage() + this.maxLinkedPages - 1, this.getNrOfPages() - 1);
 	}
 
 

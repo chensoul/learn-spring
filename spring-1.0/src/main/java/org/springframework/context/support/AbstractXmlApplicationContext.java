@@ -17,7 +17,6 @@
 package org.springframework.context.support;
 
 import java.io.IOException;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -29,14 +28,17 @@ import org.springframework.context.ApplicationContextException;
  * Convenient abstract superclass for ApplicationContext implementations
  * drawing their configuration from XML documents containing bean definitions
  * understood by an XmlBeanDefinitionParser.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @version $Revision: 1.11 $
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionParser
  */
-public abstract class AbstractXmlApplicationContext extends AbstractApplicationContext  {
+public abstract class AbstractXmlApplicationContext extends AbstractApplicationContext {
 
-	/** Bean factory for this context */
+	/**
+	 * Bean factory for this context
+	 */
 	private ConfigurableListableBeanFactory beanFactory;
 
 	/**
@@ -47,6 +49,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 
 	/**
 	 * Create a new AbstractXmlApplicationContext with the given parent context.
+	 *
 	 * @param parent the parent context
 	 */
 	public AbstractXmlApplicationContext(ApplicationContext parent) {
@@ -64,10 +67,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 			if (logger.isInfoEnabled()) {
 				logger.info("Bean factory for application context '" + getDisplayName() + "': " + beanFactory);
 			}
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new ApplicationContextException("I/O error parsing XML document for application context [" +
-			                                      getDisplayName() + "]", ex);
+												  getDisplayName() + "]", ex);
 		}
 	}
 
@@ -75,6 +77,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 	 * Create the bean factory for this context.
 	 * Default implementation creates a DefaultListableBeanFactory with this
 	 * context's parent as parent bean factory. Can be overridden in subclasses.
+	 *
 	 * @return the bean factory for this context
 	 * @see DefaultListableBeanFactory
 	 */
@@ -91,6 +94,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 	 * definitions of this context. Default implementation is empty.
 	 * <p>Can be overridden in subclasses, e.g. for turning off XML validation
 	 * or using a different XmlBeanDefinitionParser implementation.
+	 *
 	 * @param beanDefinitionReader the bean definition reader used by this context
 	 * @see XmlBeanDefinitionReader#setValidating
 	 * @see XmlBeanDefinitionReader#setParserClass
@@ -102,8 +106,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 	 * Load the bean definitions with the given XmlBeanDefinitionReader.
 	 * <p>The lifecycle of the bean factory is handled by refreshBeanFactory;
 	 * therefore this method is just supposed to load and/or register bean definitions.
+	 *
 	 * @throws BeansException in case of bean registration errors
-	 * @throws IOException if the required XML document isn't found
+	 * @throws IOException    if the required XML document isn't found
 	 * @see #refreshBeanFactory
 	 */
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
@@ -118,6 +123,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractApplicationC
 	/**
 	 * Return an array of resource locations, referring to the XML bean
 	 * definition files that this context should be built with.
+	 *
 	 * @return an array of resource locations, or null if none
 	 */
 	protected abstract String[] getConfigLocations();

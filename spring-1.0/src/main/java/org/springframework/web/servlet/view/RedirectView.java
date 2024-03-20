@@ -53,6 +53,7 @@ public class RedirectView extends AbstractUrlBasedView {
 
 	/**
 	 * Create a new RedirectView with the given URL.
+	 *
 	 * @param url the URL to redirect to
 	 */
 	public RedirectView(String url) {
@@ -61,9 +62,10 @@ public class RedirectView extends AbstractUrlBasedView {
 
 	/**
 	 * Create a new RedirectView with the given URL.
-	 * @param url the URL to redirect to
+	 *
+	 * @param url             the URL to redirect to
 	 * @param contextRelative whether to interpret the given URL as
-	 * relative to the current ServletContext
+	 *                        relative to the current ServletContext
 	 */
 	public RedirectView(String url, boolean contextRelative) {
 		setUrl(url);
@@ -75,6 +77,7 @@ public class RedirectView extends AbstractUrlBasedView {
 	 * ServletContext, i.e. as relative to the web application root.
 	 * <p>Default is false: The URL will be intepreted as absolute, i.e.
 	 * taken as-is. If true, the context path will be prepended to the URL.
+	 *
 	 * @see HttpServletRequest#getContextPath
 	 */
 	public void setContextRelative(boolean contextRelative) {
@@ -90,10 +93,11 @@ public class RedirectView extends AbstractUrlBasedView {
 
 	/**
 	 * Convert model to request parameters and redirect to the given URL.
+	 *
 	 * @see #appendQueryProperties
 	 */
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+		throws IOException {
 		StringBuffer targetUrl = new StringBuffer();
 		if (this.contextRelative) {
 			targetUrl.append(request.getContextPath());
@@ -106,14 +110,15 @@ public class RedirectView extends AbstractUrlBasedView {
 	/**
 	 * Append query properties to the redirect URL.
 	 * Stringifies, URL-encodes and formats model attributes as query properties.
-	 * @param targetUrl the StringBuffer to append the properties to
-	 * @param model Map that contains model attributes
+	 *
+	 * @param targetUrl      the StringBuffer to append the properties to
+	 * @param model          Map that contains model attributes
 	 * @param encodingScheme the encoding scheme to use
 	 * @throws UnsupportedEncodingException if string encoding failed
 	 * @see #queryProperties
 	 */
 	protected void appendQueryProperties(StringBuffer targetUrl, Map model, String encodingScheme)
-			throws UnsupportedEncodingException {
+		throws UnsupportedEncodingException {
 		// if there are not already some parameters, we need a ?
 		boolean first = (getUrl().indexOf('?') < 0);
 		Iterator entries = queryProperties(model).entrySet().iterator();
@@ -121,8 +126,7 @@ public class RedirectView extends AbstractUrlBasedView {
 			if (first) {
 				targetUrl.append('?');
 				first = false;
-			}
-			else {
+			} else {
 				targetUrl.append('&');
 			}
 			Map.Entry entry = (Map.Entry) entries.next();
@@ -138,6 +142,7 @@ public class RedirectView extends AbstractUrlBasedView {
 	 * Determine name-value pairs for query strings, which will be stringified,
 	 * URL-encoded and formatted by buildRedirectUrl.
 	 * <p>This implementation returns all model elements as-is.
+	 *
 	 * @see #appendQueryProperties
 	 */
 	protected Map queryProperties(Map model) {

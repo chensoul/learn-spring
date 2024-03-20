@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view.velocity;
 
@@ -29,7 +29,6 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
  * via setViewClass. See UrlBasedViewResolver's javadocs for details.
  *
  * @author Juergen Hoeller
- * @since 13.12.2003
  * @see #setViewClass
  * @see #setPrefix
  * @see #setSuffix
@@ -38,6 +37,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
  * @see #setDateToolAttribute
  * @see #setNumberToolAttribute
  * @see VelocityView
+ * @since 13.12.2003
  */
 public class VelocityViewResolver extends UrlBasedViewResolver {
 
@@ -49,6 +49,7 @@ public class VelocityViewResolver extends UrlBasedViewResolver {
 
 	/**
 	 * Sets default viewClass to VelocityView.
+	 *
 	 * @see #setViewClass
 	 */
 	public VelocityViewResolver() {
@@ -57,6 +58,7 @@ public class VelocityViewResolver extends UrlBasedViewResolver {
 
 	/**
 	 * Requires VelocityView.
+	 *
 	 * @see VelocityView
 	 */
 	protected Class requiredViewClass() {
@@ -67,6 +69,7 @@ public class VelocityViewResolver extends UrlBasedViewResolver {
 	 * Set the name of the VelocityFormatter helper object to expose in the
 	 * Velocity context of this view, or null if not needed.
 	 * VelocityFormatter is part of the standard Velocity distribution.
+	 *
 	 * @see org.apache.velocity.app.tools.VelocityFormatter
 	 */
 	public void setVelocityFormatterAttribute(String velocityFormatterAttribute) {
@@ -76,6 +79,7 @@ public class VelocityViewResolver extends UrlBasedViewResolver {
 	/**
 	 * Set the name of the DateTool helper object to expose in the Velocity context
 	 * of this view, or null if not needed. DateTool is part of Velocity Tools 1.0.
+	 *
 	 * @see org.apache.velocity.tools.generic.DateTool
 	 */
 	public void setDateToolAttribute(String dateToolAttribute) {
@@ -85,6 +89,7 @@ public class VelocityViewResolver extends UrlBasedViewResolver {
 	/**
 	 * Set the name of the NumberTool helper object to expose in the Velocity context
 	 * of this view, or null if not needed. NumberTool is part of Velocity Tools 1.1.
+	 *
 	 * @see org.apache.velocity.tools.generic.NumberTool
 	 */
 	public void setNumberToolAttribute(String numberToolAttribute) {

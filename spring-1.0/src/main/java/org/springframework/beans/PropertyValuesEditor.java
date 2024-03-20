@@ -18,8 +18,6 @@ package org.springframework.beans;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Properties;
-
-import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 
 /**
@@ -32,6 +30,7 @@ import org.springframework.beans.propertyeditors.PropertiesEditor;
  * Each property must be on a new line.
  * <br>
  * The present implementation relies on a PropertiesEditor.
+ *
  * @author Rod Johnson
  */
 public class PropertyValuesEditor extends PropertyEditorSupport {

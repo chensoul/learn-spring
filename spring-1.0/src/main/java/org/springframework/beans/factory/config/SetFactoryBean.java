@@ -18,7 +18,6 @@ package org.springframework.beans.factory.config;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,9 +25,10 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Simple factory for shared Set instances. Allows for central setup
  * of Sets via the "set" element in XML bean definitions.
+ *
  * @author Juergen Hoeller
- * @since 21.01.2003
  * @version $Id: SetFactoryBean.java,v 1.3 2004/03/18 02:46:07 trisberg Exp $
+ * @since 21.01.2003
  */
 public class SetFactoryBean implements FactoryBean, InitializingBean {
 
@@ -50,6 +50,7 @@ public class SetFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Set the class to use for the target Set.
 	 * Default is <code>java.util.HashSet</code>.
+	 *
 	 * @see HashSet
 	 */
 	public void setTargetSetClass(Class targetSetClass) {
@@ -60,14 +61,6 @@ public class SetFactoryBean implements FactoryBean, InitializingBean {
 			throw new IllegalArgumentException("targetSetClass must implement java.util.Set");
 		}
 		this.targetSetClass = targetSetClass;
-	}
-
-	/**
-	 * Set if a singleton should be created, or a new object
-	 * on each request else. Default is true.
-	 */
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
 	}
 
 	public void afterPropertiesSet() {
@@ -83,8 +76,7 @@ public class SetFactoryBean implements FactoryBean, InitializingBean {
 	public Object getObject() {
 		if (this.singleton) {
 			return this.targetSet;
-		}
-		else {
+		} else {
 			Set result = (Set) BeanUtils.instantiateClass(this.targetSetClass);
 			result.addAll(this.sourceSet);
 			return result;
@@ -97,6 +89,14 @@ public class SetFactoryBean implements FactoryBean, InitializingBean {
 
 	public boolean isSingleton() {
 		return singleton;
+	}
+
+	/**
+	 * Set if a singleton should be created, or a new object
+	 * on each request else. Default is true.
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
 	}
 
 }

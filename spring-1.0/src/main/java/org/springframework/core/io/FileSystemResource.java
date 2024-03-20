@@ -25,9 +25,10 @@ import java.net.URL;
 /**
  * Resource implementation for java.io.File handles.
  * Obviously supports resolution as File, and also as URL.
+ *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see File
+ * @since 28.12.2003
  */
 public class FileSystemResource extends AbstractResource {
 
@@ -35,6 +36,7 @@ public class FileSystemResource extends AbstractResource {
 
 	/**
 	 * Create a new FileSystemResource.
+	 *
 	 * @param file a File handle
 	 */
 	public FileSystemResource(File file) {
@@ -43,6 +45,7 @@ public class FileSystemResource extends AbstractResource {
 
 	/**
 	 * Create a new FileSystemResource.
+	 *
 	 * @param path a file path
 	 */
 	public FileSystemResource(String path) {

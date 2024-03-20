@@ -30,9 +30,10 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 /**
  * Interceptor that allows for changing the current locale on every request,
  * via a configurable request parameter.
+ *
  * @author Juergen Hoeller
- * @since 20.06.2003
  * @see LocaleResolver
+ * @since 20.06.2003
  */
 public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
 
@@ -49,7 +50,7 @@ public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws ServletException {
+		throws ServletException {
 		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
 		String newLocale = request.getParameter(this.paramName);
 		if (newLocale != null) {

@@ -17,7 +17,6 @@
 package org.springframework.transaction.interceptor;
 
 import java.beans.PropertyEditorSupport;
-
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.util.StringUtils;
 
@@ -35,23 +34,23 @@ import org.springframework.util.StringUtils;
  * a "-" that they should roll back.
  *
  * @author Rod Johnson
- * @since 24-Apr-2003
  * @version $Id: TransactionAttributeEditor.java,v 1.4 2004/03/18 02:46:05 trisberg Exp $
  * @see TransactionDefinition
  * @see org.springframework.core.Constants
+ * @since 24-Apr-2003
  */
 public class TransactionAttributeEditor extends PropertyEditorSupport {
 
 	/**
 	 * Format is PROPAGATION_NAME,ISOLATION_NAME,readOnly,+Exception1,-Exception2.
 	 * Null or the empty string means that the method is non transactional.
+	 *
 	 * @see java.beans.PropertyEditor#setAsText(String)
 	 */
 	public void setAsText(String s) throws IllegalArgumentException {
 		if (s == null || "".equals(s)) {
 			setValue(null);
-		}
-		else {
+		} else {
 			// tokenize it with ","
 			String[] tokens = StringUtils.commaDelimitedListToStringArray(s);
 			RuleBasedTransactionAttribute attr = new RuleBasedTransactionAttribute();
@@ -60,24 +59,18 @@ public class TransactionAttributeEditor extends PropertyEditorSupport {
 				String token = tokens[i];
 				if (token.startsWith(TransactionDefinition.PROPAGATION_CONSTANT_PREFIX)) {
 					attr.setPropagationBehaviorName(tokens[i]);
-				}
-				else if (token.startsWith(TransactionDefinition.ISOLATION_CONSTANT_PREFIX)) {
+				} else if (token.startsWith(TransactionDefinition.ISOLATION_CONSTANT_PREFIX)) {
 					attr.setIsolationLevelName(tokens[i]);
-				}
-				else if (token.startsWith(DefaultTransactionAttribute.TIMEOUT_PREFIX)) {
+				} else if (token.startsWith(DefaultTransactionAttribute.TIMEOUT_PREFIX)) {
 					String value = token.substring(DefaultTransactionAttribute.TIMEOUT_PREFIX.length());
 					attr.setTimeout(Integer.parseInt(value));
-				}
-				else if (token.equals(DefaultTransactionAttribute.READ_ONLY_MARKER)) {
+				} else if (token.equals(DefaultTransactionAttribute.READ_ONLY_MARKER)) {
 					attr.setReadOnly(true);
-				}
-				else if (token.startsWith(DefaultTransactionAttribute.COMMIT_RULE_PREFIX)) {
+				} else if (token.startsWith(DefaultTransactionAttribute.COMMIT_RULE_PREFIX)) {
 					attr.getRollbackRules().add(new NoRollbackRuleAttribute(token.substring(1)));
-				}
-				else if (token.startsWith(DefaultTransactionAttribute.ROLLBACK_RULE_PREFIX)) {
+				} else if (token.startsWith(DefaultTransactionAttribute.ROLLBACK_RULE_PREFIX)) {
 					attr.getRollbackRules().add(new RollbackRuleAttribute(token.substring(1)));
-				}
-				else {
+				} else {
 					throw new IllegalArgumentException("Illegal transaction token: " + token);
 				}
 			}

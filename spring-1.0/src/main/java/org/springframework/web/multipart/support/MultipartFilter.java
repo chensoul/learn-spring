@@ -44,9 +44,9 @@ import org.springframework.web.multipart.MultipartResolver;
  * servlet-specific multipart resolution.
  *
  * @author Juergen Hoeller
- * @since 08.10.2003
  * @see MultipartResolver
  * @see org.springframework.web.servlet.DispatcherServlet
+ * @since 08.10.2003
  */
 public class MultipartFilter extends OncePerRequestFilter {
 
@@ -57,14 +57,6 @@ public class MultipartFilter extends OncePerRequestFilter {
 	private MultipartResolver multipartResolver;
 
 	/**
-	 * Set the bean name of the MultipartResolver to fetch from Spring's
-	 * root application context.
-	 */
-	public void setMultipartResolverBeanName(String multipartResolverBeanName) {
-		this.multipartResolverBeanName = multipartResolverBeanName;
-	}
-
-	/**
 	 * Return the bean name of the MultipartResolver to fetch from Spring's
 	 * root application context.
 	 */
@@ -73,8 +65,17 @@ public class MultipartFilter extends OncePerRequestFilter {
 	}
 
 	/**
+	 * Set the bean name of the MultipartResolver to fetch from Spring's
+	 * root application context.
+	 */
+	public void setMultipartResolverBeanName(String multipartResolverBeanName) {
+		this.multipartResolverBeanName = multipartResolverBeanName;
+	}
+
+	/**
 	 * Fetch a reference to the MultipartResolver via lookupMultipartResolver
 	 * and stores it for use in this filter.
+	 *
 	 * @see #lookupMultipartResolver
 	 */
 	protected void initFilterBean() throws ServletException {
@@ -90,6 +91,7 @@ public class MultipartFilter extends OncePerRequestFilter {
 	 * bean name is "filterMultipartResolver".
 	 * <p>This can be overridden to use a custom MultipartResolver instance,
 	 * for example if not using a Spring web application context.
+	 *
 	 * @return the MultipartResolver instance, or null if none found
 	 */
 	protected MultipartResolver lookupMultipartResolver() {
@@ -106,24 +108,22 @@ public class MultipartFilter extends OncePerRequestFilter {
 	 * MultipartHttpServletRequest if they need to.
 	 */
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-																	FilterChain filterChain) throws ServletException, IOException {
+									FilterChain filterChain) throws ServletException, IOException {
 		HttpServletRequest processedRequest = request;
 		if (this.multipartResolver.isMultipart(processedRequest)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Resolving multipart request [" + processedRequest.getRequestURI() +
-				             "] with MultipartFilter");
+							 "] with MultipartFilter");
 			}
 			processedRequest = this.multipartResolver.resolveMultipart(processedRequest);
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Request [" + processedRequest.getRequestURI() + "] is not a multipart request");
 			}
 		}
 		try {
 			filterChain.doFilter(processedRequest, response);
-		}
-		finally {
+		} finally {
 			if (processedRequest instanceof MultipartHttpServletRequest) {
 				this.multipartResolver.cleanupMultipart((MultipartHttpServletRequest) processedRequest);
 			}

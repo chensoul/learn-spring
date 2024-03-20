@@ -38,18 +38,25 @@ import org.springframework.web.util.TagUtils;
  */
 public class TransformTag extends RequestContextAwareTag {
 
-	/** the value to transform using the appropriate property editor */
+	/**
+	 * the value to transform using the appropriate property editor
+	 */
 	private String value;
 
-	/** the variable to put the result in */
+	/**
+	 * the variable to put the result in
+	 */
 	private String var;
 
-	/** the scope of the variable the result will be put in */
+	/**
+	 * the scope of the variable the result will be put in
+	 */
 	private String scope = TagUtils.SCOPE_PAGE;
 
 	/**
 	 * Set the value to finally transform using the appropriate property editor
 	 * that has to be found in the BindTag.
+	 *
 	 * @param value the value
 	 * @throws JspException if expression evaluation fails
 	 */
@@ -59,6 +66,7 @@ public class TransformTag extends RequestContextAwareTag {
 
 	/**
 	 * Set the name of the variable to which to export the result of the transformation.
+	 *
 	 * @param var the name of the variable
 	 */
 	public void setVar(String var) {
@@ -68,6 +76,7 @@ public class TransformTag extends RequestContextAwareTag {
 	/**
 	 * Set the scope to which to export the variable indicated.
 	 * If the scope isn't one of the allowed scope, it'll be the default (SCOPE_PAGE).
+	 *
 	 * @param scope the scope (SCOPE_PAGE, SCOPE_REQUEST, SCOPE_APPLICATION or SCOPE_SESSION)
 	 */
 	public void setScope(String scope) throws JspException {
@@ -90,8 +99,7 @@ public class TransformTag extends RequestContextAwareTag {
 				// if an editor was found, edit the value
 				editor.setValue(resolvedValue);
 				result = editor.getAsText();
-			}
-			else {
+			} else {
 				// else, just do a toString
 				result = resolvedValue.toString();
 			}
@@ -99,13 +107,11 @@ public class TransformTag extends RequestContextAwareTag {
 			if (resolvedVar != null) {
 				String resolvedScope = ExpressionEvaluationUtils.evaluateString("scope", this.scope, pageContext);
 				pageContext.setAttribute(resolvedVar, result, TagUtils.getScope(resolvedScope));
-			}
-			else {
+			} else {
 				try {
 					// else, just print it out
 					pageContext.getOut().print(result);
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					throw new JspException(ex);
 				}
 			}

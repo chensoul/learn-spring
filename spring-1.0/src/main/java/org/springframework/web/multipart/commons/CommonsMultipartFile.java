@@ -30,10 +30,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * MultipartFile implementation for Jakarta Commons FileUpload.
+ *
  * @author Trevor D. Cook
  * @author Juergen Hoeller
- * @since 29-Sep-2003
  * @see CommonsMultipartResolver
+ * @since 29-Sep-2003
  */
 public class CommonsMultipartFile implements MultipartFile {
 
@@ -43,6 +44,7 @@ public class CommonsMultipartFile implements MultipartFile {
 
 	/**
 	 * Create an instance wrapping the given FileItem.
+	 *
 	 * @param fileItem the FileItem to wrap
 	 */
 	protected CommonsMultipartFile(FileItem fileItem) {
@@ -88,7 +90,7 @@ public class CommonsMultipartFile implements MultipartFile {
 	public void transferTo(File dest) throws IOException, IllegalStateException {
 		if (dest.exists() && !dest.delete()) {
 			throw new IOException("Destination file [" + dest.getAbsolutePath() +
-			                      "] already exists and could not be deleted");
+								  "] already exists and could not be deleted");
 		}
 		try {
 			this.fileItem.write(dest);
@@ -98,17 +100,14 @@ public class CommonsMultipartFile implements MultipartFile {
 					action = ((DefaultFileItem) this.fileItem).getStoreLocation().exists() ? "copied" : "moved";
 				}
 				logger.debug("Multipart file [" + getName() + "] with original file name [" +
-										 getOriginalFilename() + "], stored " + getStorageDescription() + ": " +
-				             action + " to [" + dest.getAbsolutePath() + "]");
+							 getOriginalFilename() + "], stored " + getStorageDescription() + ": " +
+							 action + " to [" + dest.getAbsolutePath() + "]");
 			}
-		}
-		catch (FileUploadException ex) {
+		} catch (FileUploadException ex) {
 			throw new IllegalStateException(ex.getMessage());
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.error("Could not transfer to file", ex);
 			throw new IOException("Could not transfer to file: " + ex.getMessage());
 		}
@@ -117,11 +116,9 @@ public class CommonsMultipartFile implements MultipartFile {
 	protected String getStorageDescription() {
 		if (this.fileItem.isInMemory()) {
 			return "in memory";
-		}
-		else if (this.fileItem instanceof DefaultFileItem) {
+		} else if (this.fileItem instanceof DefaultFileItem) {
 			return "at [" + ((DefaultFileItem) this.fileItem).getStoreLocation().getAbsolutePath() + "]";
-		}
-		else {
+		} else {
 			return "at disk";
 		}
 	}

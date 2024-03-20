@@ -20,10 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -76,7 +74,7 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 	 * Set a location of a properties file to be loaded.
 	 */
 	public void setLocation(Resource location) {
-		this.locations = new Resource[] {location};
+		this.locations = new Resource[]{location};
 	}
 
 	/**
@@ -89,6 +87,7 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Set the charset to use for parsing properties files.
 	 * Default is none, using java.util.Properties' default charset.
+	 *
 	 * @see PropertiesPersister#load
 	 */
 	public void setCharset(String charset) {
@@ -98,18 +97,11 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Set the PropertiesPersister to use for parsing properties files.
 	 * The default is DefaultPropertiesPersister.
+	 *
 	 * @see DefaultPropertiesPersister
 	 */
 	public void setPropertiesPersister(PropertiesPersister propertiesPersister) {
 		this.propertiesPersister = propertiesPersister;
-	}
-
-	/**
-	 * Set if a singleton should be created, or a new object
-	 * on each request else. Default is true.
-	 */
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
 	}
 
 	/**
@@ -124,18 +116,17 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 		}
 	}
 
-
 	/**
 	 * Return either singleton instance or newly created instance,
 	 * depending on the singleton property of this FactoryBean.
 	 * Delegates to mergeProperties for actual instance creation.
+	 *
 	 * @see #mergeProperties
 	 */
 	public Object getObject() throws IOException {
 		if (this.singleton) {
 			return this.singletonInstance;
-		}
-		else {
+		} else {
 			return mergeProperties();
 		}
 	}
@@ -158,6 +149,7 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Load the Properties instance. Invoked either by afterPropertiesSet
 	 * or by getObject, depending on singleton or prototype mode.
+	 *
 	 * @return the freshly loaded Properties instance
 	 * @throws IOException in case of I/O errors.
 	 */
@@ -170,12 +162,10 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 			try {
 				if (this.charset != null) {
 					this.propertiesPersister.load(props, new InputStreamReader(is, this.charset));
-				}
-				else {
+				} else {
 					this.propertiesPersister.load(props, is);
 				}
-			}
-			finally {
+			} finally {
 				is.close();
 			}
 		}
@@ -188,6 +178,14 @@ public class PropertiesFactoryBean implements FactoryBean, InitializingBean {
 
 	public boolean isSingleton() {
 		return singleton;
+	}
+
+	/**
+	 * Set if a singleton should be created, or a new object
+	 * on each request else. Default is true.
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
 	}
 
 }

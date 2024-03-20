@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.context.support;
 
@@ -46,16 +46,18 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	/**
 	 * Create a new FileSystemXmlApplicationContext, loading the definitions
 	 * from the given XML file.
+	 *
 	 * @param configLocation file path
 	 */
 	public FileSystemXmlApplicationContext(String configLocation) throws BeansException {
-		this.configLocations = new String[] {configLocation};
+		this.configLocations = new String[]{configLocation};
 		refresh();
 	}
 
 	/**
 	 * Create a new FileSystemXmlApplicationContext, loading the definitions
 	 * from the given XML files.
+	 *
 	 * @param configLocations array of file paths
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations) throws BeansException {
@@ -66,11 +68,12 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	/**
 	 * Create a new FileSystemXmlApplicationContext with the given parent,
 	 * loading the definitions from the given XML files.
+	 *
 	 * @param configLocations array of file paths
-	 * @param parent the parent context
+	 * @param parent          the parent context
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations, ApplicationContext parent)
-			throws BeansException {
+		throws BeansException {
 		super(parent);
 		this.configLocations = configLocations;
 		refresh();
@@ -85,6 +88,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * <p>Note: Even if a given path starts with a slash, it will get
 	 * interpreted as relative to the current VM working directory.
 	 * This is consisted with the semantics in a Servlet container.
+	 *
 	 * @param path path to the resource
 	 * @return Resource handle
 	 */

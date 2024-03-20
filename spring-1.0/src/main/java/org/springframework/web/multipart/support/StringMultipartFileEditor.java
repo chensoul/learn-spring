@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Custom PropertyEditor for converting MultipartFiles to Strings.
  * Allows to specify the charset to use.
+ *
  * @author Juergen Hoeller
  * @since 13.10.2003
  */
@@ -44,8 +45,9 @@ public class StringMultipartFileEditor extends PropertyEditorSupport {
 
 	/**
 	 * Create a new StringMultipartFileEditor, using the given charset.
+	 *
 	 * @param charsetName valid charset name
-	 * @see String#String(byte[],String)
+	 * @see String#String(byte[], String)
 	 */
 	public StringMultipartFileEditor(String charsetName) {
 		this.charsetName = charsetName;
@@ -56,10 +58,9 @@ public class StringMultipartFileEditor extends PropertyEditorSupport {
 			MultipartFile multipartFile = (MultipartFile) value;
 			try {
 				super.setValue(this.charsetName != null ?
-											 new String(multipartFile.getBytes(), this.charsetName) :
-											 new String(multipartFile.getBytes()));
-			}
-			catch (IOException ex) {
+					new String(multipartFile.getBytes(), this.charsetName) :
+					new String(multipartFile.getBytes()));
+			} catch (IOException ex) {
 				logger.error("Cannot read contents of multipart file", ex);
 				throw new IllegalArgumentException("Cannot read contents of multipart file: " + ex.getMessage());
 			}

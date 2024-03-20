@@ -45,12 +45,13 @@ import org.springframework.util.PathMatcher;
  * @see PathMatcher
  */
 public class PropertiesMethodNameResolver extends AbstractUrlMethodNameResolver
-		implements InitializingBean {
+	implements InitializingBean {
 
 	private Properties mappings;
 
 	/**
 	 * Set URL to method name mappings from a Properties object.
+	 *
 	 * @param mappings properties with URL as key and method name as value
 	 */
 	public void setMappings(Properties mappings) {
@@ -68,7 +69,7 @@ public class PropertiesMethodNameResolver extends AbstractUrlMethodNameResolver
 		if (name != null) {
 			return name;
 		}
-		for (Iterator it = this.mappings.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = this.mappings.keySet().iterator(); it.hasNext(); ) {
 			String registeredPath = (String) it.next();
 			if (PathMatcher.match(registeredPath, urlPath)) {
 				return (String) this.mappings.get(registeredPath);

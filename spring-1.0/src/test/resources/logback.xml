@@ -4,7 +4,8 @@
         <encoder>　　　　　　　　　
             <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
             <!--   <pattern> %logger{35} - %msg %n</pattern>　-->　　　　
-        </encoder>　　　
+        </encoder>
+        　　　
     </appender>
     　　　
     <root level="warn">　　　　　　

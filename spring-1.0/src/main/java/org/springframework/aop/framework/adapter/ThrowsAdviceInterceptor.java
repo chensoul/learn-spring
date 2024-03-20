@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
@@ -45,7 +44,9 @@ final class ThrowsAdviceInterceptor implements MethodInterceptor {
 
 	private Object throwsAdvice;
 
-	/** Methods on throws advice, keyed by exception class */
+	/**
+	 * Methods on throws advice, keyed by exception class
+	 */
 	private Map exceptionHandlerHash;
 
 	public ThrowsAdviceInterceptor(Object throwsAdvice) {
@@ -56,10 +57,10 @@ final class ThrowsAdviceInterceptor implements MethodInterceptor {
 		for (int i = 0; i < methods.length; i++) {
 			Method m = methods[i];
 			if (m.getName().equals(AFTER_THROWING) &&
-					//m.getReturnType() == null &&
-					(m.getParameterTypes().length == 1 || m.getParameterTypes().length == 4) &&
-					Throwable.class.isAssignableFrom(m.getParameterTypes()[m.getParameterTypes().length - 1])
-				) {
+				//m.getReturnType() == null &&
+				(m.getParameterTypes().length == 1 || m.getParameterTypes().length == 4) &&
+				Throwable.class.isAssignableFrom(m.getParameterTypes()[m.getParameterTypes().length - 1])
+			) {
 				// Have an exception handler
 				exceptionHandlerHash.put(m.getParameterTypes()[m.getParameterTypes().length - 1], m);
 				logger.info("Found exception handler method [" + m + "]");
@@ -77,9 +78,8 @@ final class ThrowsAdviceInterceptor implements MethodInterceptor {
 	/**
 	 * Can return null if not found.
 	 *
+	 * @param exception Won't be a ServletException or IOException
 	 * @return a handler for the given exception type
-	 * @param exception
-	 *            Won't be a ServletException or IOException
 	 */
 	private Method getExceptionHandler(Throwable exception) {
 		Class exceptionClass = exception.getClass();
@@ -99,8 +99,7 @@ final class ThrowsAdviceInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		try {
 			return mi.proceed();
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			Method handlerMethod = getExceptionHandler(t);
 			if (handlerMethod != null) {
 				invokeHandlerMethod(mi, t, handlerMethod);
@@ -112,21 +111,17 @@ final class ThrowsAdviceInterceptor implements MethodInterceptor {
 	private void invokeHandlerMethod(MethodInvocation mi, Throwable t, Method m) throws Throwable {
 		Object[] handlerArgs;
 		if (m.getParameterTypes().length == 1) {
-			handlerArgs = new Object[] { t };
-		}
-		else {
-			handlerArgs = new Object[] { mi.getMethod(), mi.getArguments(), mi.getThis(), t };
+			handlerArgs = new Object[]{t};
+		} else {
+			handlerArgs = new Object[]{mi.getMethod(), mi.getArguments(), mi.getThis(), t};
 		}
 		try {
 			m.invoke(this.throwsAdvice, handlerArgs);
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			throw new AopConfigException("Internal error", ex);
-		}
-		catch (IllegalAccessException ex) {
+		} catch (IllegalAccessException ex) {
 			throw new AopConfigException("Internal error", ex);
-		}
-		catch (InvocationTargetException ex) {
+		} catch (InvocationTargetException ex) {
 			throw ex.getTargetException();
 		}
 	}

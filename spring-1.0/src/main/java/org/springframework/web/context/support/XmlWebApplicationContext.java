@@ -17,7 +17,6 @@
 package org.springframework.web.context.support;
 
 import javax.servlet.ServletContext;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
@@ -59,67 +58,79 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
  * @see ThemeSource
  */
 public class XmlWebApplicationContext extends AbstractXmlApplicationContext
-		implements ConfigurableWebApplicationContext {
+	implements ConfigurableWebApplicationContext {
 
-	/** Default config location for the root context */
+	/**
+	 * Default config location for the root context
+	 */
 	public static final String DEFAULT_CONFIG_LOCATION = "/WEB-INF/book.xml";
 
-	/** Default prefix for building a config location for a namespace */
+	/**
+	 * Default prefix for building a config location for a namespace
+	 */
 	public static final String DEFAULT_CONFIG_LOCATION_PREFIX = "/WEB-INF/";
 
-	/** Default suffix for building a config location for a namespace */
+	/**
+	 * Default suffix for building a config location for a namespace
+	 */
 	public static final String DEFAULT_CONFIG_LOCATION_SUFFIX = ".xml";
 
 
-	/** Servlet context that this context runs in */
+	/**
+	 * Servlet context that this context runs in
+	 */
 	private ServletContext servletContext;
 
-	/** Namespace of this context, or null if root */
+	/**
+	 * Namespace of this context, or null if root
+	 */
 	private String namespace = null;
 
-	/** Paths to XML configuration files */
+	/**
+	 * Paths to XML configuration files
+	 */
 	private String[] configLocations;
 
-	/** the ThemeSource for this ApplicationContext */
+	/**
+	 * the ThemeSource for this ApplicationContext
+	 */
 	private ThemeSource themeSource;
-
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
 
 	public ServletContext getServletContext() {
 		return this.servletContext;
 	}
 
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 	protected String getNamespace() {
 		return this.namespace;
 	}
 
-	public void setConfigLocations(String[] configLocations) {
-		this.configLocations = configLocations;
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	protected String[] getConfigLocations() {
 		return this.configLocations;
 	}
 
+	public void setConfigLocations(String[] configLocations) {
+		this.configLocations = configLocations;
+	}
 
 	public void refresh() throws BeansException {
 		if (this.namespace != null) {
 			setDisplayName("XmlWebApplicationContext for namespace '" + this.namespace + "'");
 			if (this.configLocations == null || this.configLocations.length == 0) {
-				this.configLocations = new String[] {DEFAULT_CONFIG_LOCATION_PREFIX + this.namespace +
-						DEFAULT_CONFIG_LOCATION_SUFFIX};
+				this.configLocations = new String[]{DEFAULT_CONFIG_LOCATION_PREFIX + this.namespace +
+													DEFAULT_CONFIG_LOCATION_SUFFIX};
 			}
-		}
-		else {
+		} else {
 			setDisplayName("Root XmlWebApplicationContext");
 			if (this.configLocations == null || this.configLocations.length == 0) {
-				this.configLocations = new String[] {DEFAULT_CONFIG_LOCATION};
+				this.configLocations = new String[]{DEFAULT_CONFIG_LOCATION};
 			}
 		}
 		super.refresh();

@@ -19,7 +19,6 @@ package org.springframework.aop.target;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.springframework.aop.IntroductionAdvisor;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
@@ -70,13 +69,12 @@ public final class ThreadLocalTargetSource extends AbstractPrototypeTargetSource
 		Object target = targetInThread.get();
 		if (target == null) {
 			logger.info("No target for apartment prototype '" + getTargetBeanName() +
-					"' found in thread: creating one and binding it to thread '" + Thread.currentThread().getName() + "'");
+						"' found in thread: creating one and binding it to thread '" + Thread.currentThread().getName() + "'");
 			// Associate target with thread local
 			target = newPrototypeInstance();
 			targetInThread.set(target);
 			targetSet.add(target);
-		}
-		else {
+		} else {
 			++hits;
 		}
 
@@ -93,6 +91,7 @@ public final class ThreadLocalTargetSource extends AbstractPrototypeTargetSource
 	/**
 	 * Dispose of targets if necessary;
 	 * clear ThreadLocal.
+	 *
 	 * @see DisposableBean#destroy()
 	 */
 	public void destroy() {
@@ -102,11 +101,10 @@ public final class ThreadLocalTargetSource extends AbstractPrototypeTargetSource
 			if (target instanceof DisposableBean) {
 				try {
 					((DisposableBean) target).destroy();
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					// Do nothing
 					logger.warn("Thread-bound target of class '" + target.getClass() +
-							"' threw exception from destroy() method", ex);
+								"' threw exception from destroy() method", ex);
 				}
 			}
 		}

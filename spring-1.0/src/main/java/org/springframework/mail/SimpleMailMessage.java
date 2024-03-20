@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.mail;
 
@@ -28,12 +28,12 @@ import org.springframework.util.StringUtils;
  *
  * @author Dmitriy Kopylenko
  * @author Juergen Hoeller
- * @since 10.09.2003
  * @version $Id: SimpleMailMessage.java,v 1.7 2004/03/18 02:46:05 trisberg Exp $
  * @see MailSender
  * @see org.springframework.mail.javamail.JavaMailSender
  * @see org.springframework.mail.javamail.MimeMessagePreparator
  * @see org.springframework.mail.javamail.MimeMessageHelper
+ * @since 10.09.2003
  */
 public class SimpleMailMessage {
 
@@ -76,73 +76,73 @@ public class SimpleMailMessage {
 		this.text = original.getText();
 	}
 
-	public void setFrom(String from) {
-		this.from = from;
-	}
-
 	public String getFrom() {
 		return this.from;
 	}
 
-	public void setTo(String to) {
-		this.to = new String[] {to};
-	}
-
-	public void setTo(String[] to) {
-		this.to = to;
+	public void setFrom(String from) {
+		this.from = from;
 	}
 
 	public String[] getTo() {
 		return this.to;
 	}
 
-	public void setCc(String cc) {
-		this.cc = new String[] {cc};
+	public void setTo(String to) {
+		this.to = new String[]{to};
 	}
 
-	public void setCc(String[] cc) {
-		this.cc = cc;
+	public void setTo(String[] to) {
+		this.to = to;
 	}
 
 	public String[] getCc() {
 		return cc;
 	}
 
-	public void setBcc(String bcc) {
-		this.bcc = new String[] {bcc};
+	public void setCc(String cc) {
+		this.cc = new String[]{cc};
 	}
 
-	public void setBcc(String[] bcc) {
-		this.bcc = bcc;
+	public void setCc(String[] cc) {
+		this.cc = cc;
 	}
 
 	public String[] getBcc() {
 		return bcc;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setBcc(String bcc) {
+		this.bcc = new String[]{bcc};
+	}
+
+	public void setBcc(String[] bcc) {
+		this.bcc = bcc;
 	}
 
 	public String getSubject() {
 		return this.subject;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	public String getText() {
 		return this.text;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer("SimpleMailMessage: ");
-		sb.append("from: " + this.getFrom()+ "; ");
-		sb.append("to: " +  StringUtils.arrayToCommaDelimitedString(this.getTo()) + "; ");
+		sb.append("from: " + this.getFrom() + "; ");
+		sb.append("to: " + StringUtils.arrayToCommaDelimitedString(this.getTo()) + "; ");
 		sb.append("cc: " + StringUtils.arrayToCommaDelimitedString(this.getCc()) + "; ");
 		sb.append("bcc: " + StringUtils.arrayToCommaDelimitedString(this.getBcc()) + "; ");
-		sb.append("subject: " + this.getSubject()+ "; ");
+		sb.append("subject: " + this.getSubject() + "; ");
 		sb.append("text: " + this.getText());
 		return sb.toString();
 	}

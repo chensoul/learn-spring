@@ -46,10 +46,18 @@ public abstract class SqlOperation extends RdbmsOperation {
 	 */
 	private PreparedStatementCreatorFactory preparedStatementFactory;
 
+	/**
+	 * Return whether prepared statements will return a specific
+	 * type of ResultSet.
+	 */
+	protected int getResultSetType() {
+		return resultSetType;
+	}
 
 	/**
 	 * Set whether to use prepared statements that return a
 	 * specific type of ResultSet.
+	 *
 	 * @param resultSetType the ResultSet type
 	 * @see ResultSet#TYPE_FORWARD_ONLY
 	 * @see ResultSet#TYPE_SCROLL_INSENSITIVE
@@ -60,11 +68,10 @@ public abstract class SqlOperation extends RdbmsOperation {
 	}
 
 	/**
-	 * Return whether prepared statements will return a specific
-	 * type of ResultSet.
+	 * Return whether prepared statements will return updatable ResultSets.
 	 */
-	protected int getResultSetType() {
-		return resultSetType;
+	protected boolean isUpdatableResults() {
+		return updatableResults;
 	}
 
 	/**
@@ -76,16 +83,9 @@ public abstract class SqlOperation extends RdbmsOperation {
 	}
 
 	/**
-	 * Return whether prepared statements will return updatable ResultSets.
-	 */
-	protected boolean isUpdatableResults() {
-		return updatableResults;
-	}
-
-
-	/**
 	 * Overridden method to configure the PreparedStatementCreatorFactory
 	 * based on our declared parameters.
+	 *
 	 * @see RdbmsOperation#compileInternal()
 	 */
 	protected final void compileInternal() {
@@ -93,15 +93,14 @@ public abstract class SqlOperation extends RdbmsOperation {
 		int bindVarCount = 0;
 		try {
 			bindVarCount = JdbcUtils.countParameterPlaceholders(getSql(), '?', '\'');
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// transform JDBC-agnostic error to data access error
 			throw new InvalidDataAccessApiUsageException(ex.getMessage());
 		}
 		if (bindVarCount != getDeclaredParameters().size())
 			throw new InvalidDataAccessApiUsageException("SQL '" + getSql() + "' requires " + bindVarCount +
-			                                             " bind variables, but " + getDeclaredParameters().size() +
-																									 " variables were declared for this object");
+														 " bind variables, but " + getDeclaredParameters().size() +
+														 " variables were declared for this object");
 
 		this.preparedStatementFactory = new PreparedStatementCreatorFactory(getSql(), getDeclaredParameters());
 		this.preparedStatementFactory.setResultSetType(this.resultSetType);
@@ -119,6 +118,7 @@ public abstract class SqlOperation extends RdbmsOperation {
 	/**
 	 * Return a PreparedStatementCreator to perform an operation
 	 * with this parameters.
+	 *
 	 * @param params parameters. May be null.
 	 */
 	protected PreparedStatementCreator newPreparedStatementCreator(Object[] params) {

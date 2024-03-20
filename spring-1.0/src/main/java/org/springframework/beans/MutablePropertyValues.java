@@ -1,19 +1,19 @@
 
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans;
 
@@ -22,25 +22,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the PropertyValues interface.
  * Allows simple manipulation of properties, and provides constructors
  * to support deep copy and construction from a Map.
+ *
  * @author Rod Johnson
- * @since 13 May 2001
  * @version $Id: MutablePropertyValues.java,v 1.6 2004/03/18 02:46:12 trisberg Exp $
+ * @since 13 May 2001
  */
 public class MutablePropertyValues implements PropertyValues {
 
-	/** List of PropertyValue objects */
+	/**
+	 * List of PropertyValue objects
+	 */
 	private List propertyValuesList;
 
 	/**
 	 * Creates a new empty MutablePropertyValues object.
 	 * Property values can be added with the addPropertyValue methods.
+	 *
 	 * @see #addPropertyValue(PropertyValue)
 	 * @see #addPropertyValue(String, Object)
 	 */
@@ -66,8 +69,9 @@ public class MutablePropertyValues implements PropertyValues {
 
 	/**
 	 * Construct a new PropertyValues object from a Map.
+	 *
 	 * @param map Map with property values keyed by property name,
-	 * which must be a String
+	 *            which must be a String
 	 */
 	public MutablePropertyValues(Map map) {
 		Set keys = map.keySet();
@@ -82,6 +86,7 @@ public class MutablePropertyValues implements PropertyValues {
 	/**
 	 * Add a PropertyValue object, replacing any existing one
 	 * for the respective property.
+	 *
 	 * @param pv PropertyValue object to add
 	 */
 	public void addPropertyValue(PropertyValue pv) {
@@ -98,7 +103,8 @@ public class MutablePropertyValues implements PropertyValues {
 	/**
 	 * Overloaded version of addPropertyValue that takes
 	 * a property name and a property value.
-	 * @param propertyName name of the property
+	 *
+	 * @param propertyName  name of the property
 	 * @param propertyValue value of the property
 	 * @see #addPropertyValue(PropertyValue)
 	 */
@@ -108,6 +114,7 @@ public class MutablePropertyValues implements PropertyValues {
 
 	/**
 	 * Remove the given PropertyValue, if contained.
+	 *
 	 * @param pv the PropertyValue to remove
 	 */
 	public void removePropertyValue(PropertyValue pv) {
@@ -117,6 +124,7 @@ public class MutablePropertyValues implements PropertyValues {
 	/**
 	 * Overloaded version of removePropertyValue that takes
 	 * a property name.
+	 *
 	 * @param propertyName name of the property
 	 * @see #removePropertyValue(PropertyValue)
 	 */
@@ -162,8 +170,7 @@ public class MutablePropertyValues implements PropertyValues {
 			PropertyValue pvOld = old.getPropertyValue(newPv.getName());
 			if (pvOld == null) {
 				changes.addPropertyValue(newPv);
-			}
-			else if (!pvOld.equals(newPv)) {
+			} else if (!pvOld.equals(newPv)) {
 				// It's changed
 				changes.addPropertyValue(newPv);
 			}

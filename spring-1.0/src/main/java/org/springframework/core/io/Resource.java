@@ -48,15 +48,17 @@ public interface Resource extends InputStreamSource {
 
 	/**
 	 * Return a URL handle for this resource.
+	 *
 	 * @throws IOException if the resource cannot be resolved as URL,
-	 * i.e. if the resource is not available as descriptor
+	 *                     i.e. if the resource is not available as descriptor
 	 */
 	URL getURL() throws IOException;
 
 	/**
 	 * Return a File handle for this resource.
+	 *
 	 * @throws IOException if the resource cannot be resolved as absolute
-	 * file path, i.e. if the resource is not available in a file system
+	 *                     file path, i.e. if the resource is not available in a file system
 	 */
 	File getFile() throws IOException;
 
@@ -65,6 +67,7 @@ public interface Resource extends InputStreamSource {
 	 * to be used for error output when working with the resource.
 	 * <p>Implementations are also encouraged to return this value
 	 * from their toString method.
+	 *
 	 * @see Object#toString
 	 */
 	String getDescription();

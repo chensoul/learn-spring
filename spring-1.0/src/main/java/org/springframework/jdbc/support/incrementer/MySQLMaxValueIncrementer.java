@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.support.incrementer;
 
@@ -58,19 +58,29 @@ import org.springframework.jdbc.support.JdbcUtils;
 
 public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrementer {
 
-	/** The Sql string for retrieving the new sequence value */
+	/**
+	 * The Sql string for retrieving the new sequence value
+	 */
 	private static final String VALUE_SQL = "select last_insert_id()";
 
-	/** The name of the column for this sequence */
+	/**
+	 * The name of the column for this sequence
+	 */
 	private String columnName;
 
-	/** The number of keys buffered in a cache */
+	/**
+	 * The number of keys buffered in a cache
+	 */
 	private int cacheSize = 1;
 
-	/** The next id to serve */
+	/**
+	 * The next id to serve
+	 */
 	private long nextId = 0;
 
-	/** The max id to serve */
+	/**
+	 * The max id to serve
+	 */
 	private long maxId = 0;
 
 
@@ -82,22 +92,16 @@ public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrement
 
 	/**
 	 * Convenience constructor.
-	 * @param ds the DataSource to use
+	 *
+	 * @param ds              the DataSource to use
 	 * @param incrementerName the name of the sequence/table to use
-	 * @param columnName the name of the column in the sequence table to use
+	 * @param columnName      the name of the column in the sequence table to use
 	 **/
 	public MySQLMaxValueIncrementer(DataSource ds, String incrementerName, String columnName) {
 		setDataSource(ds);
 		setIncrementerName(incrementerName);
 		this.columnName = columnName;
 		afterPropertiesSet();
-	}
-
-	/**
-	 * Set the name of the column in the sequence table.
-	 */
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
 	}
 
 	/**
@@ -108,10 +112,10 @@ public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrement
 	}
 
 	/**
-	 * Set the number of buffered keys.
+	 * Set the name of the column in the sequence table.
 	 */
-	public void setCacheSize(int cacheSize) {
-		this.cacheSize = cacheSize;
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
 	}
 
 	/**
@@ -119,6 +123,13 @@ public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrement
 	 */
 	public int getCacheSize() {
 		return this.cacheSize;
+	}
+
+	/**
+	 * Set the number of buffered keys.
+	 */
+	public void setCacheSize(int cacheSize) {
+		this.cacheSize = cacheSize;
 	}
 
 	public void afterPropertiesSet() {
@@ -132,18 +143,18 @@ public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrement
 	protected synchronized long getNextKey() throws DataAccessException {
 		if (this.maxId == this.nextId) {
 			/*
-			* Need to use straight JDBC code because we need to make sure that the insert and select
-			* are performed on the same connection (otherwise we can't be sure that last_insert_id()
-			* returned the correct value)
-			*/
+			 * Need to use straight JDBC code because we need to make sure that the insert and select
+			 * are performed on the same connection (otherwise we can't be sure that last_insert_id()
+			 * returned the correct value)
+			 */
 			Connection con = DataSourceUtils.getConnection(getDataSource());
 			Statement stmt = null;
 			try {
 				stmt = con.createStatement();
 				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 				// increment the sequence column
-				stmt.executeUpdate("update "+ getIncrementerName() + " set " + this.columnName +
-													 " = last_insert_id(" + this.columnName + " + " + getCacheSize() + ")");
+				stmt.executeUpdate("update " + getIncrementerName() + " set " + this.columnName +
+								   " = last_insert_id(" + this.columnName + " + " + getCacheSize() + ")");
 				// retrieve the new max of the sequence column
 				ResultSet rs = stmt.executeQuery(VALUE_SQL);
 				try {
@@ -151,21 +162,17 @@ public class MySQLMaxValueIncrementer extends AbstractDataFieldMaxValueIncrement
 						throw new DataAccessResourceFailureException("last_insert_id() failed after executing an update");
 					}
 					this.maxId = rs.getLong(1);
-				}
-				finally {
+				} finally {
 					JdbcUtils.closeResultSet(rs);
 				}
 				this.nextId = this.maxId - getCacheSize() + 1;
-			}
-			catch (SQLException ex) {
+			} catch (SQLException ex) {
 				throw new DataAccessResourceFailureException("Could not obtain last_insert_id()", ex);
-			}
-			finally {
+			} finally {
 				JdbcUtils.closeStatement(stmt);
 				DataSourceUtils.closeConnectionIfNecessary(con, getDataSource());
 			}
-		}
-		else {
+		} else {
 			this.nextId++;
 		}
 		return this.nextId;

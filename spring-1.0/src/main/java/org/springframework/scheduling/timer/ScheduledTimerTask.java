@@ -32,10 +32,10 @@ import java.util.TimerTask;
  * instantiates a new Job for each execution.
  *
  * @author Juergen Hoeller
- * @since 19.02.2004
  * @see TimerTask
  * @see java.util.Timer#schedule(TimerTask, long, long)
  * @see java.util.Timer#scheduleAtFixedRate(TimerTask, long, long)
+ * @since 19.02.2004
  */
 public class ScheduledTimerTask {
 
@@ -58,6 +58,13 @@ public class ScheduledTimerTask {
 	}
 
 	/**
+	 * Return the TimerTask to schedule.
+	 */
+	public TimerTask getTimerTask() {
+		return timerTask;
+	}
+
+	/**
 	 * Set the TimerTask to schedule.
 	 */
 	public void setTimerTask(TimerTask timerTask) {
@@ -65,10 +72,10 @@ public class ScheduledTimerTask {
 	}
 
 	/**
-	 * Return the TimerTask to schedule.
+	 * Return the delay before starting the job for the first time.
 	 */
-	public TimerTask getTimerTask() {
-		return timerTask;
+	public long getDelay() {
+		return delay;
 	}
 
 	/**
@@ -81,10 +88,10 @@ public class ScheduledTimerTask {
 	}
 
 	/**
-	 * Return the delay before starting the job for the first time.
+	 * Return the period between repeated task executions.
 	 */
-	public long getDelay() {
-		return delay;
+	public long getPeriod() {
+		return period;
 	}
 
 	/**
@@ -97,28 +104,22 @@ public class ScheduledTimerTask {
 	}
 
 	/**
-	 * Return the period between repeated task executions.
+	 * Return whether to schedule as fixed-rate execution.
 	 */
-	public long getPeriod() {
-		return period;
+	public boolean isFixedRate() {
+		return fixedRate;
 	}
 
 	/**
 	 * Set whether to schedule as fixed-rate execution, rather than
 	 * fixed-delay execution. Default is false, i.e. fixed delay.
 	 * See Timer javadoc for details on those execution modes.
+	 *
 	 * @see java.util.Timer#schedule(TimerTask, long, long)
 	 * @see java.util.Timer#scheduleAtFixedRate(TimerTask, long, long)
 	 */
 	public void setFixedRate(boolean fixedRate) {
 		this.fixedRate = fixedRate;
-	}
-
-	/**
-	 * Return whether to schedule as fixed-rate execution.
-	 */
-	public boolean isFixedRate() {
-		return fixedRate;
 	}
 
 }

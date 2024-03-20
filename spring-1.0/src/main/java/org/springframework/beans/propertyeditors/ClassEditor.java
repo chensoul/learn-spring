@@ -21,25 +21,25 @@ import java.beans.PropertyEditorSupport;
 /**
  * Editor for java.lang.Class, to directly feed a Class property
  * instead of using a String class name property.
+ *
  * @author Juergen Hoeller
- * @since 13.05.2003
  * @see Class
+ * @since 13.05.2003
  */
 public class ClassEditor extends PropertyEditorSupport {
+
+	public String getAsText() {
+		return ((Class) getValue()).getName();
+	}
 
 	public void setAsText(String text) throws IllegalArgumentException {
 		Class clazz = null;
 		try {
 			clazz = Class.forName(text, true, Thread.currentThread().getContextClassLoader());
-		}
-		catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			throw new IllegalArgumentException("Invalid class name [" + text + "]: " + ex.getMessage());
 		}
 		setValue(clazz);
-	}
-
-	public String getAsText() {
-		return ((Class) getValue()).getName();
 	}
 
 }

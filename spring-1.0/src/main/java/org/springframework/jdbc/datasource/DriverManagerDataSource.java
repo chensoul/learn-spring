@@ -46,11 +46,11 @@ import org.springframework.jdbc.CannotGetJdbcConnectionException;
  * definition to "org.apache.commons.dbcp.BasicDataSource".
  *
  * @author Juergen Hoeller
- * @since 14.03.2003
  * @version $Id: DriverManagerDataSource.java,v 1.7 2004/03/18 02:46:05 trisberg Exp $
  * @see org.springframework.jndi.support.SimpleNamingContextBuilder
  * @see org.springframework.jndi.JndiObjectFactoryBean
  * @see org.apache.commons.dbcp.BasicDataSource
+ * @since 14.03.2003
  */
 public class DriverManagerDataSource extends AbstractDataSource implements SmartDataSource {
 
@@ -73,51 +73,50 @@ public class DriverManagerDataSource extends AbstractDataSource implements Smart
 	 * DriverManager parameters.
 	 */
 	public DriverManagerDataSource(String driverClassName, String url, String username, String password)
-			throws CannotGetJdbcConnectionException {
+		throws CannotGetJdbcConnectionException {
 		setDriverClassName(driverClassName);
 		setUrl(url);
 		setUsername(username);
 		setPassword(password);
 	}
 
-	public void setDriverClassName(String driverClassName) throws CannotGetJdbcConnectionException {
-		this.driverClassName = driverClassName;
-		try {
-			Class.forName(this.driverClassName, true, Thread.currentThread().getContextClassLoader());
-		}
-		catch (ClassNotFoundException ex) {
-			throw new CannotGetJdbcConnectionException("Could not load JDBC driver class [" +
-																								 this.driverClassName + "]", ex);
-		}
-		logger.info("Loaded JDBC driver: " + this.driverClassName);
-	}
-
 	public String getDriverClassName() {
 		return driverClassName;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setDriverClassName(String driverClassName) throws CannotGetJdbcConnectionException {
+		this.driverClassName = driverClassName;
+		try {
+			Class.forName(this.driverClassName, true, Thread.currentThread().getContextClassLoader());
+		} catch (ClassNotFoundException ex) {
+			throw new CannotGetJdbcConnectionException("Could not load JDBC driver class [" +
+													   this.driverClassName + "]", ex);
+		}
+		logger.info("Loaded JDBC driver: " + this.driverClassName);
 	}
 
 	public String getUrl() {
 		return url;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
 		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**
@@ -148,7 +147,7 @@ public class DriverManagerDataSource extends AbstractDataSource implements Smart
 	 * into a protected method to allow for easy unit testing.
 	 */
 	protected Connection getConnectionFromDriverManager(String url, String username, String password)
-	    throws SQLException {
+		throws SQLException {
 		if (logger.isInfoEnabled()) {
 			logger.info("Creating new JDBC connection to [" + url + "]");
 		}

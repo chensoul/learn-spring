@@ -60,29 +60,29 @@ public class TilesView extends InternalResourceView {
 	 * Name of the attribute that will override the path of the layout page
 	 * to render. A Tiles component controller can set such an attribute
 	 * to dynamically switch the look and feel of a Tiles page.
+	 *
 	 * @see #setPath
 	 */
 	public static final String PATH_ATTRIBUTE = TilesView.class.getName() + ".PATH";
+	private DefinitionsFactory definitionsFactory;
 
 	/**
 	 * Set the path of the layout page to render.
+	 *
 	 * @param request current HTTP request
-	 * @param path the path of the layout page
+	 * @param path    the path of the layout page
 	 * @see #PATH_ATTRIBUTE
 	 */
 	public static void setPath(HttpServletRequest request, String path) {
 		request.setAttribute(PATH_ATTRIBUTE, path);
 	}
 
-
-	private DefinitionsFactory definitionsFactory;
-
 	protected void initApplicationContext() throws ApplicationContextException {
 		super.initApplicationContext();
 
 		// get definitions factory
 		this.definitionsFactory = (DefinitionsFactory)
-		    getWebApplicationContext().getServletContext().getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
+			getWebApplicationContext().getServletContext().getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
 		if (this.definitionsFactory == null) {
 			throw new ApplicationContextException("Tiles definitions factory not found: TilesConfigurer not defined?");
 		}
@@ -93,7 +93,7 @@ public class TilesView extends InternalResourceView {
 	 * component controller if any, and determine the request dispatcher path.
 	 */
 	protected String prepareForRendering(HttpServletRequest request, HttpServletResponse response)
-	    throws Exception {
+		throws Exception {
 
 		// get component definition
 		ComponentDefinition definition = getComponentDefinition(this.definitionsFactory, request);
@@ -117,7 +117,7 @@ public class TilesView extends InternalResourceView {
 		String path = getDispatcherPath(definition, request);
 		if (path == null) {
 			throw new ServletException("Could not determine a path for Tiles definition '" +
-			                           definition.getName() + "'");
+									   definition.getName() + "'");
 		}
 
 		return path;
@@ -126,30 +126,31 @@ public class TilesView extends InternalResourceView {
 	/**
 	 * Determine the Tiles component definition for the given Tiles
 	 * definitions factory.
+	 *
 	 * @param factory the Tiles definitions factory
 	 * @param request current HTTP request
 	 * @return the component definition
 	 */
 	protected ComponentDefinition getComponentDefinition(DefinitionsFactory factory, HttpServletRequest request)
-	    throws Exception {
+		throws Exception {
 		return factory.getDefinition(getUrl(), request, getServletContext());
 	}
 
 	/**
 	 * Determine the Tiles component context for the given Tiles definition.
+	 *
 	 * @param definition the Tiles definition to render
-	 * @param request current HTTP request
+	 * @param request    current HTTP request
 	 * @return the component context
 	 * @throws Exception if preparations failed
 	 */
 	protected ComponentContext getComponentContext(ComponentDefinition definition, HttpServletRequest request)
-	    throws Exception {
+		throws Exception {
 		ComponentContext context = ComponentContext.getContext(request);
 		if (context == null) {
 			context = new ComponentContext(definition.getAttributes());
 			ComponentContext.setContext(context, request);
-		}
-		else {
+		} else {
 			context.addMissing(definition.getAttributes());
 		}
 		return context;
@@ -158,13 +159,14 @@ public class TilesView extends InternalResourceView {
 	/**
 	 * Determine and initialize the Tiles component controller for the
 	 * given Tiles definition, if any.
+	 *
 	 * @param definition the Tiles definition to render
-	 * @param request current HTTP request
+	 * @param request    current HTTP request
 	 * @return the component controller to execute, or null if none
 	 * @throws Exception if preparations failed
 	 */
 	protected Controller getController(ComponentDefinition definition, HttpServletRequest request)
-			throws Exception {
+		throws Exception {
 		Controller controller = definition.getOrCreateController();
 		if (controller instanceof ApplicationContextAware) {
 			((ApplicationContextAware) controller).setApplicationContext(getApplicationContext());
@@ -174,28 +176,30 @@ public class TilesView extends InternalResourceView {
 
 	/**
 	 * Execute the given Tiles controller.
+	 *
 	 * @param controller the component controller to execute
-	 * @param context the component context
-	 * @param request current HTTP request
-	 * @param response current HTTP response
+	 * @param context    the component context
+	 * @param request    current HTTP request
+	 * @param response   current HTTP response
 	 * @throws Exception if controller execution failed
 	 */
 	protected void executeController(Controller controller, ComponentContext context,
-	                                 HttpServletRequest request, HttpServletResponse response)
-	    throws Exception {
+									 HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
 		controller.perform(context, request, response, getServletContext());
 	}
 
 	/**
 	 * Determine the dispatcher path for the given Tiles definition,
 	 * i.e. the request dispatcher path of the layout page.
+	 *
 	 * @param definition the Tiles definition to render
-	 * @param request current HTTP request
+	 * @param request    current HTTP request
 	 * @return the path of the layout page to render
 	 * @throws Exception if preparations failed
 	 */
 	protected String getDispatcherPath(ComponentDefinition definition, HttpServletRequest request)
-	    throws Exception {
+		throws Exception {
 		Object pathAttr = request.getAttribute(PATH_ATTRIBUTE);
 		return (pathAttr != null ? pathAttr.toString() : definition.getPath());
 	}

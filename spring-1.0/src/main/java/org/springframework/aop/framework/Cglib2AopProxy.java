@@ -19,7 +19,6 @@ package org.springframework.aop.framework;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
-
 import net.sf.cglib.core.CodeGenerationException;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -28,7 +27,6 @@ import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import net.sf.cglib.proxy.NoOp;
-
 import org.aopalliance.aop.AspectException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
@@ -61,14 +59,15 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Config used to configure this proxy */
+	/**
+	 * Config used to configure this proxy
+	 */
 	protected final AdvisedSupport advised;
 
 	/**
-	 *
 	 * @throws AopConfigException if the config is invalid. We try
-	 * to throw an informative exception in this case, rather than let
-	 * a mysterious failure happen later.
+	 *                            to throw an informative exception in this case, rather than let
+	 *                            a mysterious failure happen later.
 	 */
 	protected Cglib2AopProxy(AdvisedSupport config) throws AopConfigException {
 		if (config == null)
@@ -81,6 +80,19 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 		}
 	}
 
+	/**
+	 * Wrap a return of this if necessary to be the proxy
+	 */
+	protected static Object massageReturnTypeIfNecessary(Object proxy, Object target, Object retVal) {
+		// Massage return value if necessary
+		if (retVal != null && retVal == target) {
+			// Special case: it returned "this"
+			// Note that we can't help if the target sets
+			// a reference to itself in another returned object
+			retVal = proxy;
+		}
+		return retVal;
+	}
 
 	/**
 	 * Implementation of MethodInterceptor.
@@ -104,8 +116,7 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 				// This class implements the equals() method itself
 				// We don't need to use reflection
 				return new Boolean(equals(args[0]));
-			}
-			else if (Advised.class == method.getDeclaringClass()) {
+			} else if (Advised.class == method.getDeclaringClass()) {
 				// Service invocations on ProxyConfig with the proxy config
 				return AopProxyUtils.invokeJoinpointUsingReflection(this.advised, method, args);
 			}
@@ -134,11 +145,10 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying
 				retVal = methodProxy.invoke(target, args);
-			}
-			else {
+			} else {
 				// We need to create a method invocation...
 				invocation = new MethodInvocationImpl(proxy, target, method, args,
-							targetClass, chain, methodProxy);
+					targetClass, chain, methodProxy);
 
 				// If we get here, we need to create a MethodInvocation
 				retVal = invocation.proceed();
@@ -146,12 +156,11 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 
 			retVal = massageReturnTypeIfNecessary(proxy, target, retVal);
 			return retVal;
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			// In CGLIB2, unlike CGLIB 1, it's necessary to wrap
 			// undeclared throwable exceptions. As we don't care about JDK 1.2
 			// compatibility, we use java.lang.reflect.UndeclaredThrowableException.
-			if ( (t instanceof Exception) && !(t instanceof RuntimeException)) {
+			if ((t instanceof Exception) && !(t instanceof RuntimeException)) {
 				// It's a checked exception: we must check it's legal
 				Class[] permittedThrows = method.getExceptionTypes();
 				for (int i = 0; i < permittedThrows.length; i++) {
@@ -165,8 +174,7 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 
 			// It's not a checked exception, so we can rethrow it
 			throw t;
-		}
-		finally {
+		} finally {
 			if (target != null && !targetSource.isStatic()) {
 				// Must have come from TargetSource
 				targetSource.releaseTarget(target);
@@ -177,31 +185,15 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 				AopContext.setCurrentProxy(oldProxy);
 			}
 		}
-	}	// intercept
-
-
-	/**
-	 * Wrap a return of this if necessary to be the proxy
-	 */
-	protected static Object massageReturnTypeIfNecessary(Object proxy, Object target, Object retVal) {
-		// Massage return value if necessary
-		if (retVal != null && retVal == target) {
-			// Special case: it returned "this"
-			// Note that we can't help if the target sets
-			// a reference to itself in another returned object
-			retVal = proxy;
-		}
-		return retVal;
-	}
-
+	}    // intercept
 
 	/**
 	 * Is the given method the equals method?
 	 */
 	protected final boolean isEqualsMethod(Method m) {
 		return "equals".equals(m.getName()) &&
-				m.getParameterTypes().length == 1 &&
-				m.getParameterTypes()[0] == Object.class;
+			   m.getParameterTypes().length == 1 &&
+			   m.getParameterTypes()[0] == Object.class;
 	}
 
 
@@ -227,59 +219,24 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 			e.setCallbackFilter(this);
 			e.setInterfaces(AopProxyUtils.completeProxiedInterfaces(advised));
 			Callback targetInvoker = canApplyCglibOptimizations() ?
-					(Callback) new StaticTargetInvoker(advised.getTargetSource().getTarget()) :
-					(Callback) new DynamicTargetInvoker();
+				(Callback) new StaticTargetInvoker(advised.getTargetSource().getTarget()) :
+				(Callback) new DynamicTargetInvoker();
 
-			e.setCallbacks(new Callback[] {
-					this,				// For normal advice
-					targetInvoker,		// invoke target without considering advice, if optimized
-					NoOp.INSTANCE		// no override for methods mapped to this
+			e.setCallbacks(new Callback[]{
+				this,                // For normal advice
+				targetInvoker,        // invoke target without considering advice, if optimized
+				NoOp.INSTANCE        // no override for methods mapped to this
 			});
 
 			return e.create();
-		}
-		catch (CodeGenerationException ex) {
+		} catch (CodeGenerationException ex) {
 			throw new AspectException("Couldn't generate CGLIB subclass of class '" + advised.getTargetSource().getTargetClass() + "': " +
-					"Common causes of this problem include using a final class, or a non-visible class", ex);
-		}
-		catch (Exception ex) {
+									  "Common causes of this problem include using a final class, or a non-visible class", ex);
+		} catch (Exception ex) {
 			// TargetSource getTarget failed
 			throw new AopConfigException("Unexpected AOP exception", ex);
 		}
 	}
-
-	/**
-	 * Invoker used to invoke the target without creating a method invocation
-	 * or evaluating an advice chain. (We know there was no advice for this method.)
-	 */
-	private class DynamicTargetInvoker implements MethodInterceptor {
-		 /**
-		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(Object, Method, Object[], net.sf.cglib.proxy.MethodProxy)
-		 */
-		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-			Object target = advised.getTargetSource().getTarget();
-			Object ret = methodProxy.invoke(target, args);
-			return massageReturnTypeIfNecessary(proxy, target, ret);
-		}
-	}
-
-	/**
-	 * Like DynamicTargetInvoker, for use when there's a static TargetSource
-	 */
-	private static class StaticTargetInvoker implements MethodInterceptor {
-		private final Object target;
-		public StaticTargetInvoker(Object target) {
-			this.target = target;
-		}
-		 /**
-		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(Object, Method, Object[], net.sf.cglib.proxy.MethodProxy)
-		 */
-		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-			Object ret = methodProxy.invoke(target, args);
-			return massageReturnTypeIfNecessary(proxy, target, ret);
-		}
-	}
-
 
 	/**
 	 * Given the Advised object we have, can we apply CGLIB optimizations
@@ -287,8 +244,8 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 	 */
 	private boolean canApplyCglibOptimizations() {
 		return advised.getOptimize() &&
-			advised.getTargetSource().isStatic() &&
-			!advised.getExposeProxy();
+			   advised.getTargetSource().isStatic() &&
+			   !advised.getExposeProxy();
 	}
 
 	/**
@@ -297,6 +254,7 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 	 * AOP_PROXY (run through our intercept method) or INVOKE_TARGET
 	 * (optimized direct invocation of target without re-evaluating
 	 * advice chain at runtime).
+	 *
 	 * @see net.sf.cglib.proxy.CallbackFilter#accept(Method)
 	 */
 	public int accept(Method method) {
@@ -325,24 +283,23 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 
 		// Proxy is not yet available, but that shouldn't matter
 		List chain = advised.getAdvisorChainFactory().getInterceptorsAndDynamicInterceptionAdvice(advised, null, method, targetClass);
-		boolean  haveAdvice = !chain.isEmpty();
+		boolean haveAdvice = !chain.isEmpty();
 
 		if (haveAdvice) {
 			logger.info("CGLIB proxy for " + targetClass.getName() +
 						" WILL override " + method);
-		}
-		else {
+		} else {
 			logger.info("Chain is empty for " + method + "; will NOT override");
 		}
 		return haveAdvice ? AOP_PROXY : INVOKE_TARGET;
 	}
 
-
 	/**
 	 * Equality means interceptors and interfaces are ==.
-	 * @see Object#equals(Object)
+	 *
 	 * @param other may be a dynamic proxy wrapping an instance
-	 * of this class
+	 *              of this class
+	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object other) {
 		if (other == null)
@@ -353,15 +310,13 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 		Cglib2AopProxy otherCglibProxy = null;
 		if (other instanceof Cglib2AopProxy) {
 			otherCglibProxy = (Cglib2AopProxy) other;
-		}
-		else if (other instanceof Factory) {
+		} else if (other instanceof Factory) {
 			// The 0th callback will be the Cglib2AopProxy if we're correct
 			Callback callback = ((Factory) other).getCallback(AOP_PROXY);
 			if (!(callback instanceof Cglib2AopProxy))
 				return false;
 			otherCglibProxy = (Cglib2AopProxy) callback;
-		}
-		else {
+		} else {
 			// Not a valid comparison
 			return false;
 		}
@@ -369,6 +324,24 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 		return AopProxyUtils.equalsInProxy(advised, otherCglibProxy.advised);
 	}
 
+	/**
+	 * Like DynamicTargetInvoker, for use when there's a static TargetSource
+	 */
+	private static class StaticTargetInvoker implements MethodInterceptor {
+		private final Object target;
+
+		public StaticTargetInvoker(Object target) {
+			this.target = target;
+		}
+
+		/**
+		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(Object, Method, Object[], net.sf.cglib.proxy.MethodProxy)
+		 */
+		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+			Object ret = methodProxy.invoke(target, args);
+			return massageReturnTypeIfNecessary(proxy, target, ret);
+		}
+	}
 
 	/**
 	 * Implementation of AOP Alliance MethodInvocation used by this AOP proxy
@@ -378,18 +351,34 @@ class Cglib2AopProxy implements AopProxy, MethodInterceptor, CallbackFilter {
 		private MethodProxy methodProxy;
 
 		public MethodInvocationImpl(Object proxy, Object target, Method m, Object[] arguments, Class targetClass,
-				List interceptorsAndDynamicMethodMatchers,
-				MethodProxy methodProxy) {
+									List interceptorsAndDynamicMethodMatchers,
+									MethodProxy methodProxy) {
 			super(proxy, target, m, arguments, targetClass, interceptorsAndDynamicMethodMatchers);
 			this.methodProxy = methodProxy;
 		}
 
 		/**
 		 * Gives a marginal performance improvement versus using reflection to invoke the target.
+		 *
 		 * @see ReflectiveMethodInvocation#invokeJoinpoint()
 		 */
 		protected Object invokeJoinpoint() throws Throwable {
 			return methodProxy.invoke(target, arguments);
+		}
+	}
+
+	/**
+	 * Invoker used to invoke the target without creating a method invocation
+	 * or evaluating an advice chain. (We know there was no advice for this method.)
+	 */
+	private class DynamicTargetInvoker implements MethodInterceptor {
+		/**
+		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(Object, Method, Object[], net.sf.cglib.proxy.MethodProxy)
+		 */
+		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+			Object target = advised.getTargetSource().getTarget();
+			Object ret = methodProxy.invoke(target, args);
+			return massageReturnTypeIfNecessary(proxy, target, ret);
 		}
 	}
 

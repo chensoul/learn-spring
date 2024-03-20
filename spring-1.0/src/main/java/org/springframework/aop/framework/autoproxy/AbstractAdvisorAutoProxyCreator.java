@@ -19,7 +19,6 @@ package org.springframework.aop.framework.autoproxy;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.framework.support.AopUtils;
 import org.springframework.beans.factory.BeanFactory;
@@ -71,6 +70,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	/**
 	 * Find all eligible advices and for autoproxying this class.
+	 *
 	 * @return the empty list, not null, if there are no pointcuts or interceptors
 	 * @see #findCandidateAdvisors
 	 */
@@ -83,8 +83,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 			if (AopUtils.canApply(candidate, clazz, null)) {
 				eligibleAdvice.add(candidate);
 				logger.info("Candidate Advice [" + candidate + "] accepted for class [" + clazz.getName() + "]");
-			}
-			else {
+			} else {
 				logger.info("Candidate Advice [" + candidate + "] rejected for class [" + clazz.getName() + "]");
 			}
 		}
@@ -93,6 +92,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	/**
 	 * Sort advisors based on ordering.
+	 *
 	 * @see org.springframework.core.Ordered
 	 */
 	protected List sortAdvisors(List advisors) {
@@ -105,6 +105,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * when our own infrastructure (such as this class) depends on advisors that depend
 	 * on beans... We use a ControlFlow object to check that we didn't arrived at this
 	 * call via this classes findCandidateAdvisors() method.
+	 *
 	 * @see ControlFlow
 	 */
 	protected boolean shouldSkip(Object bean, String name) {
@@ -116,6 +117,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	/**
 	 * Find all candidate advices to use in auto proxying.
+	 *
 	 * @return list of Advisor
 	 */
 	protected abstract List findCandidateAdvisors();

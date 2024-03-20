@@ -20,13 +20,13 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.LogFactory;
 
 /**
  * AdvisorChainFactory implementation that caches by method.
  * Uses IdentityHashMap in JVM 1.4, which skips expensive Method.hashCode()
  * call. In 1.3, falls back to using HashMap.
+ *
  * @author Rod Johnson
  * @version $Id: HashMapCachingAdvisorChainFactory.java,v 1.4 2004/03/18 02:46:05 trisberg Exp $
  */
@@ -42,8 +42,7 @@ public final class HashMapCachingAdvisorChainFactory implements AdvisorChainFact
 		try {
 			Class clazz = Class.forName("java.util.IdentityHashMap");
 			return (Map) clazz.newInstance();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			// Shouldn't happen
 			LogFactory.getLog(getClass()).debug("Falling back to HashMap (JDK 1.3?): couldn't create an IdentityHashMap using reflection", ex);
 			return new HashMap();

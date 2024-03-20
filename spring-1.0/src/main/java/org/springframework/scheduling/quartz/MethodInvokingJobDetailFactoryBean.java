@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.scheduling.quartz;
 
@@ -40,11 +40,11 @@ import org.springframework.util.MethodInvoker;
  * behavior with MethodInvokingFactoryBean.
  *
  * @author Juergen Hoeller
- * @since 18.02.2004
  * @see org.springframework.beans.factory.config.MethodInvokingFactoryBean
+ * @since 18.02.2004
  */
 public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
-    implements FactoryBean, BeanNameAware, InitializingBean {
+	implements FactoryBean, BeanNameAware, InitializingBean {
 
 	private String name;
 
@@ -57,6 +57,7 @@ public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
 	/**
 	 * Set the name of the job.
 	 * Default is the bean name of this FactoryBean.
+	 *
 	 * @see org.quartz.JobDetail#setName
 	 */
 	public void setName(String name) {
@@ -66,6 +67,7 @@ public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
 	/**
 	 * Set the group of the job.
 	 * Default is the default group of the Scheduler.
+	 *
 	 * @see org.quartz.JobDetail#setGroup
 	 * @see org.quartz.Scheduler#DEFAULT_GROUP
 	 */
@@ -80,7 +82,7 @@ public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
 	public void afterPropertiesSet() throws ClassNotFoundException, NoSuchMethodException {
 		prepare();
 		this.jobDetail = new JobDetail(this.name != null ? this.name : this.beanName,
-		                               this.group, MethodInvokingJob.class);
+			this.group, MethodInvokingJob.class);
 		this.jobDetail.getJobDataMap().put("methodInvoker", this);
 	}
 
@@ -115,7 +117,7 @@ public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
 		public void setMethodInvoker(MethodInvoker methodInvoker) {
 			this.methodInvoker = methodInvoker;
 			this.errorMessage = "Could not invoke method '" + this.methodInvoker.getTargetMethod() +
-					"' on target object [" + this.methodInvoker.getTargetObject() + "]";
+								"' on target object [" + this.methodInvoker.getTargetObject() + "]";
 		}
 
 		/**
@@ -124,17 +126,15 @@ public class MethodInvokingJobDetailFactoryBean extends MethodInvoker
 		protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 			try {
 				this.methodInvoker.invoke();
-			}
-			catch (InvocationTargetException ex) {
+			} catch (InvocationTargetException ex) {
 				logger.warn(this.errorMessage + ": " + ex.getTargetException().getMessage());
 				if (ex.getTargetException() instanceof JobExecutionException) {
 					throw (JobExecutionException) ex.getTargetException();
 				}
 				Exception jobEx = (ex.getTargetException() instanceof Exception) ?
-						(Exception) ex.getTargetException() : ex;
+					(Exception) ex.getTargetException() : ex;
 				throw new JobExecutionException(this.errorMessage, jobEx, false);
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				logger.warn(this.errorMessage + ": " + ex.getMessage());
 				throw new JobExecutionException(this.errorMessage, ex, false);
 			}

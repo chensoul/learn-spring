@@ -33,22 +33,31 @@ import javax.servlet.jsp.PageContext;
  */
 public abstract class TagUtils {
 
-	/** constant identifying the page scope String */
+	/**
+	 * constant identifying the page scope String
+	 */
 	public static final String SCOPE_PAGE = "page";
 
-	/** constant identifying the request scope String */
+	/**
+	 * constant identifying the request scope String
+	 */
 	public static final String SCOPE_REQUEST = "request";
 
-	/** constant identifying the session scope String */
+	/**
+	 * constant identifying the session scope String
+	 */
 	public static final String SCOPE_SESSION = "session";
 
-	/** constant identifying the application scope String */
+	/**
+	 * constant identifying the application scope String
+	 */
 	public static final String SCOPE_APPLICATION = "application";
 
 	/**
 	 * Determines the scope for a given input String. If the string does not match
 	 * 'request', 'session', 'page' or 'application', the method will return
 	 * PageContext.PAGE_SCOPE.
+	 *
 	 * @param scope the string to inspect
 	 * @return the scope found, or PageContext.PAGE_SCOPE if no scope matched.
 	 * @throws IllegalArgumentException if the scope is null
@@ -56,18 +65,14 @@ public abstract class TagUtils {
 	public static int getScope(String scope) {
 		if (scope == null) {
 			throw new IllegalArgumentException(
-					"Scope to search for cannot be null");
-		}
-		else if (scope.equals(SCOPE_REQUEST)) {
+				"Scope to search for cannot be null");
+		} else if (scope.equals(SCOPE_REQUEST)) {
 			return PageContext.REQUEST_SCOPE;
-		}
-		else if (scope.equals(SCOPE_SESSION)) {
+		} else if (scope.equals(SCOPE_SESSION)) {
 			return PageContext.SESSION_SCOPE;
-		}
-		else if (scope.equals(SCOPE_APPLICATION)) {
+		} else if (scope.equals(SCOPE_APPLICATION)) {
 			return PageContext.APPLICATION_SCOPE;
-		}
-		else {
+		} else {
 			return PageContext.PAGE_SCOPE;
 		}
 	}

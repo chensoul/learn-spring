@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.context;
 
@@ -40,7 +40,7 @@ import org.springframework.beans.BeansException;
  *
  * <p>ApplicationObjectSupport is a convenience base class for
  * application objects, implementing this interface.
- * 
+ *
  * <p>For a list of all bean lifecycle methods, see the BeanFactory javadocs.
  *
  * @author Rod Johnson
@@ -51,16 +51,17 @@ import org.springframework.beans.BeansException;
  * @see org.springframework.beans.factory.BeanFactory
  */
 public interface ApplicationContextAware {
-	
-	/** 
+
+	/**
 	 * Set the ApplicationContext that this object runs in.
 	 * Normally this call will be used to initialize the object.
 	 * <p>Invoked after population of normal bean properties but before an init
 	 * callback like InitializingBean's afterPropertiesSet or a custom init-method.
 	 * Invoked after ResourceLoaderAware's setResourceLoader.
+	 *
 	 * @param context ApplicationContext object to be used by this object
 	 * @throws ApplicationContextException in case of context initialization errors
-	 * @throws BeansException if thrown by application context methods
+	 * @throws BeansException              if thrown by application context methods
 	 * @see org.springframework.beans.factory.BeanInitializationException
 	 */
 	void setApplicationContext(ApplicationContext context) throws BeansException;

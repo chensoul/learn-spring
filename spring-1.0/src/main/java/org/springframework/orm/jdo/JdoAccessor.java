@@ -1,28 +1,26 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.orm.jdo;
 
 import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 
@@ -42,10 +40,10 @@ import org.springframework.dao.DataAccessException;
  * <p>Not intended to be used directly. See JdoTemplate and JdoInterceptor.
  *
  * @author Juergen Hoeller
- * @since 02.11.2003
  * @see JdoTemplate
  * @see JdoInterceptor
  * @see #setFlushEager
+ * @since 02.11.2003
  */
 public class JdoAccessor implements InitializingBean {
 
@@ -58,6 +56,14 @@ public class JdoAccessor implements InitializingBean {
 	private boolean flushEager = false;
 
 	/**
+	 * Return the JDO PersistenceManagerFactory that should be used to create
+	 * PersistenceManagers.
+	 */
+	public PersistenceManagerFactory getPersistenceManagerFactory() {
+		return persistenceManagerFactory;
+	}
+
+	/**
 	 * Set the JDO PersistenceManagerFactory that should be used to create
 	 * PersistenceManagers.
 	 */
@@ -66,11 +72,10 @@ public class JdoAccessor implements InitializingBean {
 	}
 
 	/**
-	 * Return the JDO PersistenceManagerFactory that should be used to create
-	 * PersistenceManagers.
+	 * Return the JDO dialect to use for this accessor.
 	 */
-	public PersistenceManagerFactory getPersistenceManagerFactory() {
-		return persistenceManagerFactory;
+	public JdoDialect getJdoDialect() {
+		return jdoDialect;
 	}
 
 	/**
@@ -83,10 +88,10 @@ public class JdoAccessor implements InitializingBean {
 	}
 
 	/**
-	 * Return the JDO dialect to use for this accessor.
+	 * Return if this accessor should flush changes to the database eagerly.
 	 */
-	public JdoDialect getJdoDialect() {
-		return jdoDialect;
+	public boolean isFlushEager() {
+		return flushEager;
 	}
 
 	/**
@@ -107,13 +112,6 @@ public class JdoAccessor implements InitializingBean {
 		this.flushEager = flushEager;
 	}
 
-	/**
-	 * Return if this accessor should flush changes to the database eagerly.
-	 */
-	public boolean isFlushEager() {
-		return flushEager;
-	}
-
 	public void afterPropertiesSet() {
 		if (this.persistenceManagerFactory == null) {
 			throw new IllegalArgumentException("persistenceManagerFactory is required");
@@ -125,7 +123,8 @@ public class JdoAccessor implements InitializingBean {
 
 	/**
 	 * Flush the given JDO persistence manager if necessary.
-	 * @param pm the current JDO PersistenceManage
+	 *
+	 * @param pm                  the current JDO PersistenceManage
 	 * @param existingTransaction if executing within an existing transaction
 	 * @throws JDOException in case of JDO flushing errors
 	 */
@@ -141,6 +140,7 @@ public class JdoAccessor implements InitializingBean {
 	 * org.springframework.dao hierarchy. Delegates to the JdoDialect if set, falls
 	 * back to PersistenceManagerFactoryUtils' standard exception translation else.
 	 * May be overridden in subclasses.
+	 *
 	 * @param ex JDOException that occured
 	 * @return the corresponding DataAccessException instance
 	 * @see JdoDialect#translateException
@@ -149,8 +149,7 @@ public class JdoAccessor implements InitializingBean {
 	public DataAccessException convertJdoAccessException(JDOException ex) {
 		if (getJdoDialect() != null) {
 			return getJdoDialect().translateException(ex);
-		}
-		else {
+		} else {
 			return PersistenceManagerFactoryUtils.convertJdoAccessException(ex);
 		}
 	}

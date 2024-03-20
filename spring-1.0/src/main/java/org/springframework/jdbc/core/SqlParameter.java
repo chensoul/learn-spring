@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.core;
 
@@ -27,19 +27,24 @@ import java.util.List;
  * Parameters may be anonymous, in which case name is null.
  * However all parameters must define a SQL type constant
  * from java.sql.Types.
+ *
  * @author Rod Johnson
  */
 public class SqlParameter {
 
 	private String name;
-	
-	/** SQL type constant from java.sql.Types */
+
+	/**
+	 * SQL type constant from java.sql.Types
+	 */
 	private int type;
 
-    /** used for types that are user-named like: STRUCT, DISTINCT, JAVA_OBJECT, and named array types. */
+	/**
+	 * used for types that are user-named like: STRUCT, DISTINCT, JAVA_OBJECT, and named array types.
+	 */
 	private String typeName;
-	
-		
+
+
 	/**
 	 * Add a new anonymous parameter
 	 */
@@ -54,25 +59,12 @@ public class SqlParameter {
 	public SqlParameter(String name, int type) {
 		this(name, type, null);
 	}
-	
+
 	public SqlParameter(String name, int type, String typeName) {
 		this.name = name;
 		this.type = type;
 		this.typeName = typeName;
 	}
-
-	public String getName() {
-		return name;
-	}
-	
-	public int getSqlType() {
-		return type;
-	}
-
-	public String getTypeName() {
-		return typeName;
-	}
-
 
 	/**
 	 * Convert a list of JDBC types, as defined in the java.sql.Types class,
@@ -88,24 +80,41 @@ public class SqlParameter {
 		return l;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public int getSqlType() {
+		return type;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
 
 	/**
 	 * Implementation of ResultReader that calls the supplied
-	 * RowMapper class's mapRow() method for each row.  
-	 * This class is used by parameters that return a result set - 
-	 * subclasses include SqlOutputParameter and SqlReturnResultSet.  
-	 * This class should also be able to be reused when we implement 
+	 * RowMapper class's mapRow() method for each row.
+	 * This class is used by parameters that return a result set -
+	 * subclasses include SqlOutputParameter and SqlReturnResultSet.
+	 * This class should also be able to be reused when we implement
 	 * functionality to retrieve generated keys for insert statements.
 	 */
 	protected static class ResultReaderStoredProcImpl implements ResultReader {
 
-		/** List to save results in */
+		/**
+		 * List to save results in
+		 */
 		private List results;
 
-		/** The RowMapper implementation that will be used to map rows */
+		/**
+		 * The RowMapper implementation that will be used to map rows
+		 */
 		private RowMapper rowMapper;
 
-		/** The counter used to count rows */
+		/**
+		 * The counter used to count rows
+		 */
 		private int rowNum = 0;
 
 		/**

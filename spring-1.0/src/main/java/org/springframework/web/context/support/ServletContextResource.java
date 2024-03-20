@@ -21,9 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import javax.servlet.ServletContext;
-
 import org.springframework.core.io.AbstractResource;
 
 /**
@@ -35,9 +33,9 @@ import org.springframework.core.io.AbstractResource;
  * Always supports resolution as URL.
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see ServletContext#getResourceAsStream
  * @see ServletContext#getRealPath
+ * @since 28.12.2003
  */
 public class ServletContextResource extends AbstractResource {
 
@@ -47,8 +45,9 @@ public class ServletContextResource extends AbstractResource {
 
 	/**
 	 * Create a new ServletContextResource.
+	 *
 	 * @param servletContext the ServletContext to load from
-	 * @param path the path of the resource
+	 * @param path           the path of the resource
 	 */
 	public ServletContextResource(ServletContext servletContext, String path) {
 		this.servletContext = servletContext;
@@ -58,6 +57,7 @@ public class ServletContextResource extends AbstractResource {
 	/**
 	 * This implementation delegates to ServletContext.getResourceAsStream,
 	 * but throws a FileNotFoundException if not found.
+	 *
 	 * @see ServletContext#getResourceAsStream
 	 */
 	public InputStream getInputStream() throws IOException {
@@ -72,7 +72,7 @@ public class ServletContextResource extends AbstractResource {
 		URL url = this.servletContext.getResource(this.path);
 		if (url == null) {
 			throw new FileNotFoundException(getDescription() + " cannot be resolved to URL " +
-																			"because it does not exist");
+											"because it does not exist");
 		}
 		return url;
 	}
@@ -80,13 +80,14 @@ public class ServletContextResource extends AbstractResource {
 	/**
 	 * This implementation delegates to ServletContext.getRealPath,
 	 * but throws a FileNotFoundException if not found or not resolvable.
+	 *
 	 * @see ServletContext#getRealPath
 	 */
 	public File getFile() throws IOException {
 		String realPath = this.servletContext.getRealPath(this.path);
 		if (realPath == null) {
 			throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path - " +
-																			"web application archive not expanded?");
+											"web application archive not expanded?");
 		}
 		return new File(realPath);
 	}

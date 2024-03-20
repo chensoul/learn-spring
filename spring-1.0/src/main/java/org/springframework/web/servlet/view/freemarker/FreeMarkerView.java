@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view.freemarker;
 
@@ -53,19 +53,26 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  *
  * @author Darren Davison
  * @author Juergen Hoeller
- * @since 3/3/2004
  * @version $Id: FreeMarkerView.java,v 1.1 2004/03/20 15:41:33 trisberg Exp $
  * @see #setUrl
  * @see #setEncoding
  * @see #setConfiguration
  * @see FreeMarkerConfig
  * @see FreeMarkerConfigurer
+ * @since 3/3/2004
  */
 public class FreeMarkerView extends AbstractUrlBasedView {
 
 	private String encoding;
 
 	private Configuration configuration;
+
+	/**
+	 * Return the encoding for the FreeMarker template.
+	 */
+	protected String getEncoding() {
+		return encoding;
+	}
 
 	/**
 	 * Set the encoding of the FreeMarker template file. Default is determined
@@ -78,27 +85,21 @@ public class FreeMarkerView extends AbstractUrlBasedView {
 	}
 
 	/**
-	 * Return the encoding for the FreeMarker template.
+	 * Return the FreeMarker configuration used by this view.
 	 */
-	protected String getEncoding() {
-		return encoding;
+	protected Configuration getConfiguration() {
+		return configuration;
 	}
 
 	/**
 	 * Set the FreeMarker Configuration to be used by this view.
 	 * If this is not set, the default lookup will occur: A single FreeMarkerConfig
 	 * is expected in the current web application context, with any bean name.
+	 *
 	 * @see FreeMarkerConfig
 	 */
 	public void setConfiguration(Configuration configration) {
 		this.configuration = configration;
-	}
-
-	/**
-	 * Return the FreeMarker configuration used by this view.
-	 */
-	protected Configuration getConfiguration() {
-		return configuration;
 	}
 
 	/**
@@ -107,6 +108,7 @@ public class FreeMarkerView extends AbstractUrlBasedView {
 	 * <p>Checks that the template for the default Locale can be found:
 	 * FreeMarker will check non-Locale-specific templates if a
 	 * locale-specific one is not found.
+	 *
 	 * @see freemarker.cache.TemplateCache#getTemplate
 	 */
 	protected void initApplicationContext() throws BeansException {
@@ -115,24 +117,22 @@ public class FreeMarkerView extends AbstractUrlBasedView {
 		if (this.configuration == null) {
 			try {
 				FreeMarkerConfig freemarkerConfig = (FreeMarkerConfig)
-						BeanFactoryUtils.beanOfTypeIncludingAncestors(getApplicationContext(),
-																													FreeMarkerConfig.class, true, true);
+					BeanFactoryUtils.beanOfTypeIncludingAncestors(getApplicationContext(),
+						FreeMarkerConfig.class, true, true);
 				this.configuration = freemarkerConfig.getConfiguration();
-			}
-			catch (NoSuchBeanDefinitionException ex) {
+			} catch (NoSuchBeanDefinitionException ex) {
 				throw new ApplicationContextException("Must define a single FreeMarkerConfig bean in this web application " +
-																							"context (may be inherited): FreeMarkerConfigurer is the usual implementation. " +
-																							"This bean may be given any name.", ex);
+													  "context (may be inherited): FreeMarkerConfigurer is the usual implementation. " +
+													  "This bean may be given any name.", ex);
 			}
 		}
 
 		try {
 			// check that we can get the template, even if we might subsequently get it again
 			getTemplate(this.configuration.getLocale());
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new ApplicationContextException("Cannot load FreeMarker template for URL [" + getUrl() +
-																						"]: Did you specify the correct template loader path?");
+												  "]: Did you specify the correct template loader path?");
 		}
 	}
 
@@ -142,12 +142,12 @@ public class FreeMarkerView extends AbstractUrlBasedView {
 	 * is needed.
 	 */
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException, TemplateException {
+		throws IOException, TemplateException {
 		// grab the locale-specific version of the template
 		Template template = getTemplate(RequestContextUtils.getLocale(request));
 		if (logger.isDebugEnabled()) {
 			logger.debug("Preparing to process FreeMarker template [" + template.getName() +
-									 "] with model [" + model + "] ");
+						 "] with model [" + model + "] ");
 		}
 		response.setContentType(getContentType());
 		processTemplate(template, model, response);
@@ -155,25 +155,27 @@ public class FreeMarkerView extends AbstractUrlBasedView {
 
 	/**
 	 * Retrieve the FreeMarker template for the given locale.
+	 *
 	 * @param locale the current locale
 	 * @return the FreeMarker template to process
 	 * @throws IOException if the template file could not be retrieved
 	 */
 	protected Template getTemplate(Locale locale) throws IOException {
 		return (this.encoding != null ? this.configuration.getTemplate(getUrl(), locale, this.encoding) :
-				this.configuration.getTemplate(getUrl(), locale));
+			this.configuration.getTemplate(getUrl(), locale));
 	}
 
 	/**
 	 * Process the FreeMarker template to the servlet response.
 	 * Can be overridden to customize the behavior.
+	 *
 	 * @param template the template to process
-	 * @param model the model for the template
+	 * @param model    the model for the template
 	 * @param response servlet response (use this to get the OutputStream or Writer)
 	 * @see freemarker.template.Template#process(Object, java.io.Writer)
 	 */
 	protected void processTemplate(Template template, Map model, HttpServletResponse response)
-			throws IOException, TemplateException {
+		throws IOException, TemplateException {
 		template.process(model, response.getWriter());
 	}
 

@@ -55,10 +55,14 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Error codes available to subclasses */
+	/**
+	 * Error codes available to subclasses
+	 */
 	protected SQLErrorCodes sqlErrorCodes;
 
-	/** Fallback translator to use if SQLError code matching doesn't work */
+	/**
+	 * Fallback translator to use if SQLError code matching doesn't work
+	 */
 	private SQLExceptionTranslator fallback = new SQLStateSQLExceptionTranslator();
 
 	/**
@@ -71,6 +75,7 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 	/**
 	 * Create a SQLErrorCode translator given these error codes.
 	 * Does not require a database metadata lookup to be performed using a connection.
+	 *
 	 * @param sec error codes
 	 */
 	public SQLErrorCodeSQLExceptionTranslator(SQLErrorCodes sec) {
@@ -81,8 +86,9 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 	 * Create a SQLErrorCode translator for the given DataSource.
 	 * Invoking this constructor will cause a connection to be obtained from the
 	 * DataSource to get the metadata
+	 *
 	 * @param ds DataSource to use to find metadata and establish which error
-	 * codes are usable
+	 *           codes are usable
 	 */
 	public SQLErrorCodeSQLExceptionTranslator(DataSource ds) {
 		setDataSource(ds);
@@ -92,8 +98,9 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 	 * Set the DataSource.
 	 * Setting this property will cause a connection to be obtained from the
 	 * DataSource to get the metadata
+	 *
 	 * @param ds DataSource to use to find metadata and establish which error
-	 * codes are usable
+	 *           codes are usable
 	 */
 	public void setDataSource(DataSource ds) {
 		this.sqlErrorCodes = SQLErrorCodesFactory.getInstance().getErrorCodes(ds);
@@ -101,8 +108,9 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 
 	/**
 	 * Override the default SQLState fallback translator
+	 *
 	 * @param fallback custom fallback exception translator to use if error code
-	 * translation fails
+	 *                 translation fails
 	 */
 	public void setFallbackTranslator(SQLExceptionTranslator fallback) {
 		this.fallback = fallback;
@@ -110,6 +118,7 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 
 	/**
 	 * Set custom error codes to be used for translation
+	 *
 	 * @param sec custom error codes to use
 	 */
 	public void setSqlErrorCodes(SQLErrorCodes sec) {
@@ -129,20 +138,16 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 			if (Arrays.binarySearch(this.sqlErrorCodes.getBadSqlGrammarCodes(), errorCode) >= 0) {
 				logTranslation(task, sql, sqlex);
 				return new BadSqlGrammarException(task, sql, sqlex);
-			}
-			else if (Arrays.binarySearch(this.sqlErrorCodes.getDataIntegrityViolationCodes() , errorCode) >= 0) {
+			} else if (Arrays.binarySearch(this.sqlErrorCodes.getDataIntegrityViolationCodes(), errorCode) >= 0) {
 				logTranslation(task, sql, sqlex);
 				return new DataIntegrityViolationException(task + ": " + sqlex.getMessage(), sqlex);
-			}
-			else if (Arrays.binarySearch(this.sqlErrorCodes.getDataRetrievalFailureCodes() , errorCode) >= 0) {
+			} else if (Arrays.binarySearch(this.sqlErrorCodes.getDataRetrievalFailureCodes(), errorCode) >= 0) {
 				logTranslation(task, sql, sqlex);
 				return new DataRetrievalFailureException(task + ": " + sqlex.getMessage(), sqlex);
-			}
-			else if (Arrays.binarySearch(this.sqlErrorCodes.getOptimisticLockingFailureCodes() , errorCode) >= 0) {
+			} else if (Arrays.binarySearch(this.sqlErrorCodes.getOptimisticLockingFailureCodes(), errorCode) >= 0) {
 				logTranslation(task, sql, sqlex);
 				return new OptimisticLockingFailureException(task + ": " + sqlex.getMessage(), sqlex);
-			}
-			else if (Arrays.binarySearch(this.sqlErrorCodes.getDataAccessResourceFailureCodes() , errorCode) >= 0) {
+			} else if (Arrays.binarySearch(this.sqlErrorCodes.getDataAccessResourceFailureCodes(), errorCode) >= 0) {
 				logTranslation(task, sql, sqlex);
 				return new DataAccessResourceFailureException(task + ": " + sqlex.getMessage(), sqlex);
 			}
@@ -150,14 +155,15 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 
 		// we couldn't identify it more precisely - let's hand it over to the SQLState fallback translator
 		logger.warn("Unable to translate SQLException with errorCode '" + sqlex.getErrorCode() +
-						"', will now try the fallback translator");
+					"', will now try the fallback translator");
 		return this.fallback.translate(task, sql, sqlex);
 	}
 
 	/**
 	 * Subclasses can override this method to attempt a custom mapping from SQLException to DataAccessException
-	 * @param task task being attempted
-	 * @param sql SQL that caused the problem
+	 *
+	 * @param task  task being attempted
+	 * @param sql   SQL that caused the problem
 	 * @param sqlex offending SQLException
 	 * @return null if no custom translation was possible, otherwise a DataAccessException
 	 * resulting from custom translation. This exception should include the sqlex parameter
@@ -170,7 +176,7 @@ public class SQLErrorCodeSQLExceptionTranslator implements SQLExceptionTranslato
 
 	private void logTranslation(String task, String sql, SQLException sqlex) {
 		logger.warn("Translating SQLException with SQLState '" + sqlex.getSQLState() + "' and errorCode '" + sqlex.getErrorCode() +
-						"' and message [" + sqlex.getMessage() + "]; SQL was [" + sql + "] for task [" + task + "]");
+					"' and message [" + sqlex.getMessage() + "]; SQL was [" + sql + "] for task [" + task + "]");
 	}
 
 }

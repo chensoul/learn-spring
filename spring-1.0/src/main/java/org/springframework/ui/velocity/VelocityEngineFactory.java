@@ -20,12 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
-
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -78,6 +76,7 @@ public class VelocityEngineFactory {
 	/**
 	 * Set the location of the Velocity config file.
 	 * Alternatively, you can specify all properties locally.
+	 *
 	 * @see #setVelocityProperties
 	 * @see #setResourceLoaderPath
 	 */
@@ -89,6 +88,7 @@ public class VelocityEngineFactory {
 	 * Set Velocity properties, like "file.resource.loader.path".
 	 * <p>Can be used to override values in a Velocity config file,
 	 * or to specify all necessary properties locally.
+	 *
 	 * @see #setConfigLocation
 	 */
 	public void setVelocityProperties(Properties velocityProperties) {
@@ -103,6 +103,7 @@ public class VelocityEngineFactory {
 	 * <p>Will define a path for the default Velocity resource loader with the name
 	 * "file". If the specified resource cannot be resolved to a java.io.File, the
 	 * generic SpringResourceLoader will be used, without modification detection.
+	 *
 	 * @see org.springframework.core.io.ResourceEditor
 	 * @see org.springframework.context.ApplicationContext#getResource
 	 * @see org.apache.velocity.runtime.resource.loader.FileResourceLoader
@@ -116,6 +117,7 @@ public class VelocityEngineFactory {
 	 * Set the Spring ResourceLoader to use for loading Velocity template files.
 	 * The default is DefaultResourceLoader. Will get overridden by the
 	 * ApplicationContext if running in a context.
+	 *
 	 * @see DefaultResourceLoader
 	 */
 	public void setResourceLoader(ResourceLoader resourceLoader) {
@@ -125,6 +127,7 @@ public class VelocityEngineFactory {
 	/**
 	 * If Velocity should log via Commons Logging, i.e. if Velocity's log system
 	 * should be set to CommonsLoggingLogSystem. Default value is true.
+	 *
 	 * @see CommonsLoggingLogSystem
 	 */
 	public void setOverrideLogging(boolean overrideLogging) {
@@ -134,8 +137,9 @@ public class VelocityEngineFactory {
 
 	/**
 	 * Prepare the VelocityEngine instance and return it.
+	 *
 	 * @return the VelocityEngine instance
-	 * @throws IOException if the config file wasn't found
+	 * @throws IOException       if the config file wasn't found
 	 * @throws VelocityException on Velocity initialization failure
 	 */
 	public VelocityEngine createVelocityEngine() throws IOException, VelocityException {
@@ -148,8 +152,7 @@ public class VelocityEngineFactory {
 			InputStream is = this.configLocation.getInputStream();
 			try {
 				props.load(is);
-			}
-			finally {
+			} finally {
 				is.close();
 			}
 		}
@@ -160,7 +163,7 @@ public class VelocityEngineFactory {
 		}
 
 		// set properties
-		for (Iterator it = props.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = props.keySet().iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			velocityEngine.setProperty(key, props.getProperty(key));
 		}
@@ -170,25 +173,23 @@ public class VelocityEngineFactory {
 			try {
 				Resource path = this.resourceLoader.getResource(this.resourceLoaderPath);
 				velocityEngine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH,
-																				path.getFile().getAbsolutePath());
-			}
-			catch (IOException ex) {
+					path.getFile().getAbsolutePath());
+			} catch (IOException ex) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Cannot resolve resource loader path [" + this.resourceLoaderPath +
-											 "] to File: using SpringResourceLoader", ex);
-				}
-				else if (logger.isInfoEnabled()) {
+								 "] to File: using SpringResourceLoader", ex);
+				} else if (logger.isInfoEnabled()) {
 					logger.info("Cannot resolve resource loader path [" + this.resourceLoaderPath +
-											"] to File: using SpringResourceLoader");
+								"] to File: using SpringResourceLoader");
 				}
 				velocityEngine.setProperty(VelocityEngine.RESOURCE_LOADER,
-																	 SpringResourceLoader.NAME);
+					SpringResourceLoader.NAME);
 				velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CLASS,
-																	 SpringResourceLoader.class.getName());
+					SpringResourceLoader.class.getName());
 				velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER,
-																							 this.resourceLoader);
+					this.resourceLoader);
 				velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER_PATH,
-																							 this.resourceLoaderPath);
+					this.resourceLoaderPath);
 			}
 		}
 
@@ -204,11 +205,9 @@ public class VelocityEngineFactory {
 			velocityEngine.init();
 		} catch (VelocityException ex) {
 			throw ex;
-		}
-		catch (RuntimeException ex) {
+		} catch (RuntimeException ex) {
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.error("Why does VelocityEngine throw a generic checked exception, after all?", ex);
 			throw new VelocityException(ex.getMessage());
 		}
@@ -220,8 +219,9 @@ public class VelocityEngineFactory {
 	 * Return a new VelocityEngine. Subclasses can override this for
 	 * custom initialization, or for using a mock object for testing.
 	 * Called by createVelocityEngine.
+	 *
 	 * @return the VelocityEngine instance
-	 * @throws IOException if a config file wasn't found
+	 * @throws IOException       if a config file wasn't found
 	 * @throws VelocityException on Velocity initialization failure
 	 * @see #createVelocityEngine
 	 */
@@ -234,14 +234,15 @@ public class VelocityEngineFactory {
 	 * post-processing of the VelocityEngine after this FactoryBean
 	 * performed its default configuration (but before VelocityEngine.init).
 	 * Called by createVelocityEngine.
+	 *
 	 * @param velocityEngine the current VelocityEngine
-	 * @throws IOException if a config file wasn't found
+	 * @throws IOException       if a config file wasn't found
 	 * @throws VelocityException on Velocity initialization failure
 	 * @see #createVelocityEngine
 	 * @see org.apache.velocity.app.VelocityEngine#init
 	 */
 	protected void postProcessVelocityEngine(VelocityEngine velocityEngine)
-			throws IOException, VelocityException {
+		throws IOException, VelocityException {
 	}
 
 }

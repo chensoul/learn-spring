@@ -10,15 +10,16 @@ import org.springframework.core.NestedRuntimeException;
  * Unfortunately, the Timer API does not specify such an exception itself.
  *
  * @author Juergen Hoeller
- * @since 19.03.2004
  * @see org.quartz.JobExecutionException
+ * @since 19.03.2004
  */
 public class TimerTaskExecutionException extends NestedRuntimeException {
 
 	/**
 	 * Create a new TimerTaskExecutionException.
+	 *
 	 * @param msg the error message
-	 * @param ex the exception that occured within the TimerTask
+	 * @param ex  the exception that occured within the TimerTask
 	 */
 	public TimerTaskExecutionException(String msg, Throwable ex) {
 		super(msg, ex);

@@ -17,7 +17,6 @@
 package org.springframework.aop.framework;
 
 import org.aopalliance.intercept.Interceptor;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
 
@@ -30,14 +29,15 @@ import org.springframework.aop.TargetSource;
  * manipulation of its AOP advice.
  *
  * @author Rod Johnson
- * @since 13-Mar-2003
  * @version $Id: Advised.java,v 1.11 2004/03/23 20:17:00 jhoeller Exp $
  * @see AdvisedSupport
+ * @since 13-Mar-2003
  */
 public interface Advised {
 
 	/**
 	 * Return the TargetSource used by this Advised object
+	 *
 	 * @return the TargetSource used by this advised object
 	 */
 	TargetSource getTargetSource();
@@ -47,6 +47,7 @@ public interface Advised {
 	 * This can be necessary if a target object needs to invoke a method on itself
 	 * benefitting from advice. (If it invokes a method on <code>this</code> no advice
 	 * will apply.) Getting the proxy is analogous to an EJB calling getEJBObject().
+	 *
 	 * @return whether the factory should expose the proxy as a ThreadLocal
 	 * @see AopContext
 	 */
@@ -55,12 +56,14 @@ public interface Advised {
 	/**
 	 * Should we proxy the target class as well as any interfaces?
 	 * Can use this to force CGLIB proxying.
+	 *
 	 * @return whether we proxy the target class as well as any interfaces
 	 */
 	boolean getProxyTargetClass();
 
 	/**
 	 * Return the Advisors applying to this proxy.
+	 *
 	 * @return a list of Advisors applying to this proxy. Cannot return null,
 	 * but may return the empty array.
 	 */
@@ -69,12 +72,14 @@ public interface Advised {
 	/**
 	 * Return the interfaces proxied by the AOP proxy. Will not
 	 * include the target class, which may also be proxied.
+	 *
 	 * @return the interfaces proxied by the AOP proxy
 	 */
 	Class[] getProxiedInterfaces();
 
 	/**
 	 * Return whether this interface is proxied
+	 *
 	 * @param intf interface to test
 	 * @return whether the interface is proxied
 	 */
@@ -85,6 +90,7 @@ public interface Advised {
 	 * This will be wrapped in a DefaultPointcutAdvistor with a pointcut that
 	 * always applies, and returned from the getAdvisors() method in this
 	 * wrapped form.
+	 *
 	 * @param interceptor to add to the tail of the chain
 	 * @see #addInterceptor(int, Interceptor)
 	 * @see org.springframework.aop.support.DefaultPointcutAdvisor
@@ -93,9 +99,10 @@ public interface Advised {
 
 	/**
 	 * Add an interceptor at the specified position in the interceptor chain.
-	 * @param pos index from 0 (head)
+	 *
+	 * @param pos         index from 0 (head)
 	 * @param interceptor interceptor to add at the specified position in the
-	 * interceptor chain
+	 *                    interceptor chain
 	 */
 	void addInterceptor(int pos, Interceptor interceptor) throws AopConfigException;
 
@@ -103,14 +110,16 @@ public interface Advised {
 	 * Add an Advisor at the end of the advisor chain.
 	 * The Advisor may be an IntroductionAdvisor, in which new interfaces
 	 * will be available when a proxy is next obtained from the relevant factory.
+	 *
 	 * @param advisor Advisor to add to the end of the chain
 	 */
 	void addAdvisor(Advisor advisor) throws AopConfigException;
 
 	/**
 	 * Add an Advisor at the specified position in the chain
+	 *
 	 * @param advisor advisor to add at the specified position in the chain
-	 * @param pos position in chain (0 is head). Must be valid.
+	 * @param pos     position in chain (0 is head). Must be valid.
 	 */
 	void addAdvisor(int pos, Advisor advisor) throws AopConfigException;
 
@@ -119,6 +128,7 @@ public interface Advised {
 	 * or -1 if no such advisor applies to this proxy.
 	 * The return value of this method can be used to index into
 	 * the Advisors array.
+	 *
 	 * @param advisor advisor to search for
 	 * @return index from 0 of this advisor, or -1 if there's
 	 * no such advisor.
@@ -127,6 +137,7 @@ public interface Advised {
 
 	/**
 	 * Remove the given advisor
+	 *
 	 * @param advisor advisor to remove
 	 * @return true if the advisor was removed; false if the
 	 * advisor was not found and hence could not be removed
@@ -135,6 +146,7 @@ public interface Advised {
 
 	/**
 	 * Remove the advisor at the given index
+	 *
 	 * @param index index of advisor to remove
 	 * @throws AopConfigException if the index is invalid
 	 */
@@ -146,6 +158,7 @@ public interface Advised {
 	 * and the replacement is not or implements different interfaces,
 	 * the proxy will need to be re-obtained or the old interfaces
 	 * won't be supported and the new interface won't be implemented.
+	 *
 	 * @param a advisor to replace
 	 * @param b advisor to replace it with
 	 * @return whether it was replaced. If the advisor wasn't found in the
@@ -162,6 +175,7 @@ public interface Advised {
 	/**
 	 * As toString() will normally pass to the target,
 	 * this returns the equivalent for the AOP proxy
+	 *
 	 * @return a string description of the proxy configuration
 	 */
 	String toProxyConfigString();

@@ -38,6 +38,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
 	 * <p>Note that the parent shouldn't be changed: It should only be set outside
 	 * a constructor if it isn't available when an object of this class is created,
 	 * for example in case of WebApplicationContext setup.
+	 *
 	 * @param parent the parent context
 	 * @see org.springframework.web.context.ConfigurableWebApplicationContext
 	 */
@@ -47,6 +48,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
 	 * Add a new BeanFactoryPostProcessor that will get applied to the internal
 	 * bean factory of this application context on refresh, before any of the
 	 * bean definitions get evaluated. To be invoked during context configuration.
+	 *
 	 * @param beanFactoryPostProcessor the factory processor to register
 	 */
 	void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor);
@@ -54,8 +56,9 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
 	/**
 	 * Load or refresh the persistent representation of the configuration,
 	 * which might an XML file, properties file, or relational database schema.
+	 *
 	 * @throws ApplicationContextException if the config cannot be loaded
-	 * @throws BeansException if the bean factory could not be initialized
+	 * @throws BeansException              if the bean factory could not be initialized
 	 */
 	void refresh() throws BeansException;
 
@@ -67,6 +70,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
 	 * <p>Note: Do not use this to post-process the bean factory; singletons
 	 * will already have been instantiated before. Use a BeanFactoryPostProcessor
 	 * to intercept the bean factory setup process before beans get touched.
+	 *
 	 * @see #refresh
 	 * @see #addBeanFactoryPostProcessor
 	 */
@@ -76,6 +80,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
 	 * Close this application context, releasing all resources and locks that the
 	 * implementation might hold. This includes disposing all cached singleton beans.
 	 * <p>Note: Does <i>not</i> invoke close on a parent context.
+	 *
 	 * @throws ApplicationContextException if there were fatal errors
 	 */
 	void close() throws ApplicationContextException;

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.support;
 
@@ -20,6 +20,7 @@ package org.springframework.jdbc.support;
  * JavaBean for holding JDBC Error Codes for a particular database.
  * Normally loaded through a BeanFactory
  * implementation. Used by the SQLErrorCodeSQLExceptionTranslator.
+ *
  * @author Thomas Risberg
  * @version $Id: SQLErrorCodes.java,v 1.4 2004/03/18 02:46:15 trisberg Exp $
  */
@@ -30,19 +31,12 @@ public class SQLErrorCodes {
 	private String[] badSqlGrammarCodes = new String[0];
 
 	private String[] dataIntegrityViolationCodes = new String[0];
-	
-	private String[] dataRetrievalFailureCodes = new String[0];
-	
-	private String[] optimisticLockingFailureCodes = new String[0];
-	
-	private String[] dataAccessResourceFailureCodes = new String[0];
 
-	/**
-	 * Sets the badSqlGrammarCodes.
-	 */
-	public void setBadSqlGrammarCodes(String[] badSqlGrammarCodes) {
-		this.badSqlGrammarCodes = badSqlGrammarCodes;
-	}
+	private String[] dataRetrievalFailureCodes = new String[0];
+
+	private String[] optimisticLockingFailureCodes = new String[0];
+
+	private String[] dataAccessResourceFailureCodes = new String[0];
 
 	/**
 	 * Returns the badSqlGrammarCodes.
@@ -52,10 +46,10 @@ public class SQLErrorCodes {
 	}
 
 	/**
-	 * Sets the dataIntegrityViolationCodes.
+	 * Sets the badSqlGrammarCodes.
 	 */
-	public void setDataIntegrityViolationCodes(String[] dataIntegrityViolationCodes) {
-		this.dataIntegrityViolationCodes = dataIntegrityViolationCodes;
+	public void setBadSqlGrammarCodes(String[] badSqlGrammarCodes) {
+		this.badSqlGrammarCodes = badSqlGrammarCodes;
 	}
 
 	/**
@@ -66,11 +60,19 @@ public class SQLErrorCodes {
 	}
 
 	/**
+	 * Sets the dataIntegrityViolationCodes.
+	 */
+	public void setDataIntegrityViolationCodes(String[] dataIntegrityViolationCodes) {
+		this.dataIntegrityViolationCodes = dataIntegrityViolationCodes;
+	}
+
+	/**
 	 * @return Returns the dataRetrievalFailureCodes.
 	 */
 	public String[] getDataRetrievalFailureCodes() {
 		return dataRetrievalFailureCodes;
 	}
+
 	/**
 	 * @param dataRetrievalFailureCodes The dataRetrievalFailureCodes to set.
 	 */
@@ -89,7 +91,7 @@ public class SQLErrorCodes {
 	 * @param dataAccessResourceFailureCodes The dataAccessResourceFailureCodes to set.
 	 */
 	public void setDataAccessResourceFailureCodes(
-			String[] dataAccessResourceFailureCodes) {
+		String[] dataAccessResourceFailureCodes) {
 		this.dataAccessResourceFailureCodes = dataAccessResourceFailureCodes;
 	}
 
@@ -99,12 +101,12 @@ public class SQLErrorCodes {
 	public String[] getOptimisticLockingFailureCodes() {
 		return optimisticLockingFailureCodes;
 	}
-	
+
 	/**
 	 * @param optimisticLockingFailureCodes The optimisticLockingFailureCodes to set.
 	 */
 	public void setOptimisticLockingFailureCodes(
-			String[] optimisticLockingFailureCodes) {
+		String[] optimisticLockingFailureCodes) {
 		this.optimisticLockingFailureCodes = optimisticLockingFailureCodes;
 	}
 

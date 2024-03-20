@@ -22,7 +22,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.springframework.util.StringUtils;
 
 /**
@@ -42,14 +41,14 @@ import org.springframework.util.StringUtils;
  */
 public class ResourceBundleMessageSource extends AbstractMessageSource {
 
-	private String[] basenames;
-
 	/**
 	 * Cache to hold already generated MessageFormats per message code.
 	 * Note that this Map contains the actual code Map, keyed with the Locale.
+	 *
 	 * @see #getMessageFormat
 	 */
 	private final Map cachedMessageFormats = new HashMap();
+	private String[] basenames;
 
 	/**
 	 * Set a single basename, following ResourceBundle conventions:
@@ -58,12 +57,13 @@ public class ResourceBundleMessageSource extends AbstractMessageSource {
 	 * <p>Messages will normally be held in the /lib or /classes directory of a WAR.
 	 * They can also be held in Jars on the class path. For example, a Jar in an
 	 * application's manifest classpath could contain messages for the application.
+	 *
 	 * @param basename the single basename
 	 * @see #setBasenames
 	 * @see ResourceBundle
 	 */
 	public void setBasename(String basename) {
-		setBasenames(new String[] {basename});
+		setBasenames(new String[]{basename});
 	}
 
 	/**
@@ -72,11 +72,12 @@ public class ResourceBundleMessageSource extends AbstractMessageSource {
 	 * resolving a message code.
 	 * <p>Note that message definitions in a <i>previous</i> resource bundle
 	 * will override ones in a later bundle, due to the sequential lookup.
+	 *
 	 * @param basenames an array of basenames
 	 * @see #setBasename
 	 * @see ResourceBundle
 	 */
-	public void setBasenames(String[] basenames)  {
+	public void setBasenames(String[] basenames) {
 		this.basenames = basenames;
 	}
 
@@ -91,25 +92,24 @@ public class ResourceBundleMessageSource extends AbstractMessageSource {
 	/**
 	 * Return a MessageFormat for the given bundle basename, message code,
 	 * and Locale.
+	 *
 	 * @param basename the basename of the bundle
-	 * @param code the message code to retrieve
-	 * @param locale the Locale to resolve for
+	 * @param code     the message code to retrieve
+	 * @param locale   the Locale to resolve for
 	 * @return the resulting MessageFormat
 	 */
 	protected MessageFormat resolve(String basename, String code, Locale locale) {
 		try {
 			ResourceBundle bundle = ResourceBundle.getBundle(basename, locale,
-			                                                 Thread.currentThread().getContextClassLoader());
+				Thread.currentThread().getContextClassLoader());
 			try {
 				return getMessageFormat(bundle, code);
-			}
-			catch (MissingResourceException ex) {
+			} catch (MissingResourceException ex) {
 				// assume key not found
 				// -> do NOT throw the exception to allow for checking parent message source
 				return null;
 			}
-		}
-		catch (MissingResourceException ex) {
+		} catch (MissingResourceException ex) {
 			logger.warn("ResourceBundle [" + basename + "] not found for MessageSource: " + ex.getMessage());
 			// assume bundle not found
 			// -> do NOT throw the exception to allow for checking parent message source
@@ -120,8 +120,9 @@ public class ResourceBundleMessageSource extends AbstractMessageSource {
 	/**
 	 * Return a MessageFormat for the given bundle and code,
 	 * fetching already generated MessageFormats from the cache.
+	 *
 	 * @param bundle the ResourceBundle to work on
-	 * @param code the message code to retrieve
+	 * @param code   the message code to retrieve
 	 * @return the resulting MessageFormat
 	 */
 	protected MessageFormat getMessageFormat(ResourceBundle bundle, String code) throws MissingResourceException {
@@ -138,8 +139,7 @@ public class ResourceBundleMessageSource extends AbstractMessageSource {
 				MessageFormat result = new MessageFormat(msg);
 				if (codeMap != null) {
 					codeMap.put(code, result);
-				}
-				else {
+				} else {
 					codeMap = new HashMap();
 					codeMap.put(code, result);
 					this.cachedMessageFormats.put(bundle, codeMap);

@@ -56,6 +56,7 @@ public abstract class AbstractCommandController extends BaseCommandController {
 
 	/**
 	 * Create a new AbstractCommandController.
+	 *
 	 * @param commandClass class of the command bean
 	 */
 	public AbstractCommandController(Class commandClass) {
@@ -64,8 +65,9 @@ public abstract class AbstractCommandController extends BaseCommandController {
 
 	/**
 	 * Create a new AbstractCommandController.
+	 *
 	 * @param commandClass class of the command bean
-	 * @param commandName name of the command bean
+	 * @param commandName  name of the command bean
 	 */
 	public AbstractCommandController(Class commandClass, String commandName) {
 		setCommandClass(commandClass);
@@ -73,7 +75,7 @@ public abstract class AbstractCommandController extends BaseCommandController {
 	}
 
 	protected final ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+		throws Exception {
 		Object command = getCommand(request);
 		ServletRequestDataBinder binder = bindAndValidate(request, command);
 		return handle(request, response, command, binder.getErrors());
@@ -84,14 +86,15 @@ public abstract class AbstractCommandController extends BaseCommandController {
 	 * of the command class, and an Errors object containing binding and validation errors.
 	 * <p>Can invoke <code>errors.getModel()</code> to populate the ModelAndView model
 	 * with the command and the Errors instance, under the specified command name.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
-	 * @param command the populated command object
-	 * @param errors validation errors holder
+	 * @param command  the populated command object
+	 * @param errors   validation errors holder
 	 * @return a ModelAndView to render, or null if handled directly
 	 * @see org.springframework.validation.Errors
 	 */
 	protected abstract ModelAndView handle(HttpServletRequest request, HttpServletResponse response,
-	                                       Object command, BindException errors) throws Exception;
+										   Object command, BindException errors) throws Exception;
 
 }

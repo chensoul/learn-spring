@@ -46,8 +46,8 @@ import java.util.Properties;
  * there should be permission enough to copy and paste it here.
  *
  * @author Juergen Hoeller
- * @since 10.03.2004
  * @see Properties
+ * @since 10.03.2004
  */
 public class DefaultPropertiesPersister implements PropertiesPersister {
 
@@ -59,7 +59,9 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 
 	public static final String whiteSpaceChars = " \t\r\n\f";
 
-	/** A table of hex digits */
+	/**
+	 * A table of hex digits
+	 */
 	protected static final char[] hexDigit = {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 	};
@@ -168,7 +170,7 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 		int len = theString.length();
 		StringBuffer outBuffer = new StringBuffer(len);
 
-		for (int x = 0; x < len;) {
+		for (int x = 0; x < len; ) {
 			aChar = theString.charAt(x++);
 			if (aChar == '\\') {
 				aChar = theString.charAt(x++);
@@ -208,12 +210,11 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 								break;
 							default:
 								throw new IllegalArgumentException(
-								    "Malformed \\uxxxx encoding.");
+									"Malformed \\uxxxx encoding.");
 						}
 					}
 					outBuffer.append((char) value);
-				}
-				else {
+				} else {
 					if (aChar == 't')
 						aChar = '\t';
 					else if (aChar == 'r')
@@ -223,8 +224,7 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 					else if (aChar == 'f') aChar = '\f';
 					outBuffer.append(aChar);
 				}
-			}
-			else
+			} else
 				outBuffer.append(aChar);
 		}
 		return outBuffer.toString();
@@ -241,14 +241,14 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 		if (header != null)
 			writeln(out, "#" + header);
 		writeln(out, "#" + new Date().toString());
-		for (Enumeration e = props.keys(); e.hasMoreElements();) {
+		for (Enumeration e = props.keys(); e.hasMoreElements(); ) {
 			String key = (String) e.nextElement();
 			String val = (String) props.get(key);
 			key = saveConvert(key, true);
 
 			/* No need to escape embedded and trailing spaces for value, hence
-			* pass false to flag.
-			*/
+			 * pass false to flag.
+			 */
 			val = saveConvert(val, false);
 			writeln(out, key + "=" + val);
 		}
@@ -308,8 +308,7 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 						outBuffer.append(toHex((aChar >> 8) & 0xF));
 						outBuffer.append(toHex((aChar >> 4) & 0xF));
 						outBuffer.append(toHex(aChar & 0xF));
-					}
-					else {
+					} else {
 						if (specialSaveChars.indexOf(aChar) != -1)
 							outBuffer.append('\\');
 						outBuffer.append(aChar);
@@ -321,7 +320,8 @@ public class DefaultPropertiesPersister implements PropertiesPersister {
 
 	/**
 	 * Convert a nibble to a hex character.
-	 * @param	nibble the nibble to convert
+	 *
+	 * @param    nibble the nibble to convert
 	 */
 	protected char toHex(int nibble) {
 		return hexDigit[(nibble & 0xF)];

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.handler.metadata;
 
@@ -39,17 +39,18 @@ import org.springframework.context.ApplicationContextException;
  * <p>Controllers instantiated by this class may have dependencies on middle tier
  * objects, expressed via JavaBean properties or constructor arguments. These will
  * be resolved automatically.
- * <p>You will normally use this HandlerMapping with at most one DispatcherServlet in your web 
+ * <p>You will normally use this HandlerMapping with at most one DispatcherServlet in your web
  * application. Otherwise you'll end with one instance of the mapped controller for
  * each DispatcherServlet's context. You <i>might</i> want this--for example, if
  * one's using a .pdf mapping and a PDF view, and another a JSP view, or if
  * using different middle tier objects, but should understand the implications. All
  * Controllers with attributes will be picked up by each DispatcherServlet's context.
+ *
  * @author Rod Johnson
  * @version $Id: CommonsPathMapHandlerMapping.java,v 1.2 2004/03/18 02:46:17 trisberg Exp $
  */
 public class CommonsPathMapHandlerMapping extends AbstractPathMapHandlerMapping {
-	
+
 	/**
 	 * Use Commons Attributes AttributeIndex to get a Collection of FQNs of
 	 * classes with the required PathMap attribute. Protected so that it can
@@ -59,19 +60,18 @@ public class CommonsPathMapHandlerMapping extends AbstractPathMapHandlerMapping 
 		try {
 			AttributeIndex ai = new AttributeIndex(getClass().getClassLoader());
 			return ai.getClassesWithAttribute(PathMap.class);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new ApplicationContextException("Failed to load Commons Attributes attribute index", ex);
 		}
 	}
-	
+
 	/**
 	 * Use Commons Attributes to find PathMap attributes for the given class.
 	 * We know there's at least one, as the getClassNamesWithPathMapAttributes
 	 * method return this class name.
 	 */
 	protected PathMap[] getPathMapAttributes(Class handlerClass) {
-		Collection atts =  Attributes.getAttributes(handlerClass, PathMap.class);
+		Collection atts = Attributes.getAttributes(handlerClass, PathMap.class);
 		return (PathMap[]) atts.toArray(new PathMap[atts.size()]);
 	}
 

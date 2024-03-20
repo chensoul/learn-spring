@@ -27,10 +27,11 @@ import org.springframework.aop.AfterReturningAdvice;
  * create a MethodInvocation object.
  * <br>Used internally by the AOP framework: application developers should not need
  * to use this class directly.
+ *
  * @author Rod Johnson
  * @version $Id: AfterReturningAdviceInterceptor.java,v 1.3 2004/03/19 18:43:17 johnsonr Exp $
  */
-final class AfterReturningAdviceInterceptor implements MethodInterceptor {
+public final class AfterReturningAdviceInterceptor implements MethodInterceptor {
 
 	private AfterReturningAdvice advice;
 
@@ -43,7 +44,7 @@ final class AfterReturningAdviceInterceptor implements MethodInterceptor {
 	 */
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		Object retval = mi.proceed();
-		advice.afterReturning(retval, mi.getMethod(), mi.getArguments(), mi.getThis() );
+		advice.afterReturning(retval, mi.getMethod(), mi.getArguments(), mi.getThis());
 		return retval;
 	}
 

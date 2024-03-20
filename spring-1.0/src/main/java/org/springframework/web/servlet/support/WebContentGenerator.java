@@ -55,15 +55,21 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	public static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
 
-	/** Set of supported methods. GET and POST by default. */
-	private Set	supportedMethods;
+	/**
+	 * Set of supported methods. GET and POST by default.
+	 */
+	private Set supportedMethods;
 
 	private boolean requireSession = false;
 
-	/** Use HTTP 1.0 expires header? */
+	/**
+	 * Use HTTP 1.0 expires header?
+	 */
 	private boolean useExpiresHeader = true;
 
-	/** Use HTTP 1.1 cache-control header? */
+	/**
+	 * Use HTTP 1.1 cache-control header?
+	 */
 	private boolean useCacheControlHeader = true;
 
 	private int cacheSeconds = -1;
@@ -133,14 +139,15 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 * Check and prepare the given request and response according to the settings
 	 * of this generator. Checks for supported methods and a required session,
 	 * and applies the specified number of cache seconds.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
+	 *
+	 * @param request      current HTTP request
+	 * @param response     current HTTP response
 	 * @param lastModified if the mapped handler provides Last-Modified support
 	 * @throws ServletException if the request cannot be handled because a check failed
 	 */
 	protected final void checkAndPrepare(HttpServletRequest request, HttpServletResponse response,
-	                                     boolean lastModified)
-	    throws ServletException {
+										 boolean lastModified)
+		throws ServletException {
 
 		// check whether we should support the request method
 		String method = request.getMethod();
@@ -179,9 +186,10 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	/**
 	 * Set HTTP headers to allow caching for the given number of seconds.
 	 * Does not tell the browser to revalidate the resource.
+	 *
 	 * @param response current HTTP response
-	 * @param seconds number of seconds into the future that the response
-	 * should be cacheable for
+	 * @param seconds  number of seconds into the future that the response
+	 *                 should be cacheable for
 	 * @see #cacheForSeconds(HttpServletResponse, int, boolean)
 	 */
 	protected final void cacheForSeconds(HttpServletResponse response, int seconds) {
@@ -191,11 +199,12 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	/**
 	 * Set HTTP headers to allow caching for the given number of seconds.
 	 * Tells the browser to revalidate the resource if mustRevalidate is true.
-	 * @param response current HTTP response
-	 * @param seconds number of seconds into the future that the response
-	 * should be cacheable for
+	 *
+	 * @param response       current HTTP response
+	 * @param seconds        number of seconds into the future that the response
+	 *                       should be cacheable for
 	 * @param mustRevalidate whether the client should revalidate the resource
-	 * (typically only necessary for controllers with last-modified support)
+	 *                       (typically only necessary for controllers with last-modified support)
 	 */
 	protected final void cacheForSeconds(HttpServletResponse response, int seconds, boolean mustRevalidate) {
 		if (this.useExpiresHeader) {
@@ -217,9 +226,10 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 * i.e. allow caching for the given number of seconds in case of a positive
 	 * value, prevent caching if given a 0 value, do nothing else.
 	 * Does not tell the browser to revalidate the resource.
+	 *
 	 * @param response current HTTP response
-	 * @param seconds positive number of seconds into the future that the
-	 * response should be cacheable for, 0 to prevent caching
+	 * @param seconds  positive number of seconds into the future that the
+	 *                 response should be cacheable for, 0 to prevent caching
 	 * @see #cacheForSeconds(HttpServletResponse, int, boolean)
 	 */
 	protected final void applyCacheSeconds(HttpServletResponse response, int seconds) {
@@ -230,17 +240,17 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 * Apply the given cache seconds and generate respective HTTP headers,
 	 * i.e. allow caching for the given number of seconds in case of a positive
 	 * value, prevent caching if given a 0 value, do nothing else.
-	 * @param response current HTTP response
-	 * @param seconds positive number of seconds into the future that the
-	 * response should be cacheable for, 0 to prevent caching
+	 *
+	 * @param response       current HTTP response
+	 * @param seconds        positive number of seconds into the future that the
+	 *                       response should be cacheable for, 0 to prevent caching
 	 * @param mustRevalidate whether the client should revalidate the resource
-	 * (typically only necessary for controllers with last-modified support)
+	 *                       (typically only necessary for controllers with last-modified support)
 	 */
 	protected final void applyCacheSeconds(HttpServletResponse response, int seconds, boolean mustRevalidate) {
 		if (seconds > 0) {
 			cacheForSeconds(response, seconds, mustRevalidate);
-		}
-		else if (seconds == 0) {
+		} else if (seconds == 0) {
 			preventCaching(response);
 		}
 		// leave caching to the client otherwise

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans.support;
 
@@ -21,10 +21,11 @@ import java.io.Serializable;
 /**
  * Mutable implementation of SortDefinition.
  * Supports toggling the ascending value on setting the same property again.
+ *
  * @author Juergen Hoeller
  * @author Jean-Pierre Pawlak
- * @since 26.05.2003
  * @see #setToggleAscendingOnProperty
+ * @since 26.05.2003
  */
 public class MutableSortDefinition implements SortDefinition, Serializable {
 
@@ -55,6 +56,10 @@ public class MutableSortDefinition implements SortDefinition, Serializable {
 		this.toggleAscendingOnProperty = toggleAscendingOnSameProperty;
 	}
 
+	public String getProperty() {
+		return property;
+	}
+
 	/**
 	 * Set the sort property.
 	 * If the property was the same as the current, the sort is reversed if
@@ -63,14 +68,12 @@ public class MutableSortDefinition implements SortDefinition, Serializable {
 	public void setProperty(String property) {
 		if (property == null || "".equals(property)) {
 			this.property = "";
-		}
-		else {
+		} else {
 			// implicit toggling of ascending?
 			if (this.toggleAscendingOnProperty) {
 				if (property.equals(this.property)) {
 					ascending = !ascending;
-				}
-				else {
+				} else {
 					this.ascending = true;
 				}
 			}
@@ -78,32 +81,28 @@ public class MutableSortDefinition implements SortDefinition, Serializable {
 		}
 	}
 
-	public String getProperty() {
-		return property;
+	public boolean isIgnoreCase() {
+		return ignoreCase;
 	}
 
 	public void setIgnoreCase(boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 	}
 
-	public boolean isIgnoreCase() {
-		return ignoreCase;
+	public boolean isAscending() {
+		return ascending;
 	}
 
 	public void setAscending(boolean ascending) {
 		this.ascending = ascending;
 	}
 
-	public boolean isAscending() {
-		return ascending;
+	public boolean isToggleAscendingOnProperty() {
+		return toggleAscendingOnProperty;
 	}
 
 	public void setToggleAscendingOnProperty(boolean toggleAscendingOnProperty) {
 		this.toggleAscendingOnProperty = toggleAscendingOnProperty;
-	}
-
-	public boolean isToggleAscendingOnProperty() {
-		return toggleAscendingOnProperty;
 	}
 
 	public boolean equals(Object obj) {
@@ -112,7 +111,7 @@ public class MutableSortDefinition implements SortDefinition, Serializable {
 		}
 		SortDefinition sd = (SortDefinition) obj;
 		return (getProperty().equals(sd.getProperty()) &&
-		    isAscending() == sd.isAscending() && isIgnoreCase() == sd.isIgnoreCase());
+				isAscending() == sd.isAscending() && isIgnoreCase() == sd.isIgnoreCase());
 	}
 
 	public int hashCode() {

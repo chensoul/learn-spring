@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans;
 
@@ -27,20 +27,25 @@ package org.springframework.beans;
  * this object doesn't know anything about the objects it will be applied to.
  *
  * @author Rod Johnson
- * @since 13 May 2001
  * @version $Id: PropertyValue.java,v 1.3 2004/03/18 02:46:12 trisberg Exp $
+ * @since 13 May 2001
  */
 public class PropertyValue {
 
-	/** Property name */
+	/**
+	 * Property name
+	 */
 	private String name;
 
-	/** Value of the property */
+	/**
+	 * Value of the property
+	 */
 	private Object value;
 
 	/**
 	 * Creates new PropertyValue.
-	 * @param name name of the property
+	 *
+	 * @param name  name of the property
 	 * @param value value of the property (possibly before type conversion)
 	 */
 	public PropertyValue(String name, Object value) {
@@ -53,6 +58,7 @@ public class PropertyValue {
 
 	/**
 	 * Return the name of the property.
+	 *
 	 * @return the name of the property
 	 */
 	public String getName() {
@@ -64,6 +70,7 @@ public class PropertyValue {
 	 * <p>Note that type conversion will <i>not</i> have occurred here.
 	 * It is the responsibility of the BeanWrapper implementation to
 	 * perform type conversion.
+	 *
 	 * @return the value of the property
 	 */
 	public Object getValue() {

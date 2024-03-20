@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.util;
 
@@ -315,10 +315,10 @@ public abstract class HtmlUtils {
 			char c = s.charAt(i);
 			// handle non special ASCII chars first since they will be most common
 			if ((c >= 0 && c <= 33)
-			    || (c >= 35 && c <= 37)
-			    || (c >= 39 && c <= 59)
-			    || (c == 61)
-			    || (c >= 63 && c <= 159)) {
+				|| (c >= 35 && c <= 37)
+				|| (c >= 39 && c <= 59)
+				|| (c == 61)
+				|| (c >= 63 && c <= 159)) {
 				escaped.append(c);
 				continue;
 			}
@@ -663,12 +663,11 @@ public abstract class HtmlUtils {
 						}
 						try {
 							unescaped.append(
-							    (char) Integer.parseInt(
-							        reference.substring(index),
-							        (index == 1) ? 10 : 16));
+								(char) Integer.parseInt(
+									reference.substring(index),
+									(index == 1) ? 10 : 16));
 							continue;
-						}
-						catch (NumberFormatException e) {
+						} catch (NumberFormatException e) {
 							// wasn't hex or decimal, copy original chars
 							unescaped.append('&' + reference + ';');
 							continue;
@@ -688,7 +687,8 @@ public abstract class HtmlUtils {
 
 	/**
 	 * Write the given character as decimal reference.
-	 * @param c the character to write
+	 *
+	 * @param c   the character to write
 	 * @param buf the buffer to write into
 	 */
 	private static void writeDecimalReference(char c, StringBuffer buf) {

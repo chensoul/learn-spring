@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.transaction.interceptor;
 
@@ -22,29 +22,32 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.transaction.TransactionUsageException;
 
 /**
  * Simple implementation of TransactionAttributeSource that
  * allows attributes to be stored per method in a map.
- * @since 24-Apr-2003
- * @version $Id: MethodMapTransactionAttributeSource.java,v 1.8 2004/03/18 02:46:05 trisberg Exp $
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @version $Id: MethodMapTransactionAttributeSource.java,v 1.8 2004/03/18 02:46:05 trisberg Exp $
  * @see #isMatch
+ * @since 24-Apr-2003
  */
 public class MethodMapTransactionAttributeSource implements TransactionAttributeSource {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Map from Method to TransactionAttribute */
+	/**
+	 * Map from Method to TransactionAttribute
+	 */
 	private Map methodMap = new HashMap();
 
-	/** Map from Method to name pattern used for registration */
+	/**
+	 * Map from Method to name pattern used for registration
+	 */
 	private Map nameMap = new HashMap();
 
 	/**
@@ -64,6 +67,7 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 	/**
 	 * Add an attribute for a transactional method.
 	 * Method names can end or start with "*" for matching multiple methods.
+	 *
 	 * @param name class and method name, separated by a dot
 	 * @param attr attribute associated with the method
 	 */
@@ -77,8 +81,7 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 		try {
 			Class clazz = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
 			addTransactionalMethod(clazz, methodName, attr);
-		}
-		catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			throw new TransactionUsageException("Class '" + className + "' not found");
 		}
 	}
@@ -86,12 +89,13 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 	/**
 	 * Add an attribute for a transactional method.
 	 * Method names can end or start with "*" for matching multiple methods.
-	 * @param clazz target interface or class
+	 *
+	 * @param clazz      target interface or class
 	 * @param mappedName mapped method name
-	 * @param attr attribute associated with the method
+	 * @param attr       attribute associated with the method
 	 */
 	public void addTransactionalMethod(Class clazz, String mappedName, TransactionAttribute attr) {
-		String name = clazz.getName() + '.'  + mappedName;
+		String name = clazz.getName() + '.' + mappedName;
 		logger.debug("Adding transactional method [" + name + "] with attribute [" + attr + "]");
 
 		// TODO address method overloading? At present this will
@@ -106,11 +110,11 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 		}
 		if (matchingMethods.isEmpty()) {
 			throw new TransactionUsageException("Couldn't find method '" + mappedName +
-																					"' on class [" + clazz.getName() + "]");
+												"' on class [" + clazz.getName() + "]");
 		}
 
 		// register all matching methods
-		for (Iterator it = matchingMethods.iterator(); it.hasNext();) {
+		for (Iterator it = matchingMethods.iterator(); it.hasNext(); ) {
 			Method method = (Method) it.next();
 			String regMethodName = (String) this.nameMap.get(method);
 			if (regMethodName == null || (!regMethodName.equals(name) && regMethodName.length() <= name.length())) {
@@ -118,15 +122,14 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 				// method name specification now -> (re-)register method
 				if (logger.isDebugEnabled() && regMethodName != null) {
 					logger.debug("Replacing attribute for transactional method [" + method + "]: current name '" +
-											 name + "' is more specific than '" + regMethodName + "'");
+								 name + "' is more specific than '" + regMethodName + "'");
 				}
 				this.nameMap.put(method, name);
 				addTransactionalMethod(method, attr);
-			}
-			else {
+			} else {
 				if (logger.isDebugEnabled() && regMethodName != null) {
 					logger.debug("Keeping attribute for transactional method [" + method + "]: current name '" +
-											 name + "' is not more specific than '" + regMethodName + "'");
+								 name + "' is not more specific than '" + regMethodName + "'");
 				}
 			}
 		}
@@ -134,8 +137,9 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 
 	/**
 	 * Add an attribute for a transactional method.
+	 *
 	 * @param method the method
-	 * @param attr attribute associated with the method
+	 * @param attr   attribute associated with the method
 	 */
 	public void addTransactionalMethod(Method method, TransactionAttribute attr) {
 		logger.info("Adding transactional method [" + method + "] with attribute [" + attr + "]");
@@ -146,13 +150,14 @@ public class MethodMapTransactionAttributeSource implements TransactionAttribute
 	 * Return if the given method name matches the mapped name.
 	 * The default implementation checks for "xxx*" and "*xxx" matches.
 	 * Can be overridden in subclasses.
+	 *
 	 * @param methodName the method name of the class
 	 * @param mappedName the name in the descriptor
 	 * @return if the names match
 	 */
 	protected boolean isMatch(String methodName, String mappedName) {
 		return (mappedName.endsWith("*") && methodName.startsWith(mappedName.substring(0, mappedName.length() - 1))) ||
-				(mappedName.startsWith("*") && methodName.endsWith(mappedName.substring(1, mappedName.length())));
+			   (mappedName.startsWith("*") && methodName.endsWith(mappedName.substring(1, mappedName.length())));
 	}
 
 	public TransactionAttribute getTransactionAttribute(Method method, Class targetClass) {

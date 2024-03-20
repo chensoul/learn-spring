@@ -28,12 +28,12 @@ import org.springframework.beans.MutablePropertyValues;
  * access and modify property values.
  *
  * @author Juergen Hoeller
- * @since 19.03.2004
  * @see ConfigurableBeanFactory#getBeanDefinition
  * @see BeanFactoryPostProcessor
  * @see PropertyPlaceholderConfigurer
  * @see org.springframework.beans.factory.support.RootBeanDefinition
  * @see org.springframework.beans.factory.support.ChildBeanDefinition
+ * @since 19.03.2004
  */
 public interface BeanDefinition {
 

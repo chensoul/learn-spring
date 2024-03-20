@@ -33,6 +33,7 @@ import org.springframework.beans.BeansException;
 /**
  * PropertyComparator performs a comparison of two beans,
  * using the specified bean property via a BeanWrapper.
+ *
  * @author Juergen Hoeller
  * @author Jean-Pierre Pawlak
  * @since 19.05.2003
@@ -49,6 +50,32 @@ public class PropertyComparator implements Comparator {
 		this.sortDefinition = sortDefinition;
 	}
 
+	/**
+	 * Sorts the given List according to the given sort definition.
+	 * <p>Note: Contained objects have to provide the given property
+	 * in the form of a bean property, i.e. a getXXX method.
+	 *
+	 * @param source         the input List
+	 * @param sortDefinition the parameters to sort by
+	 * @throws IllegalArgumentException in case of a missing propertyName
+	 */
+	public static void sort(List source, SortDefinition sortDefinition) throws BeansException {
+		Collections.sort(source, new PropertyComparator(sortDefinition));
+	}
+
+	/**
+	 * Sorts the given source according to the given sort definition.
+	 * <p>Note: Contained objects have to provide the given property
+	 * in the form of a bean property, i.e. a getXXX method.
+	 *
+	 * @param source         input source
+	 * @param sortDefinition the parameters to sort by
+	 * @throws IllegalArgumentException in case of a missing propertyName
+	 */
+	public static void sort(Object[] source, SortDefinition sortDefinition) throws BeansException {
+		Arrays.sort(source, new PropertyComparator(sortDefinition));
+	}
+
 	public int compare(Object o1, Object o2) {
 		Object v1 = getPropertyValue(o1);
 		Object v2 = getPropertyValue(o2);
@@ -60,16 +87,14 @@ public class PropertyComparator implements Comparator {
 		try {
 			if (v1 != null) {
 				result = ((Comparable) v1).compareTo(v2);
-			}
-			else {
+			} else {
 				if (v2 != null) {
-					result = - ((Comparable) v2).compareTo(v1);
+					result = -((Comparable) v2).compareTo(v1);
 				} else {
 					return 0;
 				}
 			}
-		}
-		catch (RuntimeException ex) {
+		} catch (RuntimeException ex) {
 			logger.warn("Could not sort objects [" + o1 + "] and [" + o2 + "]", ex);
 			return 0;
 		}
@@ -83,31 +108,6 @@ public class PropertyComparator implements Comparator {
 			this.cachedBeanWrappers.put(o, bw);
 		}
 		return bw.getPropertyValue(this.sortDefinition.getProperty());
-	}
-
-
-	/**
-	 * Sorts the given List according to the given sort definition.
-	 * <p>Note: Contained objects have to provide the given property
-	 * in the form of a bean property, i.e. a getXXX method.
-	 * @param source the input List
-	 * @param sortDefinition the parameters to sort by
-	 * @throws IllegalArgumentException in case of a missing propertyName
-	 */
-	public static void sort(List source, SortDefinition sortDefinition) throws BeansException {
-		Collections.sort(source, new PropertyComparator(sortDefinition));
-	}
-
-	/**
-	 * Sorts the given source according to the given sort definition.
-	 * <p>Note: Contained objects have to provide the given property
-	 * in the form of a bean property, i.e. a getXXX method.
-	 * @param source input source
-	 * @param sortDefinition the parameters to sort by
-	 * @throws IllegalArgumentException in case of a missing propertyName
-	 */
-	public static void sort(Object[] source, SortDefinition sortDefinition) throws BeansException {
-		Arrays.sort(source, new PropertyComparator(sortDefinition));
 	}
 
 }

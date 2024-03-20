@@ -16,14 +16,12 @@
 
 package org.springframework.orm.ibatis;
 
+import com.ibatis.db.sqlmap.SqlMap;
+import com.ibatis.db.sqlmap.XmlSqlMapBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
-
-import com.ibatis.db.sqlmap.SqlMap;
-import com.ibatis.db.sqlmap.XmlSqlMapBuilder;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -36,8 +34,8 @@ import org.springframework.core.io.Resource;
  * The SqlMapClient/SqlMapSession API is only available with SQL Maps 2.
  *
  * @author Juergen Hoeller
- * @since 28.11.2003
  * @see SqlMapTemplate#setSqlMap
+ * @since 28.11.2003
  */
 public class SqlMapFactoryBean implements FactoryBean, InitializingBean {
 
@@ -57,6 +55,7 @@ public class SqlMapFactoryBean implements FactoryBean, InitializingBean {
 
 	/**
 	 * Set optional properties to be passed into the XmlSqlMapBuilder.
+	 *
 	 * @see com.ibatis.db.sqlmap.XmlSqlMapBuilder#buildSqlMap(java.io.Reader, Properties)
 	 */
 	public void setSqlMapProperties(Properties sqlMapProperties) {
@@ -69,8 +68,8 @@ public class SqlMapFactoryBean implements FactoryBean, InitializingBean {
 		}
 		InputStream is = this.configLocation.getInputStream();
 		this.sqlMap = (this.sqlMapProperties != null) ?
-				XmlSqlMapBuilder.buildSqlMap(new InputStreamReader(is), this.sqlMapProperties) :
-				XmlSqlMapBuilder.buildSqlMap(new InputStreamReader(is));
+			XmlSqlMapBuilder.buildSqlMap(new InputStreamReader(is), this.sqlMapProperties) :
+			XmlSqlMapBuilder.buildSqlMap(new InputStreamReader(is));
 	}
 
 	public Object getObject() {

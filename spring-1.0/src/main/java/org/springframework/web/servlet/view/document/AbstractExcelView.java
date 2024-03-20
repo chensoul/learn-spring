@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view.document;
 
@@ -97,8 +97,9 @@ import org.springframework.web.servlet.view.AbstractView;
  * <br>&lt;/servlet-mapping&gt;
  * </code>
  * <br>The use of this view is close to the AbstractPdfView
- * @see AbstractPdfView
+ *
  * @author <a href="mailto:jp.pawlak@tiscali.fr">Jean-Pierre Pawlak</a>
+ * @see AbstractPdfView
  */
 public abstract class AbstractExcelView extends AbstractView {
 
@@ -128,11 +129,10 @@ public abstract class AbstractExcelView extends AbstractView {
 	 * Renders the view given the specified model.
 	 */
 	protected final void renderMergedOutputModel(Map model, HttpServletRequest request,
-	                                             HttpServletResponse response) throws Exception {
+												 HttpServletResponse response) throws Exception {
 		if (this.url != null) {
 			this.wb = getTemplateSource(this.url, request);
-		}
-		else {
+		} else {
 			this.wb = new HSSFWorkbook();
 			logger.info("Excel WorkBook created from scratch");
 		}
@@ -148,11 +148,12 @@ public abstract class AbstractExcelView extends AbstractView {
 
 	/**
 	 * Creates the workBook from an existing .xls document.
-	 * @param url url of the Excle template without localization part nor extension
+	 *
+	 * @param url     url of the Excle template without localization part nor extension
 	 * @param request
 	 * @return HSSFWorkbook
 	 */
-	protected HSSFWorkbook getTemplateSource(String url, HttpServletRequest request) 
+	protected HSSFWorkbook getTemplateSource(String url, HttpServletRequest request)
 		throws ServletException {
 
 		String source = null;
@@ -168,8 +169,7 @@ public abstract class AbstractExcelView extends AbstractView {
 			realPath = getServletContext().getRealPath(source);
 			try {
 				inputFile = new FileInputStream(realPath);
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				// Nothing: at this stage, it is acceptable
 			}
 		}
@@ -179,8 +179,7 @@ public abstract class AbstractExcelView extends AbstractView {
 			realPath = getServletContext().getRealPath(source);
 			try {
 				inputFile = new FileInputStream(realPath);
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				// Nothing: at this stage, it is acceptable
 			}
 		}
@@ -190,8 +189,7 @@ public abstract class AbstractExcelView extends AbstractView {
 			realPath = getServletContext().getRealPath(source);
 			try {
 				inputFile = new FileInputStream(realPath);
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				throw new ApplicationContextException(
 					"Can't resolve real path for EXCEL template at '"
 					+ source
@@ -204,8 +202,7 @@ public abstract class AbstractExcelView extends AbstractView {
 			HSSFWorkbook workBook = new HSSFWorkbook(fs);
 			logger.info("Loaded Excel workBook " + source);
 			return workBook;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new ApplicationContextException("IOException with '" + source + "': " + e.getMessage());
 		}
 	}
@@ -213,19 +210,21 @@ public abstract class AbstractExcelView extends AbstractView {
 	/**
 	 * Subclasses must implement this method to create an Excel HSSFWorkbook document,
 	 * given the model.
+	 *
 	 * @param model
-	 * @param wb The Excel workBook to complete
-	 * @param request in case we need locale etc. Shouldn't look at attributes
+	 * @param wb       The Excel workBook to complete
+	 * @param request  in case we need locale etc. Shouldn't look at attributes
 	 * @param response in case we need to set cookies. Shouldn't write to it.
 	 */
-	protected abstract void buildExcelDocument(Map model,	HSSFWorkbook wb, HttpServletRequest request,
-																						 HttpServletResponse response) throws Exception;
+	protected abstract void buildExcelDocument(Map model, HSSFWorkbook wb, HttpServletRequest request,
+											   HttpServletResponse response) throws Exception;
 
 	/**
 	 * Convenient method to obtain the cell in the given sheet, row and column
 	 * <br>Creating by the way the row and the cell if they still doesn't exist
 	 * <br>Thus, the column can be passed as an int, the method making the needed
 	 * downcasts.
+	 *
 	 * @param sheet A sheet Object. The first sheet is usually obtained by wb.getSheetAt(0)
 	 * @param row
 	 * @param col
@@ -245,6 +244,7 @@ public abstract class AbstractExcelView extends AbstractView {
 
 	/**
 	 * Convenient method to set a String as text content in a cell.
+	 *
 	 * @param cell The cell in which the text must be put
 	 * @param text The text to put in the cell
 	 */

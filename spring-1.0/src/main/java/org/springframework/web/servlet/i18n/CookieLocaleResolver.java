@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.i18n;
 
@@ -45,6 +45,7 @@ public class CookieLocaleResolver implements LocaleResolver {
 	 * overriding a cookie value if the locale has been changed in the
 	 * course of the current request! Use RequestContext.getLocale() to
 	 * retrieve the current locale in controllers or views.
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContext#getLocale
 	 */
 	public static final String LOCALE_REQUEST_ATTRIBUTE_NAME = CookieLocaleResolver.class.getName() + ".LOCALE";
@@ -61,6 +62,10 @@ public class CookieLocaleResolver implements LocaleResolver {
 
 	private int cookieMaxAge = DEFAULT_COOKIE_MAX_AGE;
 
+	public String getCookieName() {
+		return cookieName;
+	}
+
 	/**
 	 * Use the given name for locale cookies.
 	 */
@@ -68,13 +73,9 @@ public class CookieLocaleResolver implements LocaleResolver {
 		this.cookieName = cookieName;
 	}
 
-	public String getCookieName() {
-		return cookieName;
-	}
-
 	/**
 	 * Use the given path for theme cookies.
-	 * The cookie is only visible for URLs in the path and below. 
+	 * The cookie is only visible for URLs in the path and below.
 	 */
 	public String getCookiePath() {
 		return cookiePath;
@@ -84,16 +85,16 @@ public class CookieLocaleResolver implements LocaleResolver {
 		this.cookiePath = cookiePath;
 	}
 
+	public int getCookieMaxAge() {
+		return cookieMaxAge;
+	}
+
 	/**
 	 * Use the given maximum age, specified in seconds, for locale cookies.
 	 * Useful special value: -1 ... not persistent, deleted when client shuts down
 	 */
 	public void setCookieMaxAge(int cookieMaxAge) {
 		this.cookieMaxAge = cookieMaxAge;
-	}
-
-	public int getCookieMaxAge() {
-		return cookieMaxAge;
 	}
 
 	public Locale resolveLocale(HttpServletRequest request) {
@@ -139,8 +140,7 @@ public class CookieLocaleResolver implements LocaleResolver {
 			cookie = new Cookie(getCookieName(), locale.getLanguage() + " " + locale.getCountry() + " " + locale.getVariant());
 			cookie.setMaxAge(getCookieMaxAge());
 			cookie.setPath(cookiePath);
-		}
-		else {
+		} else {
 			// set request attribute to fallback locale and remove cookie
 			request.setAttribute(LOCALE_REQUEST_ATTRIBUTE_NAME, request.getLocale());
 			cookie = new Cookie(getCookieName(), "");

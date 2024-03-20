@@ -22,7 +22,6 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.ThrowsAdvice;
 
 /**
- *
  * @author Rod Johnson
  * @version $Id: ThrowsAdviceAdapter.java,v 1.5 2004/03/19 16:54:41 johnsonr Exp $
  */

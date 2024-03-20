@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
@@ -38,21 +37,26 @@ import org.springframework.util.StringUtils;
  * Concrete implementation of ListableBeanFactory.
  * Can be used as a standalone bean factory,
  * or as a superclass for custom bean factories.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 16 April 2001
  * @version $Id: DefaultListableBeanFactory.java,v 1.20 2004/03/22 14:07:47 jhoeller Exp $
+ * @since 16 April 2001
  */
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
-    implements ConfigurableListableBeanFactory, BeanDefinitionRegistry {
+	implements ConfigurableListableBeanFactory, BeanDefinitionRegistry {
 
 	/* Whether to allow re-registration of a different definition with the same name */
 	private boolean allowBeanDefinitionOverriding = true;
 
-	/** Map of bean definition objects, keyed by bean name */
+	/**
+	 * Map of bean definition objects, keyed by bean name
+	 */
 	private Map beanDefinitionMap = new HashMap();
 
-	/** List of bean definition names, in registration order */
+	/**
+	 * List of bean definition names, in registration order
+	 */
 	private List beanDefinitionNames = new ArrayList();
 
 
@@ -113,7 +117,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	public Map getBeansOfType(Class type, boolean includePrototypes, boolean includeFactoryBeans)
-			throws BeansException {
+		throws BeansException {
 
 		String[] beanNames = getBeanDefinitionNames(type);
 		Map result = new HashMap();
@@ -135,15 +139,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 					FactoryBean factory = (FactoryBean) getBean(FACTORY_BEAN_PREFIX + factoryNames[i]);
 					Class objectType = factory.getObjectType();
 					if ((objectType == null && factory.isSingleton()) ||
-							((factory.isSingleton() || includePrototypes) &&
-							objectType != null && type.isAssignableFrom(objectType))) {
+						((factory.isSingleton() || includePrototypes) &&
+						 objectType != null && type.isAssignableFrom(objectType))) {
 						Object createdObject = getBean(factoryNames[i]);
 						if (type.isInstance(createdObject)) {
 							result.put(factoryNames[i], createdObject);
 						}
 					}
-				}
-				catch (FactoryBeanCircularReferenceException ex) {
+				} catch (FactoryBeanCircularReferenceException ex) {
 					// we're currently creating that FactoryBean
 					// sensible to ignore it, as we are just looking for a certain type
 					logger.debug("Ignoring exception on FactoryBean type check", ex);
@@ -163,7 +166,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		if (logger.isInfoEnabled()) {
 			logger.info("Pre-instantiating singletons in factory [" + this + "]");
 		}
-		for (Iterator it = this.beanDefinitionNames.iterator(); it.hasNext();) {
+		for (Iterator it = this.beanDefinitionNames.iterator(); it.hasNext(); ) {
 			String beanName = (String) it.next();
 			if (containsBeanDefinition(beanName)) {
 				RootBeanDefinition bd = getMergedBeanDefinition(beanName, false);
@@ -173,8 +176,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						if (factory.isSingleton()) {
 							getBean(beanName);
 						}
-					}
-					else {
+					} else {
 						getBean(beanName);
 					}
 				}
@@ -188,28 +190,25 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	//---------------------------------------------------------------------
 
 	public void registerBeanDefinition(String name, BeanDefinition beanDefinition)
-			throws BeanDefinitionStoreException {
+		throws BeanDefinitionStoreException {
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
 				((AbstractBeanDefinition) beanDefinition).validate();
-			}
-			catch (BeanDefinitionValidationException ex) {
+			} catch (BeanDefinitionValidationException ex) {
 				throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), name,
-				                                       "Validation of bean definition with name failed", ex);
+					"Validation of bean definition with name failed", ex);
 			}
 		}
 		Object oldBeanDefinition = this.beanDefinitionMap.get(name);
 		if (oldBeanDefinition != null) {
 			if (!this.allowBeanDefinitionOverriding) {
 				throw new BeanDefinitionStoreException("Cannot register bean definition [" + beanDefinition + "] for bean '" +
-																							 name + "': there's already [" + oldBeanDefinition + "] bound");
-			}
-			else {
+													   name + "': there's already [" + oldBeanDefinition + "] bound");
+			} else {
 				logger.info("Overriding bean definition for bean '" + name +
-										"': replacing [" + oldBeanDefinition + "] with [" + beanDefinition + "]");
+							"': replacing [" + oldBeanDefinition + "] with [" + beanDefinition + "]");
 			}
-		}
-		else {
+		} else {
 			this.beanDefinitionNames.add(name);
 		}
 		this.beanDefinitionMap.put(name, beanDefinition);
@@ -256,8 +255,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		sb.append(" defining beans [" + StringUtils.arrayToDelimitedString(getBeanDefinitionNames(), ",") + "]");
 		if (getParentBeanFactory() == null) {
 			sb.append("; Root of BeanFactory hierarchy");
-		}
-		else {
+		} else {
 			sb.append("; parent=<" + getParentBeanFactory() + ">");
 		}
 		return sb.toString();

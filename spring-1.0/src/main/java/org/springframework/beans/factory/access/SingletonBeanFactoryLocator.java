@@ -25,10 +25,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -285,41 +283,6 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 
 
 	/**
-	 * Returns an instance which uses the default "beanRefFactory.xml", as the name of the
-	 * definition file(s). All resources returned by the current thread's context
-	 * classloader's getResources() method with this name will be combined to create a
-	 * definition, which is just a BeanFactory.
-	 */
-	public static BeanFactoryLocator getInstance() throws FatalBeanException {
-		return getInstance(BEANS_REFS_XML_NAME);
-	}
-
-	/**
-	 * Returns an instance which uses the the specified selector, as the name of the
-	 * definition file(s). All resources returned by the current thread's context
-	 * classloader's getResources() method with this name will be combined to create a
-	 * definition, which is just a a BeanFactory.
-	 * @param selector the name of the resource(s) which will be read and combine to
-	 * form the definition for the SingletonBeanFactoryLocator instance
-	 */
-	public static BeanFactoryLocator getInstance(String selector) throws FatalBeanException {
-		synchronized (instances) {
-			// debugging trace only
-			//if (logger.isDebugEnabled()) {
-			//	logger.debug("SingletonBeanFactoryLocator.getInstance(): instances.hashCode=" +
-			//	             instances.hashCode() + ", instances=" + instances);
-			//}
-			BeanFactoryLocator bfl = (BeanFactoryLocator) instances.get(selector);
-			if (bfl == null) {
-				bfl = new SingletonBeanFactoryLocator(selector);
-				instances.put(selector, bfl);
-			}
-			return bfl;
-		}
-	}
-
-
-	/**
 	 * Constructor which uses the default "beanRefFactory.xml", as the name of the
 	 * definition file(s). All resources returned by the definition classloader's
 	 * getResources() method with this name will be combined to create a definition.
@@ -338,11 +301,46 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 		this.resourceName = resourceName;
 	}
 
+	/**
+	 * Returns an instance which uses the default "beanRefFactory.xml", as the name of the
+	 * definition file(s). All resources returned by the current thread's context
+	 * classloader's getResources() method with this name will be combined to create a
+	 * definition, which is just a BeanFactory.
+	 */
+	public static BeanFactoryLocator getInstance() throws FatalBeanException {
+		return getInstance(BEANS_REFS_XML_NAME);
+	}
+
+	/**
+	 * Returns an instance which uses the the specified selector, as the name of the
+	 * definition file(s). All resources returned by the current thread's context
+	 * classloader's getResources() method with this name will be combined to create a
+	 * definition, which is just a a BeanFactory.
+	 *
+	 * @param selector the name of the resource(s) which will be read and combine to
+	 *                 form the definition for the SingletonBeanFactoryLocator instance
+	 */
+	public static BeanFactoryLocator getInstance(String selector) throws FatalBeanException {
+		synchronized (instances) {
+			// debugging trace only
+			//if (logger.isDebugEnabled()) {
+			//	logger.debug("SingletonBeanFactoryLocator.getInstance(): instances.hashCode=" +
+			//	             instances.hashCode() + ", instances=" + instances);
+			//}
+			BeanFactoryLocator bfl = (BeanFactoryLocator) instances.get(selector);
+			if (bfl == null) {
+				bfl = new SingletonBeanFactoryLocator(selector);
+				instances.put(selector, bfl);
+			}
+			return bfl;
+		}
+	}
+
 	// see superclass JavaDoc: org.springframework.beans.factory.access.BeanFactoryLocator#useFactory(java.lang.String)
 	public BeanFactoryReference useBeanFactory(String factoryKey) throws BeansException {
 		synchronized (this.bfgInstancesByKey) {
 			BeanFactoryGroup bfg = (BeanFactoryGroup) this.bfgInstancesByKey
-					.get(this.resourceName);
+				.get(this.resourceName);
 
 			if (bfg != null) {
 				// debugging trace only
@@ -351,30 +349,28 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 				//			+ "' requested. Using existing instance.");
 				//}
 				bfg.refCount++;
-			}
-			else {
+			} else {
 				// this group definition doesn't exist, we need to try to load it
 				if (logger.isDebugEnabled()) {
 					logger.debug("Factory group with resourceName '" + this.resourceName
-							+ "' requested. Creating new instance.");
+								 + "' requested. Creating new instance.");
 				}
 
 				Collection resourceUrls;
 				try {
 					resourceUrls = getAllDefinitionResources(this.resourceName);
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					throw new FatalBeanException(
-							"Unable to load group definition. Group resource name:"
-									+ this.resourceName + ", factoryKey:" + factoryKey,
-							ex);
+						"Unable to load group definition. Group resource name:"
+						+ this.resourceName + ", factoryKey:" + factoryKey,
+						ex);
 				}
 
 				int numResources = resourceUrls.size();
 				if (numResources == 0)
 					throw new FatalBeanException(
-							"Unable to find definition for specified definition. Group:"
-									+ this.resourceName + ", contextId:" + factoryKey);
+						"Unable to find definition for specified definition. Group:"
+						+ this.resourceName + ", contextId:" + factoryKey);
 
 				String[] resources = new String[numResources];
 				Iterator it = resourceUrls.iterator();
@@ -399,12 +395,11 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 			Object bean;
 			try {
 				bean = groupContext.getBean(lookupId);
-			}
-			catch (BeansException e) {
+			} catch (BeansException e) {
 				throw new FatalBeanException(
-						"Unable to return specified BeanFactory instance: factoryKey="
-								+ factoryKey + ", from group with resourceName: "
-								+ this.resourceName, e);
+					"Unable to return specified BeanFactory instance: factoryKey="
+					+ factoryKey + ", from group with resourceName: "
+					+ this.resourceName, e);
 			}
 
 			if (bean instanceof String) {
@@ -412,22 +407,21 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 				lookupId = (String) bean;
 				try {
 					bean = groupContext.getBean(lookupId);
-				}
-				catch (BeansException e) {
+				} catch (BeansException e) {
 					throw new FatalBeanException(
-							"Unable to return specified BeanFactory instance: lookupId="
-									+ lookupId + ", factoryKey=" + factoryKey
-									+ ", from group with resourceName: "
-									+ this.resourceName, e);
+						"Unable to return specified BeanFactory instance: lookupId="
+						+ lookupId + ", factoryKey=" + factoryKey
+						+ ", from group with resourceName: "
+						+ this.resourceName, e);
 				}
 			}
 
 			if (!(bean instanceof BeanFactory))
 				throw new FatalBeanException(
-						"Returned bean is not BeanFactory or its subclass. lookupId="
-								+ lookupId + ", factoryKey=" + factoryKey
-								+ ", from group with resourceName: " + this.resourceName
-								+ ". Returned cbject class is: " + bean.getClass());
+					"Returned bean is not BeanFactory or its subclass. lookupId="
+					+ lookupId + ", factoryKey=" + factoryKey
+					+ ", from group with resourceName: " + this.resourceName
+					+ ". Returned cbject class is: " + bean.getClass());
 
 			final BeanFactory beanFactory = (BeanFactory) bean;
 
@@ -454,10 +448,9 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 								bfgInstancesByKey.remove(resourceName);
 								bfgInstancesByObj.remove(this.groupContextRef);
 							}
-						}
-						else {
+						} else {
 							logger.warn("Tried to release a SingletonBeanFactoryLocator (or subclass) group definition " +
-													"more times than it has actually been used. resourceName='" + resourceName + "'");
+										"more times than it has actually been used. resourceName='" + resourceName + "'");
 						}
 					}
 				}
@@ -477,8 +470,7 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 		for (int i = 0; i < resources.length; ++i) {
 			try {
 				reader.loadBeanDefinitions(new UrlResource(resources[i]));
-			}
-			catch (MalformedURLException ex) {
+			} catch (MalformedURLException ex) {
 				throw new BeanDefinitionStoreException("Bad URL when loading definition", ex);
 			}
 		}
@@ -486,16 +478,16 @@ public class SingletonBeanFactoryLocator implements BeanFactoryLocator {
 		return fac;
 	}
 
-    /**
-     * Destroy definition in separate method so subclass may work with other definition types
-     */
+	/**
+	 * Destroy definition in separate method so subclass may work with other definition types
+	 */
 	protected void destroyDefinition(BeanFactory groupDef, String resourceName) throws BeansException {
 		if (groupDef instanceof ConfigurableBeanFactory) {
 			// debugging trace only
 			if (logger.isDebugEnabled()) {
 				logger.debug("Factory group with resourceName '"
-						+ resourceName
-						+ "' being released, as no more references.");
+							 + resourceName
+							 + "' being released, as no more references.");
 			}
 			((ConfigurableBeanFactory) groupDef).destroySingletons();
 		}

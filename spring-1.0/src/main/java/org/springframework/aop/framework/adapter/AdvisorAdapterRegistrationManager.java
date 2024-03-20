@@ -16,8 +16,6 @@
 
 package org.springframework.aop.framework.adapter;
 
-import org.springframework.aop.framework.adapter.AdvisorAdapter;
-import org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -45,8 +43,8 @@ public class AdvisorAdapterRegistrationManager implements BeanPostProcessor {
 	 * @see BeanPostProcessor#postProcessAfterInitialization(Object, String)
 	 */
 	public Object postProcessAfterInitialization(Object bean, String name) throws BeansException {
-		if(bean instanceof AdvisorAdapter){
-			GlobalAdvisorAdapterRegistry.getInstance().registerAdvisorAdapter((AdvisorAdapter)bean);
+		if (bean instanceof AdvisorAdapter) {
+			GlobalAdvisorAdapterRegistry.getInstance().registerAdvisorAdapter((AdvisorAdapter) bean);
 		}
 
 		return bean;

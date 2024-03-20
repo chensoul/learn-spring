@@ -57,10 +57,10 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Trevor D. Cook
  * @author Juergen Hoeller
- * @since 29-Sep-2003
  * @see #CommonsMultipartResolver(ServletContext)
  * @see CommonsMultipartFile
  * @see org.apache.commons.fileupload.DiskFileUpload
+ * @since 29-Sep-2003
  */
 public class CommonsMultipartResolver implements MultipartResolver, ServletContextAware {
 
@@ -77,6 +77,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	 * Constructor for use as bean. Determines the servlet container's
 	 * temporary directory via the ServletContext passed in as through the
 	 * ServletContextAware interface (typically by a WebApplicationContext).
+	 *
 	 * @see #setServletContext
 	 * @see ServletContextAware
 	 * @see org.springframework.web.context.WebApplicationContext
@@ -88,6 +89,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	/**
 	 * Constructor for standalone usage. Determines the servlet container's
 	 * temporary directory via the given ServletContext.
+	 *
 	 * @param servletContext the ServletContext to use
 	 */
 	public CommonsMultipartResolver(ServletContext servletContext) {
@@ -98,6 +100,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	/**
 	 * Initialize the underlying org.apache.commons.fileupload.DiskFileUpload instance.
 	 * Can be overridden to use a custom subclass, e.g. for testing purposes.
+	 *
 	 * @return the new DiskFileUpload instance
 	 */
 	protected DiskFileUpload newFileUpload() {
@@ -107,6 +110,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	/**
 	 * Return the underlying org.apache.commons.fileupload.DiskFileUpload instance.
 	 * There is hardly any need to access this.
+	 *
 	 * @return the underlying DiskFileUpload instance
 	 */
 	public DiskFileUpload getFileUpload() {
@@ -116,6 +120,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	/**
 	 * Set the maximum allowed size (in bytes) before uploads are refused.
 	 * -1 indicates no limit (the default).
+	 *
 	 * @param maxUploadSize the maximum upload size allowed
 	 * @see org.apache.commons.fileupload.FileUploadBase#setSizeMax
 	 */
@@ -127,6 +132,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	 * Set the maximum allowed size (in bytes) before uploads are written to disk.
 	 * Uploaded files will still be received past this amount, but they will not be
 	 * stored in memory. Default is 10240, according to Commons FileUpload.
+	 *
 	 * @param maxInMemorySize the maximum in memory size allowed
 	 * @see org.apache.commons.fileupload.DiskFileUpload#setSizeThreshold
 	 */
@@ -142,6 +148,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	 * encoding will override this setting. This also allows for generically
 	 * overriding the character encoding in a filter that invokes the
 	 * ServletRequest.setCharacterEncoding method.
+	 *
 	 * @param defaultEncoding the character encoding to use
 	 * @see #determineEncoding
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -157,12 +164,13 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	/**
 	 * Set the temporary directory where uploaded files get stored.
 	 * Default is the servlet container's temporary directory for the web application.
+	 *
 	 * @see WebUtils#TEMP_DIR_CONTEXT_ATTRIBUTE
 	 */
 	public void setUploadTempDir(Resource uploadTempDir) throws IOException {
 		if (!uploadTempDir.exists() && !uploadTempDir.getFile().mkdirs()) {
 			throw new IllegalArgumentException("Given uploadTempDir [" + uploadTempDir +
-																				 "] could not be created");
+											   "] could not be created");
 		}
 		this.uploadTempDir = uploadTempDir.getFile();
 		this.fileUpload.setRepositoryPath(uploadTempDir.getFile().getAbsolutePath());
@@ -197,43 +205,39 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 			List fileItems = fileUpload.parseRequest(request);
 			Map parameters = new HashMap();
 			Map multipartFiles = new HashMap();
-			for (Iterator it = fileItems.iterator(); it.hasNext();) {
+			for (Iterator it = fileItems.iterator(); it.hasNext(); ) {
 				FileItem fileItem = (FileItem) it.next();
 				if (fileItem.isFormField()) {
 					String value = null;
 					try {
 						value = fileItem.getString(enc);
-					}
-					catch (UnsupportedEncodingException ex) {
+					} catch (UnsupportedEncodingException ex) {
 						logger.warn("Could not decode multipart item '" + fileItem.getFieldName() +
-						            "] with encoding '" + enc + "': using platform default");
+									"] with encoding '" + enc + "': using platform default");
 						value = fileItem.getString();
 					}
 					String[] curParam = (String[]) parameters.get(fileItem.getFieldName());
 					if (curParam == null) {
 						// simple form field
-						parameters.put(fileItem.getFieldName(), new String[] { value });
-					}
-					else {
+						parameters.put(fileItem.getFieldName(), new String[]{value});
+					} else {
 						// array of simple form fields
 						String[] newParam = StringUtils.addStringToArray(curParam, value);
 						parameters.put(fileItem.getFieldName(), newParam);
 					}
-				}
-				else {
+				} else {
 					// multipart file field
 					CommonsMultipartFile file = new CommonsMultipartFile(fileItem);
 					multipartFiles.put(file.getName(), file);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Found multipart file [" + file.getName() + "] of size " + file.getSize() +
-						             " bytes with original file name [" + file.getOriginalFilename() +
-						             "], stored " + file.getStorageDescription());
+									 " bytes with original file name [" + file.getOriginalFilename() +
+									 "], stored " + file.getStorageDescription());
 					}
 				}
 			}
 			return new DefaultMultipartHttpServletRequest(request, multipartFiles, parameters);
-		}
-		catch (FileUploadException ex) {
+		} catch (FileUploadException ex) {
 			throw new MultipartException("Could not parse multipart request", ex);
 		}
 	}
@@ -243,6 +247,7 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 	 * Can be overridden in subclasses.
 	 * <p>The default implementation checks the request encoding,
 	 * falling back to the default encoding specified for this resolver.
+	 *
 	 * @param request current HTTP request
 	 * @return the encoding for the request (never null)
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -258,11 +263,11 @@ public class CommonsMultipartResolver implements MultipartResolver, ServletConte
 
 	public void cleanupMultipart(MultipartHttpServletRequest request) {
 		Map multipartFiles = request.getFileMap();
-		for (Iterator i = multipartFiles.keySet().iterator(); i.hasNext();) {
+		for (Iterator i = multipartFiles.keySet().iterator(); i.hasNext(); ) {
 			String name = (String) i.next();
 			CommonsMultipartFile file = (CommonsMultipartFile) multipartFiles.get(name);
 			logger.debug("Cleaning up multipart file [" + file.getName() + "] with original file name [" +
-			             file.getOriginalFilename() + "], stored " + file.getStorageDescription());
+						 file.getOriginalFilename() + "], stored " + file.getStorageDescription());
 			file.getFileItem().delete();
 		}
 	}

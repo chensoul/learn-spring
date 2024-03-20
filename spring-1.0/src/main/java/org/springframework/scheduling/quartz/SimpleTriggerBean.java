@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.scheduling.quartz;
 
@@ -42,7 +42,6 @@ import org.springframework.core.Constants;
  * instead of registering the JobDetail separately.
  *
  * @author Juergen Hoeller
- * @since 18.02.2004
  * @see #setName
  * @see #setGroup
  * @see #setStartTime
@@ -51,9 +50,10 @@ import org.springframework.core.Constants;
  * @see #setJobDetail
  * @see SchedulerFactoryBean#setTriggers
  * @see SchedulerFactoryBean#setJobDetails
+ * @since 18.02.2004
  */
 public class SimpleTriggerBean extends SimpleTrigger
-    implements JobDetailAwareTrigger, BeanNameAware, InitializingBean {
+	implements JobDetailAwareTrigger, BeanNameAware, InitializingBean {
 
 	private static final Constants constants = new Constants(SimpleTrigger.class);
 
@@ -67,20 +67,21 @@ public class SimpleTriggerBean extends SimpleTrigger
 		setRepeatCount(REPEAT_INDEFINITELY);
 	}
 
+	public JobDetail getJobDetail() {
+		return jobDetail;
+	}
+
 	/**
 	 * Set the JobDetail that this trigger should be associated with.
 	 * <p>This is typically used with a bean reference if the JobDetail
 	 * is a Spring-managed bean. Alternatively, the trigger can also
 	 * be associated with a job by name and group.
+	 *
 	 * @see #setJobName
 	 * @see #setJobGroup
 	 */
 	public void setJobDetail(JobDetail jobDetail) {
 		this.jobDetail = jobDetail;
-	}
-
-	public JobDetail getJobDetail() {
-		return jobDetail;
 	}
 
 	/**
@@ -91,6 +92,7 @@ public class SimpleTriggerBean extends SimpleTrigger
 	 * specified. However, in typical usage within a Spring context,
 	 * the start time will be the container startup time anyway.
 	 * Specifying a relative delay is appropriate in that case.
+	 *
 	 * @see #setStartTime
 	 */
 	public void setStartDelay(long startDelay) {
@@ -101,6 +103,7 @@ public class SimpleTriggerBean extends SimpleTrigger
 	 * Set the misfire instruction via the name of the corresponding
 	 * constant in the SimpleTrigger class. Default is
 	 * MISFIRE_INSTRUCTION_SMART_POLICY.
+	 *
 	 * @see org.quartz.SimpleTrigger#MISFIRE_INSTRUCTION_FIRE_NOW
 	 * @see org.quartz.Trigger#MISFIRE_INSTRUCTION_SMART_POLICY
 	 */

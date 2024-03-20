@@ -45,8 +45,8 @@ import org.springframework.web.util.HtmlUtils;
  * model attribute via AbstractView's requestContextAttribute property.
  *
  * @author Juergen Hoeller
- * @since 03.03.2003
  * @see org.springframework.web.servlet.view.AbstractView#setRequestContextAttribute
+ * @since 03.03.2003
  */
 public class RequestContext {
 
@@ -70,6 +70,7 @@ public class RequestContext {
 	 * <p>This only works with InternalResourceViews, as Errors instances
 	 * are part of the model and not normally exposed as request attributes.
 	 * It will typically be used within JSPs or custom tags.
+	 *
 	 * @param request current HTTP request
 	 */
 	public RequestContext(HttpServletRequest request) throws ServletException {
@@ -81,8 +82,9 @@ public class RequestContext {
 	 * using the given model attributes for Errors retrieval.
 	 * <p>This works with all View implementations.
 	 * It will typically be used by View implementations.
+	 *
 	 * @param request current HTTP request
-	 * @param model the model attributes for the current view
+	 * @param model   the model attributes for the current view
 	 */
 	public RequestContext(HttpServletRequest request, Map model)
 		throws ServletException {
@@ -96,6 +98,7 @@ public class RequestContext {
 	/**
 	 * Return the context path of the current request,
 	 * i.e. the path that indicates the current web application.
+	 *
 	 * @see HttpServletRequest#getContextPath
 	 */
 	public String getContextPath() {
@@ -124,13 +127,6 @@ public class RequestContext {
 	}
 
 	/**
-	 * (De)activate default HTML escaping for messages and errors.
-	 */
-	public void setDefaultHtmlEscape(boolean defaultHtmlEscape) {
-		this.defaultHtmlEscape = defaultHtmlEscape;
-	}
-
-	/**
 	 * Default HTML escaping?
 	 */
 	public boolean isDefaultHtmlEscape() {
@@ -138,8 +134,16 @@ public class RequestContext {
 	}
 
 	/**
+	 * (De)activate default HTML escaping for messages and errors.
+	 */
+	public void setDefaultHtmlEscape(boolean defaultHtmlEscape) {
+		this.defaultHtmlEscape = defaultHtmlEscape;
+	}
+
+	/**
 	 * Retrieve the message for the given code, using the defaultHtmlEscape setting.
-	 * @param code code of the message
+	 *
+	 * @param code           code of the message
 	 * @param defaultMessage String to return if the lookup fails
 	 * @return the message
 	 */
@@ -149,8 +153,9 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the message for the given code, using the defaultHtmlEscape setting.
-	 * @param code code of the message
-	 * @param args arguments for the message, or null if none
+	 *
+	 * @param code           code of the message
+	 * @param args           arguments for the message, or null if none
 	 * @param defaultMessage String to return if the lookup fails
 	 * @return the message
 	 */
@@ -160,10 +165,11 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the message for the given code.
-	 * @param code code of the message
-	 * @param args arguments for the message, or null if none
+	 *
+	 * @param code           code of the message
+	 * @param args           arguments for the message, or null if none
 	 * @param defaultMessage String to return if the lookup fails
-	 * @param htmlEscape HTML escape the message?
+	 * @param htmlEscape     HTML escape the message?
 	 * @return the message
 	 */
 	public String getMessage(String code, Object[] args, String defaultMessage, boolean htmlEscape) {
@@ -173,6 +179,7 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the message for the given code, using the defaultHtmlEscape setting.
+	 *
 	 * @param code code of the message
 	 * @return the message
 	 * @throws NoSuchMessageException if not found
@@ -183,6 +190,7 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the message for the given code, using the defaultHtmlEscape setting.
+	 *
 	 * @param code code of the message
 	 * @param args arguments for the message, or null if none
 	 * @return the message
@@ -194,8 +202,9 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the message for the given code.
-	 * @param code code of the message
-	 * @param args arguments for the message, or null if none
+	 *
+	 * @param code       code of the message
+	 * @param args       arguments for the message, or null if none
 	 * @param htmlEscape HTML escape the message?
 	 * @return the message
 	 * @throws NoSuchMessageException if not found
@@ -208,6 +217,7 @@ public class RequestContext {
 	/**
 	 * Retrieve the given MessageSourceResolvable (e.g. an ObjectError instance),
 	 * using the defaultHtmlEscape setting.
+	 *
 	 * @param resolvable the MessageSourceResolvable
 	 * @return the message
 	 * @throws NoSuchMessageException if not found
@@ -218,6 +228,7 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the given MessageSourceResolvable (e.g. an ObjectError instance).
+	 *
 	 * @param resolvable the MessageSourceResolvable
 	 * @param htmlEscape HTML escape the message?
 	 * @return the message
@@ -231,6 +242,7 @@ public class RequestContext {
 	/**
 	 * Retrieve the Errors instance for the given bind object,
 	 * using the defaultHtmlEscape setting.
+	 *
 	 * @param name name of the bind object
 	 * @return the Errors instance, or null if not found
 	 */
@@ -240,7 +252,8 @@ public class RequestContext {
 
 	/**
 	 * Retrieve the Errors instance for the given bind object.
-	 * @param name name of the bind object
+	 *
+	 * @param name       name of the bind object
 	 * @param htmlEscape create an Errors instance with automatic HTML escaping?
 	 * @return the Errors instance, or null if not found
 	 */
@@ -260,8 +273,7 @@ public class RequestContext {
 		if (htmlEscape && !(errors instanceof EscapedErrors)) {
 			errors = new EscapedErrors(errors);
 			put = true;
-		}
-		else if (!htmlEscape && errors instanceof EscapedErrors) {
+		} else if (!htmlEscape && errors instanceof EscapedErrors) {
 			errors = ((EscapedErrors) errors).getSource();
 			put = true;
 		}
@@ -279,8 +291,7 @@ public class RequestContext {
 		String key = BindException.ERROR_KEY_PREFIX + name;
 		if (this.model != null) {
 			return (Errors) this.model.get(key);
-		}
-		else {
+		} else {
 			return (Errors) this.request.getAttribute(key);
 		}
 	}

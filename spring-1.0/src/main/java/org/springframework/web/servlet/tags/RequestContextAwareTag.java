@@ -52,25 +52,25 @@ public abstract class RequestContextAwareTag extends TagSupport {
 	private RequestContext requestContext;
 
 	/**
-	 * Sets HTML escaping for this tag, overriding the default
-	 * HTML escaping setting for the current page.
-	 * @see HtmlEscapeTag#setDefaultHtmlEscape
-	 */
-	public final void setHtmlEscape(String htmlEscape) throws JspException {
-		this.htmlEscape =	htmlEscape;
-	}
-
-	/**
 	 * Returns the HTML escaping setting for this tag,
 	 * or the default setting if not overridden.
 	 */
 	protected final boolean isHtmlEscape() throws JspException {
 		if (this.htmlEscape != null) {
 			return ExpressionEvaluationUtils.evaluateBoolean("htmlEscape", this.htmlEscape, pageContext);
-		}
-		else {
+		} else {
 			return HtmlEscapeTag.isDefaultHtmlEscape(this.pageContext);
 		}
+	}
+
+	/**
+	 * Sets HTML escaping for this tag, overriding the default
+	 * HTML escaping setting for the current page.
+	 *
+	 * @see HtmlEscapeTag#setDefaultHtmlEscape
+	 */
+	public final void setHtmlEscape(String htmlEscape) throws JspException {
+		this.htmlEscape = htmlEscape;
 	}
 
 	/**
@@ -86,16 +86,13 @@ public abstract class RequestContextAwareTag extends TagSupport {
 	 */
 	public final int doStartTag() throws JspException {
 		try {
-			this.requestContext =	new RequestContext((HttpServletRequest) this.pageContext.getRequest());
+			this.requestContext = new RequestContext((HttpServletRequest) this.pageContext.getRequest());
 			return doStartTagInternal();
-		}
-		catch (JspException ex) {
+		} catch (JspException ex) {
 			throw ex;
-		}
-		catch (RuntimeException ex) {
+		} catch (RuntimeException ex) {
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			pageContext.getServletContext().log("Exception in custom tag", ex);
 			throw new JspTagException(ex.getMessage());
 		}
@@ -103,9 +100,10 @@ public abstract class RequestContextAwareTag extends TagSupport {
 
 	/**
 	 * Called by doStartTag to perform the actual work.
+	 *
 	 * @return same as TagSupport.doStartTag
 	 * @throws Exception any exception, any checked one other than
-	 * a JspException gets wrapped in a JspException by doStartTag
+	 *                   a JspException gets wrapped in a JspException by doStartTag
 	 * @see javax.servlet.jsp.tagext.TagSupport#doStartTag
 	 */
 	protected int doStartTagInternal() throws Exception {

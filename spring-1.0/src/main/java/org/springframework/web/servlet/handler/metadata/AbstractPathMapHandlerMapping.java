@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.handler.metadata;
 
@@ -26,7 +26,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 
 /**
- * Abstract implementation of the HandlerMapping interface that recognizes 
+ * Abstract implementation of the HandlerMapping interface that recognizes
  * metadata attributes of type PathMap on application Controllers and automatically
  * wires them into the current servlet's WebApplicationContext.
  *
@@ -48,35 +48,36 @@ import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
  * @version $Id: AbstractPathMapHandlerMapping.java,v 1.6 2004/03/18 02:46:17 trisberg Exp $
  */
 public abstract class AbstractPathMapHandlerMapping extends AbstractUrlHandlerMapping {
-	
+
 	/**
 	 * Look for all classes with a PathMap class attribute, instantiate them in
 	 * the owning ApplicationContext and register them as MVC handlers usable
 	 * by the current DispatcherServlet.
+	 *
 	 * @see org.springframework.context.support.ApplicationObjectSupport#initApplicationContext()
 	 */
 	public void initApplicationContext() throws ApplicationContextException {
 		try {
 			logger.info("Looking for attribute-defined URL mappings in application context: " + getApplicationContext());
-			
+
 			Collection names = getClassNamesWithPathMapAttributes();
-			logger.info("Found " + names.size() + " attribute-targeted handlers");				
-			
+			logger.info("Found " + names.size() + " attribute-targeted handlers");
+
 			// For each classname returned by the Commons Attribute indexer
-			for (Iterator itr = names.iterator(); itr.hasNext();) {
+			for (Iterator itr = names.iterator(); itr.hasNext(); ) {
 				String handlerClassName = (String) itr.next();
 				Class handlerClass = Class.forName(handlerClassName);
 				if (!(getApplicationContext() instanceof ConfigurableApplicationContext)) {
 					throw new ApplicationContextException("AbstractPathMapHandlerMapping needs to run in a ConfigurableApplicationContext");
 				}
 				ConfigurableListableBeanFactory beanFactory =
-						((ConfigurableApplicationContext) getApplicationContext()).getBeanFactory();
+					((ConfigurableApplicationContext) getApplicationContext()).getBeanFactory();
 
 				// Autowire the given handler class via AutowireCapableBeanFactory.
 				// Either autowires a constructor or by type, depending on the
 				// constructors available in the given class.
 				Object handler = beanFactory.autowire(handlerClass, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, true);
-				
+
 				// We now have an "autowired" handler, that may reference beans in the
 				// application context. We now add the new handler to the factory.
 				// This isn't necessary for the handler to work, but is useful if we want
@@ -85,19 +86,18 @@ public abstract class AbstractPathMapHandlerMapping extends AbstractUrlHandlerMa
 
 				// There may be multiple paths mapped to this handler,
 				PathMap[] pathMaps = getPathMapAttributes(handlerClass);
-				for (int i = 0; i < pathMaps.length; i++) {				
+				for (int i = 0; i < pathMaps.length; i++) {
 					PathMap pathMap = pathMaps[i];
 					String path = pathMap.getUrl();
 					if (!path.startsWith("/")) {
 						path = "/" + path;
 					}
-					
+
 					logger.info("Mapping path [" + path + "] to class with name '" + handlerClassName + "'");
 					registerHandler(path, handler);
 				}
 			}
-		}
-		catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			// Shouldn't happen: Attributes API gave us the classname
 			throw new ApplicationContextException("Failed to load a class returned in an attribute index: internal error in Commons Attributes indexing?", ex);
 		}

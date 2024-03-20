@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,9 +33,10 @@ import org.apache.commons.logging.LogFactory;
  * <br>
  * The TransactionAttributeEditor property editor creates objects
  * of this class.
- * @since 09-Apr-2003
- * @version $Id: RuleBasedTransactionAttribute.java,v 1.3 2004/03/18 02:46:05 trisberg Exp $
+ *
  * @author Rod Johnson
+ * @version $Id: RuleBasedTransactionAttribute.java,v 1.3 2004/03/18 02:46:05 trisberg Exp $
+ * @since 09-Apr-2003
  */
 public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute {
 
@@ -53,18 +53,19 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute {
 		this.rollbackRules = rollbackRules;
 	}
 
-	public void setRollbackRules(List rollbackRules) {
-		this.rollbackRules = rollbackRules;
-	}
-
 	public List getRollbackRules() {
 		return rollbackRules;
+	}
+
+	public void setRollbackRules(List rollbackRules) {
+		this.rollbackRules = rollbackRules;
 	}
 
 	/**
 	 * Winning rule is the shallowest rule (that is, the closest
 	 * in the inheritance hierarchy to the exception). If no rule applies (-1),
 	 * return false.
+	 *
 	 * @see TransactionAttribute#rollbackOn(Throwable)
 	 */
 	public boolean rollbackOn(Throwable t) {
@@ -73,7 +74,7 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute {
 		int deepest = Integer.MAX_VALUE;
 
 		if (this.rollbackRules != null) {
-			for (Iterator it = this.rollbackRules.iterator(); it.hasNext();) {
+			for (Iterator it = this.rollbackRules.iterator(); it.hasNext(); ) {
 				RollbackRuleAttribute rule = (RollbackRuleAttribute) it.next();
 				int depth = rule.getDepth(t);
 				if (depth >= 0 && depth < deepest) {
@@ -97,12 +98,12 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute {
 	public String toString() {
 		StringBuffer result = getDefinitionDescription();
 		TreeSet rules = new TreeSet();
-		for (Iterator it = rollbackRules.iterator(); it.hasNext();) {
+		for (Iterator it = rollbackRules.iterator(); it.hasNext(); ) {
 			RollbackRuleAttribute rule = (RollbackRuleAttribute) it.next();
 			String sign = (rule instanceof NoRollbackRuleAttribute) ? COMMIT_RULE_PREFIX : ROLLBACK_RULE_PREFIX;
 			rules.add(sign + rule.getExceptionName());
 		}
-		for (Iterator it = rules.iterator(); it.hasNext();) {
+		for (Iterator it = rules.iterator(); it.hasNext(); ) {
 			result.append(',');
 			result.append(it.next());
 		}

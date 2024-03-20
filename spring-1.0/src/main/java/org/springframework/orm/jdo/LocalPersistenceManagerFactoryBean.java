@@ -1,33 +1,30 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.orm.jdo;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -54,10 +51,10 @@ import org.springframework.core.io.Resource;
  * JDO implementation for JTA transactions (which might involve JCA).
  *
  * @author Juergen Hoeller
- * @since 03.06.2003
  * @see JdoTemplate#setPersistenceManagerFactory
  * @see JdoTransactionManager#setPersistenceManagerFactory
  * @see org.springframework.jndi.JndiObjectFactoryBean
+ * @since 03.06.2003
  */
 public class LocalPersistenceManagerFactoryBean implements FactoryBean, InitializingBean, DisposableBean {
 
@@ -104,9 +101,10 @@ public class LocalPersistenceManagerFactoryBean implements FactoryBean, Initiali
 
 	/**
 	 * Initialize the PersistenceManagerFactory for the given location.
+	 *
 	 * @throws IllegalArgumentException in case of illegal property values
-	 * @throws IOException if the properties could not be loaded from the given location
-	 * @throws JDOException in case of JDO initialization errors
+	 * @throws IOException              if the properties could not be loaded from the given location
+	 * @throws JDOException             in case of JDO initialization errors
 	 */
 	public void afterPropertiesSet() throws IllegalArgumentException, IOException, JDOException {
 		if (this.configLocation == null && this.jdoProperties == null) {
@@ -120,8 +118,7 @@ public class LocalPersistenceManagerFactoryBean implements FactoryBean, Initiali
 			InputStream is = this.configLocation.getInputStream();
 			try {
 				props.load(is);
-			}
-			finally {
+			} finally {
 				is.close();
 			}
 		}
@@ -147,6 +144,7 @@ public class LocalPersistenceManagerFactoryBean implements FactoryBean, Initiali
 	 * <p>The default implementation invokes JDOHelper's getPersistenceManagerFactory.
 	 * A custom implementation could prepare the instance in a specific way,
 	 * or use a custom PersistenceManagerFactory implementation.
+	 *
 	 * @param prop Properties prepared by this LocalPersistenceManagerFactoryBean
 	 * @return the PersistenceManagerFactory instance
 	 * @see javax.jdo.JDOHelper#getPersistenceManagerFactory
@@ -164,7 +162,7 @@ public class LocalPersistenceManagerFactoryBean implements FactoryBean, Initiali
 
 	public Class getObjectType() {
 		return (this.persistenceManagerFactory != null) ?
-		    this.persistenceManagerFactory.getClass() : PersistenceManagerFactory.class;
+			this.persistenceManagerFactory.getClass() : PersistenceManagerFactory.class;
 	}
 
 	public boolean isSingleton() {

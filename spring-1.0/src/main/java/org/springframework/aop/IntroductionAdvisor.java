@@ -26,10 +26,11 @@ import org.springframework.aop.framework.AopConfigException;
  * <br>
  * Introduction is the implementation of additional interfaces
  * (not implemented by a target) via AOP advice.
+ *
  * @author Rod Johnson
- * @since 04-Apr-2003
- * @see IntroductionInterceptor
  * @version $Id: IntroductionAdvisor.java,v 1.3 2004/03/18 02:46:07 trisberg Exp $
+ * @see IntroductionInterceptor
+ * @since 04-Apr-2003
  */
 public interface IntroductionAdvisor extends Advisor {
 
@@ -48,8 +49,9 @@ public interface IntroductionAdvisor extends Advisor {
 	/**
 	 * Can the advised interfaces be implemented by the
 	 * introduction advice? Invoked before adding an IntroductionAdvisor.
+	 *
 	 * @throws AopConfigException if the advised interfaces can't
-	 * be implemented by the introduction advice
+	 *                            be implemented by the introduction advice
 	 */
 	void validateInterfaces() throws AopConfigException;
 

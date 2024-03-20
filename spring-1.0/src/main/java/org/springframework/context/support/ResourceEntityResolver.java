@@ -20,12 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.xml.sax.InputSource;
-
 import org.springframework.beans.factory.xml.BeansDtdResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.xml.sax.InputSource;
 
 /**
  * EntityResolver implementation that tries to resolve entity references
@@ -43,8 +41,8 @@ import org.springframework.core.io.Resource;
  * will be interpreted relative to the application context too.
  *
  * @author Juergen Hoeller
- * @since 31.07.2003
  * @see ApplicationContext#getResource
+ * @since 31.07.2003
  */
 public class ResourceEntityResolver extends BeansDtdResolver {
 
@@ -65,8 +63,7 @@ public class ResourceEntityResolver extends BeansDtdResolver {
 				if (givenUrl.startsWith(systemRootUrl)) {
 					resourcePath = givenUrl.substring(systemRootUrl.length());
 				}
-			}
-			catch (MalformedURLException ex) {
+			} catch (MalformedURLException ex) {
 				// no URL -> try relative to resource base
 				resourcePath = systemId;
 			}

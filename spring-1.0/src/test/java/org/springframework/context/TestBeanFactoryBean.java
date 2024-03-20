@@ -1,4 +1,4 @@
-package org.springframework.config;
+package org.springframework.context;
 
 import org.springframework.beans.factory.FactoryBean;
 

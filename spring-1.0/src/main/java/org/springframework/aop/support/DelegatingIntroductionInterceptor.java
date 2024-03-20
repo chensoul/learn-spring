@@ -18,7 +18,6 @@ package org.springframework.aop.support;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +37,7 @@ import org.springframework.aop.framework.support.AopUtils;
  * The suppressInterface() method can be used to suppress interfaces implemented
  * by the delegate but which should not be introduced to the owning
  * AOP proxy.
+ *
  * @author Rod Johnson
  * @version $Id: DelegatingIntroductionInterceptor.java,v 1.2 2004/03/18 02:46:11 trisberg Exp $
  */
@@ -45,7 +45,9 @@ public class DelegatingIntroductionInterceptor implements IntroductionIntercepto
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Set of Class */
+	/**
+	 * Set of Class
+	 */
 	private Set publishedInterfaces = new HashSet();
 
 	/**
@@ -58,6 +60,7 @@ public class DelegatingIntroductionInterceptor implements IntroductionIntercepto
 	/**
 	 * Construct a new DelegatingIntroductionInterceptor, providing
 	 * a delegate that implements the interfaces to be introduced.
+	 *
 	 * @param delegate the delegate that implements the introduced interfaces
 	 */
 	public DelegatingIntroductionInterceptor(Object delegate) {
@@ -92,6 +95,7 @@ public class DelegatingIntroductionInterceptor implements IntroductionIntercepto
 	 * been autodetected due to its implementation by
 	 * the delegate.
 	 * Does nothing if it's not implemented by the delegate
+	 *
 	 * @param intf interface to suppress
 	 */
 	public void suppressInterface(Class intf) {
@@ -127,6 +131,7 @@ public class DelegatingIntroductionInterceptor implements IntroductionIntercepto
 
 	/**
 	 * Is this method on an introduced interface?
+	 *
 	 * @param mi method invocation
 	 * @return whether the method is on an introduced interface
 	 */

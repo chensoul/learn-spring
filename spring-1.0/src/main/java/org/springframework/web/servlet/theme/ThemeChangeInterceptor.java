@@ -27,9 +27,10 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 /**
  * Interceptor that allows for changing the current theme on every request,
  * via a configurable request parameter.
+ *
  * @author Juergen Hoeller
- * @since 20.06.2003
  * @see ThemeResolver
+ * @since 20.06.2003
  */
 public class ThemeChangeInterceptor extends HandlerInterceptorAdapter {
 
@@ -46,7 +47,7 @@ public class ThemeChangeInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws ServletException {
+		throws ServletException {
 		ThemeResolver themeResolver = RequestContextUtils.getThemeResolver(request);
 		String newTheme = request.getParameter(this.paramName);
 		if (newTheme != null) {

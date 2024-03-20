@@ -1,25 +1,23 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.transaction.interceptor;
 
 import java.util.Properties;
-
 import org.aopalliance.aop.AspectException;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.TargetSource;
@@ -57,11 +55,11 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @author Juergen Hoeller
  * @author Dmitriy Kopylenko
  * @author Rod Johnson
- * @since 21.08.2003
+ * @version $Id: TransactionProxyFactoryBean.java,v 1.25 2004/03/23 16:05:23 jhoeller Exp $
  * @see org.springframework.aop.framework.ProxyFactoryBean
  * @see TransactionInterceptor
  * @see #setTransactionAttributes
- * @version $Id: TransactionProxyFactoryBean.java,v 1.25 2004/03/23 16:05:23 jhoeller Exp $
+ * @since 21.08.2003
  */
 public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryBean, InitializingBean {
 
@@ -115,6 +113,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	 * Set the transaction attribute source which is used to find transaction
 	 * attributes. If specifying a String property value, a PropertyEditor
 	 * will create a MethodMapTransactionAttributeSource from the value.
+	 *
 	 * @see #setTransactionAttributes
 	 * @see TransactionAttributeSourceEditor
 	 * @see MethodMapTransactionAttributeSource
@@ -132,6 +131,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	 * no matter if defined in an interface or the class itself.
 	 * <p>Internally, a NameMatchTransactionAttributeSource will be
 	 * created from the given properties.
+	 *
 	 * @see #setTransactionAttributeSource
 	 * @see TransactionAttributeEditor
 	 * @see NameMatchTransactionAttributeSource
@@ -146,6 +146,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	 * Set a pointcut, i.e a bean that can cause conditional invocation
 	 * of the TransactionInterceptor depending on method and attributes passed.
 	 * Note: Additional interceptors are always invoked.
+	 *
 	 * @see #setPreInterceptors
 	 * @see #setPostInterceptors
 	 */
@@ -156,6 +157,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	/**
 	 * Set additional interceptors (or advisors) to be applied before the
 	 * implicit transaction interceptor, e.g. PerformanceMonitorInterceptor.
+	 *
 	 * @see org.springframework.aop.interceptor.PerformanceMonitorInterceptor
 	 */
 	public void setPreInterceptors(Object[] preInterceptors) {
@@ -169,6 +171,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	 * <p>Note that this is just necessary if you rely on those interceptors in general:
 	 * HibernateTemplate and JdoTemplate work nicely with JtaTransactionManager through
 	 * implicit on-demand thread binding.
+	 *
 	 * @see org.springframework.orm.hibernate.HibernateInterceptor
 	 * @see org.springframework.orm.jdo.JdoInterceptor
 	 */
@@ -181,10 +184,10 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 		if (this.target == null) {
 			throw new AopConfigException("Target must be set");
 		}
-		
+
 		if (this.transactionAttributeSource == null) {
 			throw new AopConfigException("Either 'transactionAttributeSource' or 'transactionAttributes' is required: " +
-																	 "If there are no transactional methods, don't use a transactional proxy.");
+										 "If there are no transactional methods, don't use a transactional proxy.");
 		}
 
 		TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
@@ -203,8 +206,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 		if (this.pointcut != null) {
 			Advisor advice = new DefaultPointcutAdvisor(this.pointcut, transactionInterceptor);
 			proxyFactory.addAdvisor(advice);
-		}
-		else {
+		} else {
 			// rely on default pointcut
 			proxyFactory.addAdvisor(new TransactionAttributeSourceAdvisor(transactionInterceptor));
 			// could just do the following, but it's usually less efficient because of AOP advice chain caching
@@ -222,8 +224,7 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 		proxyFactory.setTargetSource(createTargetSource(this.target));
 		if (this.proxyInterfaces != null) {
 			proxyFactory.setInterfaces(this.proxyInterfaces);
-		}
-		else if (!getProxyTargetClass()) {
+		} else if (!getProxyTargetClass()) {
 			// rely on AOP infrastructure to tell us what interfaces to proxy
 			proxyFactory.setInterfaces(AopUtils.getAllInterfaces(this.target));
 		}
@@ -232,15 +233,15 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 
 	/**
 	 * Set the target or TargetSource.
+	 *
 	 * @param target target. If this is an implementation of TargetSource it is
-	 * used as our TargetSource; otherwise it is wrapped in a SingletonTargetSource.
+	 *               used as our TargetSource; otherwise it is wrapped in a SingletonTargetSource.
 	 * @return a TargetSource for this object
 	 */
 	protected TargetSource createTargetSource(Object target) {
 		if (target instanceof TargetSource) {
 			return (TargetSource) target;
-		}
-		else {
+		} else {
 			return new SingletonTargetSource(target);
 		}
 	}
@@ -252,11 +253,9 @@ public class TransactionProxyFactoryBean extends ProxyConfig implements FactoryB
 	public Class getObjectType() {
 		if (this.proxy != null) {
 			return this.proxy.getClass();
-		}
-		else if (this.target != null) {
+		} else if (this.target != null) {
 			return this.target.getClass();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

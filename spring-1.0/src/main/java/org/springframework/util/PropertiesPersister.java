@@ -33,17 +33,18 @@ import java.util.Properties;
  * for example to specify a charset for a properties file.
  *
  * @author Juergen Hoeller
- * @since 10.03.2004
  * @see DefaultPropertiesPersister
  * @see Properties
+ * @since 10.03.2004
  */
 public interface PropertiesPersister {
 
 	/**
 	 * Load properties from the given InputStream into the given
 	 * Properties object.
+	 *
 	 * @param props the Properties object to load into
-	 * @param is the InputStream to load from
+	 * @param is    the InputStream to load from
 	 * @throws IOException in case of I/O errors
 	 * @see Properties#load
 	 */
@@ -52,7 +53,8 @@ public interface PropertiesPersister {
 	/**
 	 * Load properties from the given Reader into the given
 	 * Properties object.
-	 * @param props the Properties object to load into
+	 *
+	 * @param props  the Properties object to load into
 	 * @param reader the Reader to load from
 	 * @throws IOException in case of I/O errors
 	 */
@@ -61,8 +63,9 @@ public interface PropertiesPersister {
 	/**
 	 * Write the contents of the given Properties object to the
 	 * given OutputStream.
-	 * @param props the Properties object to store
-	 * @param os the OutputStream to write to
+	 *
+	 * @param props  the Properties object to store
+	 * @param os     the OutputStream to write to
 	 * @param header the description of the property list
 	 * @throws IOException in case of I/O errors
 	 * @see Properties#store
@@ -72,7 +75,8 @@ public interface PropertiesPersister {
 	/**
 	 * Write the contents of the given Properties object to the
 	 * given Writer.
-	 * @param props the Properties object to store
+	 *
+	 * @param props  the Properties object to store
 	 * @param writer the Writer to write to
 	 * @param header the description of the property list
 	 * @throws IOException in case of I/O errors

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.support;
 
@@ -114,23 +114,20 @@ public class DatabaseStartupValidator implements InitializingBean {
 				stmt = con.createStatement();
 				stmt.execute(this.validationQuery);
 				validated = true;
-			}
-			catch (SQLException ex) {
+			} catch (SQLException ex) {
 				latestEx = ex;
 				logger.debug("Validation query [" + this.validationQuery + "] threw exception", ex);
 				float rest = ((float) (deadLine - System.currentTimeMillis())) / 1000;
 				if (rest > this.interval) {
 					logger.warn("Database has not started up yet - retrying in " + this.interval +
-											" seconds (timeout in " + rest + " seconds)");
+								" seconds (timeout in " + rest + " seconds)");
 				}
-			}
-			finally {
+			} finally {
 				JdbcUtils.closeStatement(stmt);
 				if (con != null) {
 					try {
 						con.close();
-					}
-					catch (SQLException ex) {
+					} catch (SQLException ex) {
 						// ignore
 					}
 				}
@@ -138,8 +135,7 @@ public class DatabaseStartupValidator implements InitializingBean {
 
 			try {
 				Thread.sleep(this.interval * 1000);
-			}
-			catch (InterruptedException ex) {
+			} catch (InterruptedException ex) {
 				// ignore
 			}
 		}
@@ -147,10 +143,9 @@ public class DatabaseStartupValidator implements InitializingBean {
 		if (validated) {
 			float duration = (System.currentTimeMillis() - beginTime) / 1000;
 			logger.info("Database startup detected after " + duration + " seconds");
-		}
-		else {
+		} else {
 			throw new CannotGetJdbcConnectionException("Database has not started up within " +
-			                                           this.timeout + " seconds", latestEx);
+													   this.timeout + " seconds", latestEx);
 		}
 	}
 

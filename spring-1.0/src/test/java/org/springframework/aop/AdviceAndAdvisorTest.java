@@ -3,6 +3,7 @@ package org.springframework.aop;
 import org.aopalliance.intercept.Interceptor;
 import org.junit.Test;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor;
 import org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
@@ -14,14 +15,11 @@ public class AdviceAndAdvisorTest {
 
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.setTarget(service);
-
-
 		proxyFactory.addInterceptor(new MyMethodInterceptor());
 
 		UserService proxy = (UserService) proxyFactory.getProxy();
 		proxy.doSth();
-		System.out.println(proxy.getClass()
-			.getName());
+		System.out.println(proxy.getClass().getName());
 	}
 
 
@@ -33,14 +31,13 @@ public class AdviceAndAdvisorTest {
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.setTarget(service);
 
-//    AfterReturningAdviceInterceptor interceptor = new AfterReturningAdviceInterceptor(afterReturningAdvice);
+		AfterReturningAdviceInterceptor interceptor = new AfterReturningAdviceInterceptor(afterReturningAdvice);
 		// proxyFactory提供了添加MethodBeforeAdvice,ThrowAdvice通知的功能,独独没有没有提供AfterReturningAdvice功能
-//    proxyFactory.addInterceptor(interceptor);
+		proxyFactory.addInterceptor(interceptor);
 
 		UserService proxy = (UserService) proxyFactory.getProxy();
 		proxy.doSth();
-		System.out.println(proxy.getClass()
-			.getName());
+		System.out.println(proxy.getClass().getName());
 	}
 
 	@Test
@@ -49,7 +46,6 @@ public class AdviceAndAdvisorTest {
 
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.setTarget(service);
-
 
 		proxyFactory.addBeforeAdvice(new MyMethodBeforeAdvice());
 
@@ -73,8 +69,7 @@ public class AdviceAndAdvisorTest {
 
 		UserService proxy = (UserService) proxyFactory.getProxy();
 		proxy.doSth();
-		System.out.println(proxy.getClass()
-			.getName());
+		System.out.println(proxy.getClass().getName());
 	}
 
 	@Test
@@ -93,8 +88,7 @@ public class AdviceAndAdvisorTest {
 		UserService proxy = (UserService) proxyFactory.getProxy();
 		proxy.doSth();
 		proxy.insert();
-		System.out.println(proxy.getClass()
-			.getName());
+		System.out.println(proxy.getClass().getName());
 	}
 
 	@Test
@@ -106,15 +100,13 @@ public class AdviceAndAdvisorTest {
 
 		MyMethodBeforeAdvice advice = new MyMethodBeforeAdvice();
 		DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(advice);
-		Interceptor interceptor = GlobalAdvisorAdapterRegistry.getInstance()
-			.getInterceptor(advisor);
+		Interceptor interceptor = GlobalAdvisorAdapterRegistry.getInstance().getInterceptor(advisor);
 
 		proxyFactory.addInterceptor(interceptor);
 
 		UserService proxy = (UserService) proxyFactory.getProxy();
 		proxy.doSth();
 		proxy.insert();
-		System.out.println(proxy.getClass()
-			.getName());
+		System.out.println(proxy.getClass().getName());
 	}
 }

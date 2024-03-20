@@ -39,15 +39,16 @@ import java.util.TreeSet;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Keith Donald
- * @since 16 April 2001
  * @version $Id: StringUtils.java,v 1.11 2004/03/19 16:45:29 jhoeller Exp $
  * @see org.apache.commons.lang.StringUtils
+ * @since 16 April 2001
  */
 public abstract class StringUtils {
 
 	/**
 	 * Count the occurrences of the substring in string s.
-	 * @param s string to search in. Return 0 if this is null.
+	 *
+	 * @param s   string to search in. Return 0 if this is null.
 	 * @param sub string to search for. Return 0 if this is null.
 	 */
 	public static int countOccurrencesOf(String s, String sub) {
@@ -65,7 +66,8 @@ public abstract class StringUtils {
 	/**
 	 * Replace all occurences of a substring within a string with
 	 * another string.
-	 * @param inString String to examine
+	 *
+	 * @param inString   String to examine
 	 * @param oldPattern String to replace
 	 * @param newPattern String to insert
 	 * @return a String with the replacements
@@ -98,6 +100,7 @@ public abstract class StringUtils {
 
 	/**
 	 * Delete all occurrences of the given substring.
+	 *
 	 * @param pattern the pattern to delete all occurrences of
 	 */
 	public static String delete(String inString, String pattern) {
@@ -106,8 +109,9 @@ public abstract class StringUtils {
 
 	/**
 	 * Delete any character in a given string.
+	 *
 	 * @param chars characters to delete.
-	 * E.g. az\n will delete as, zs and new lines.
+	 *              E.g. az\n will delete as, zs and new lines.
 	 */
 	public static String deleteAny(String inString, String chars) {
 		if (inString == null || chars == null) {
@@ -125,16 +129,17 @@ public abstract class StringUtils {
 
 	/**
 	 * Tokenize the given String into a String array via a StringTokenizer.
-	 * @param s the String to tokenize
-	 * @param delimiters the delimiter characters, assembled as String
-	 * @param trimTokens trim the tokens via String.trim
+	 *
+	 * @param s                 the String to tokenize
+	 * @param delimiters        the delimiter characters, assembled as String
+	 * @param trimTokens        trim the tokens via String.trim
 	 * @param ignoreEmptyTokens omit empty tokens from the result array
 	 * @return an array of the tokens
 	 * @see StringTokenizer
 	 * @see String#trim
 	 */
 	public static String[] tokenizeToStringArray(String s, String delimiters,
-	                                             boolean trimTokens, boolean ignoreEmptyTokens) {
+												 boolean trimTokens, boolean ignoreEmptyTokens) {
 		StringTokenizer st = new StringTokenizer(s, delimiters);
 		List tokens = new ArrayList();
 		while (st.hasMoreTokens()) {
@@ -151,7 +156,8 @@ public abstract class StringUtils {
 
 	/**
 	 * Take a String which is a delimited list and convert it to a String array.
-	 * @param s String
+	 *
+	 * @param s     String
 	 * @param delim delim (this will not be returned)
 	 * @return an array of the tokens in the list
 	 */
@@ -180,6 +186,7 @@ public abstract class StringUtils {
 
 	/**
 	 * Convert a CSV list into an array of Strings.
+	 *
 	 * @param s CSV list
 	 * @return an array of Strings, or the empty array if s is null
 	 */
@@ -190,6 +197,7 @@ public abstract class StringUtils {
 	/**
 	 * Convenience method to convert a CSV string list to a set.
 	 * Note that this will suppress duplicates.
+	 *
 	 * @param s CSV String
 	 * @return a Set of String entries in the list
 	 */
@@ -205,15 +213,15 @@ public abstract class StringUtils {
 	/**
 	 * Convenience method to return a String array as a delimited (e.g. CSV)
 	 * String. E.g. useful for toString() implementations.
-	 * @param arr array to display. Elements may be of any type (toString
-	 * will be called on each element).
+	 *
+	 * @param arr   array to display. Elements may be of any type (toString
+	 *              will be called on each element).
 	 * @param delim delimiter to use (probably a ,)
 	 */
 	public static String arrayToDelimitedString(Object[] arr, String delim) {
 		if (arr == null) {
 			return "null";
-		}
-		else {
+		} else {
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < arr.length; i++) {
 				if (i > 0)
@@ -227,7 +235,8 @@ public abstract class StringUtils {
 	/**
 	 * Convenience method to return a Collection as a delimited (e.g. CSV)
 	 * String. E.g. useful for toString() implementations.
-	 * @param c Collection to display
+	 *
+	 * @param c     Collection to display
 	 * @param delim delimiter to use (probably a ",")
 	 */
 	public static String collectionToDelimitedString(Collection c, String delim) {
@@ -249,8 +258,9 @@ public abstract class StringUtils {
 	/**
 	 * Convenience method to return a String array as a CSV String.
 	 * E.g. useful for toString() implementations.
+	 *
 	 * @param arr array to display. Elements may be of any type (toString
-	 * will be called on each element).
+	 *            will be called on each element).
 	 */
 	public static String arrayToCommaDelimitedString(Object[] arr) {
 		return arrayToDelimitedString(arr, ",");
@@ -259,6 +269,7 @@ public abstract class StringUtils {
 	/**
 	 * Convenience method to return a Collection as a CSV String.
 	 * E.g. useful for toString() implementations.
+	 *
 	 * @param c Collection to display
 	 */
 	public static String collectionToCommaDelimitedString(Collection c) {
@@ -268,8 +279,9 @@ public abstract class StringUtils {
 	/**
 	 * Append the given String to the given String array, returning a new array
 	 * consisting of the input array contents plus the given String.
+	 *
 	 * @param arr the array to append to
-	 * @param s the String to append
+	 * @param s   the String to append
 	 * @return the new array
 	 */
 	public static String[] addStringToArray(String[] arr, String s) {
@@ -287,6 +299,7 @@ public abstract class StringUtils {
 	 * StringUtils.hasLength(" ") = true
 	 * StringUtils.hasLength("Hello") = true
 	 * </pre>
+	 *
 	 * @param str the String to check, may be null
 	 * @return <code>true</code> if the String is has length and is not null
 	 */
@@ -305,6 +318,7 @@ public abstract class StringUtils {
 	 * StringUtils.hasText("12345") = true
 	 * StringUtils.hasText(" 12345 ") = true
 	 * </pre>
+	 *
 	 * @param str the String to check, may be null
 	 * @return <code>true</code> if the String is not null, length > 0,
 	 * and not whitespace only
@@ -325,6 +339,7 @@ public abstract class StringUtils {
 	/**
 	 * Unqualifies a string qualified by a '.' dot character. For example,
 	 * "this.name.is.qualified", returns "qualified".
+	 *
 	 * @param qualifiedName the qualified name
 	 */
 	public static String unqualify(String qualifiedName) {
@@ -334,8 +349,9 @@ public abstract class StringUtils {
 	/**
 	 * Unqualifies a string qualified by a separator character. For example,
 	 * "this:name:is:qualified" returns "qualified" if using a ':' separator.
+	 *
 	 * @param qualifiedName the qualified name
-	 * @param separator the separator
+	 * @param separator     the separator
 	 */
 	public static String unqualify(String qualifiedName, char separator) {
 		return qualifiedName.substring(qualifiedName.lastIndexOf(separator) + 1);
@@ -345,6 +361,7 @@ public abstract class StringUtils {
 	 * Uncapitalizes a <code>String</code>, changing the first letter to
 	 * lower case as per {@link Character#toLowerCase(char)}.
 	 * No other letters are changed.
+	 *
 	 * @param str the String to uncapitalize, may be null
 	 * @return the uncapitalized String, <code>null</code> if null
 	 * String input

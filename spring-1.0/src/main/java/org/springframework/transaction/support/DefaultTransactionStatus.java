@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.transaction.support;
 
@@ -27,8 +27,8 @@ import org.springframework.transaction.TransactionStatus;
  * the concrete transaction manager implementation.
  *
  * @author Juergen Hoeller
- * @since 19.01.2004
  * @see AbstractPlatformTransactionManager
+ * @since 19.01.2004
  */
 public class DefaultTransactionStatus implements TransactionStatus {
 
@@ -48,19 +48,20 @@ public class DefaultTransactionStatus implements TransactionStatus {
 
 	/**
 	 * Create a new TransactionStatus instance.
-	 * @param transaction underlying transaction object,
-	 * e.g. a JTA UserTransaction
-	 * @param newTransaction if the transaction is new,
-	 * else participating in an existing transaction
+	 *
+	 * @param transaction        underlying transaction object,
+	 *                           e.g. a JTA UserTransaction
+	 * @param newTransaction     if the transaction is new,
+	 *                           else participating in an existing transaction
 	 * @param newSynchronization if a new transaction synchronization
-	 * has been opened for the given transaction
-	 * @param debug should debug logging be enabled for the handling of this transaction?
-	 * Caching it in here can prevent repeated calls to ask the logging system whether
-	 * debug logging should be enabled.
+	 *                           has been opened for the given transaction
+	 * @param debug              should debug logging be enabled for the handling of this transaction?
+	 *                           Caching it in here can prevent repeated calls to ask the logging system whether
+	 *                           debug logging should be enabled.
 	 */
 	public DefaultTransactionStatus(Object transaction, boolean newTransaction,
-																	boolean newSynchronization, boolean readOnly,
-	                                boolean debug, Object suspendedResources) {
+									boolean newSynchronization, boolean readOnly,
+									boolean debug, Object suspendedResources) {
 		this.transaction = transaction;
 		this.newTransaction = newTransaction;
 		this.newSynchronization = newSynchronization;

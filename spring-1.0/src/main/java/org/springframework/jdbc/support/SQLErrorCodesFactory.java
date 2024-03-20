@@ -52,19 +52,15 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
  */
 public class SQLErrorCodesFactory {
 
-	protected final Log logger = LogFactory.getLog(getClass());
-
 	/**
 	 * Name of custom SQL error codes file, loading from the root
 	 * of the class path (e.g. in the WEB-INF/classes directory).
 	 */
 	public static final String SQL_ERROR_CODE_OVERRIDE_PATH = "sql-error-codes.xml";
-
 	/**
 	 * Name of default SQL error code files, loading from the class path.
 	 */
 	public static final String SQL_ERROR_CODE_DEFAULT_PATH = "org/springframework/jdbc/support/sql-error-codes.xml";
-
 	/**
 	 * Keep track of this instance so we can return it to classes that request it.
 	 */
@@ -74,18 +70,12 @@ public class SQLErrorCodesFactory {
 		instance = new SQLErrorCodesFactory();
 	}
 
+	protected final Log logger = LogFactory.getLog(getClass());
 	/**
-	 * Return singleton instance.
+	 * Create a Map to hold error codes for all databases defined in the config file.
 	 */
-	public static SQLErrorCodesFactory getInstance() {
-		return instance;
-	}
-
-
-	/**
-	* Create a Map to hold error codes for all databases defined in the config file.
-	*/
 	private Map rdbmsErrorCodes;
+
 
 	/**
 	 * Not public to enforce Singleton design pattern.
@@ -101,7 +91,7 @@ public class SQLErrorCodesFactory {
 				path = SQL_ERROR_CODE_DEFAULT_PATH;
 				resource = loadResource(path);
 				if (resource == null || !resource.exists()) {
-					throw new BeanDefinitionStoreException("Unable to locate file [" + SQL_ERROR_CODE_DEFAULT_PATH  + "]");
+					throw new BeanDefinitionStoreException("Unable to locate file [" + SQL_ERROR_CODE_DEFAULT_PATH + "]");
 				}
 			}
 			ListableBeanFactory bf = new XmlBeanFactory(resource);
@@ -112,37 +102,41 @@ public class SQLErrorCodesFactory {
 				SQLErrorCodes ec = (SQLErrorCodes) bf.getBean(rdbmsNames[i]);
 				if (ec.getBadSqlGrammarCodes() == null) {
 					ec.setBadSqlGrammarCodes(new String[0]);
-				}
-				else {
+				} else {
 					Arrays.sort(ec.getBadSqlGrammarCodes());
 				}
 				if (ec.getDataIntegrityViolationCodes() == null) {
 					ec.setDataIntegrityViolationCodes(new String[0]);
-				}
-				else {
+				} else {
 					Arrays.sort(ec.getDataIntegrityViolationCodes());
 				}
 				if (ec.getDatabaseProductName() == null) {
 					this.rdbmsErrorCodes.put(rdbmsNames[i], ec);
-				}
-				else {
+				} else {
 					this.rdbmsErrorCodes.put(ec.getDatabaseProductName(), ec);
 				}
 			}
 			logger.info("SQLErrorCodes loaded: " + this.rdbmsErrorCodes.keySet());
-		}
-		catch (BeanDefinitionStoreException be) {
+		} catch (BeanDefinitionStoreException be) {
 			logger.warn("Error loading error codes from config file. Message: " + be.getMessage());
 			this.rdbmsErrorCodes = new HashMap(0);
 		}
 	}
 
 	/**
+	 * Return singleton instance.
+	 */
+	public static SQLErrorCodesFactory getInstance() {
+		return instance;
+	}
+
+	/**
 	 * Protected for testability. Load the given resource from the class path.
+	 *
 	 * @param path resource path. SQL_ERROR_CODE_DEFAULT_PATH or
-	 * SQL_ERROR_CODE_OVERRIDE_PATH.
-	 * <b>Not to be overriden by application developers, who should obtain instances
-	 * of this class from the static getInstance() method.</b>
+	 *             SQL_ERROR_CODE_OVERRIDE_PATH.
+	 *             <b>Not to be overriden by application developers, who should obtain instances
+	 *             of this class from the static getInstance() method.</b>
 	 * @return the input stream or null if the resource wasn't found
 	 */
 	protected Resource loadResource(String path) {
@@ -153,6 +147,7 @@ public class SQLErrorCodesFactory {
 	 * Return SQLErrorCodes for the given DataSource,
 	 * evaluating databaseProductName from DatabaseMetaData,
 	 * or an empty error codes instance if no SQLErrorCodes were found.
+	 *
 	 * @see DatabaseMetaData#getDatabaseProductName
 	 */
 	public SQLErrorCodes getErrorCodes(DataSource ds) {
@@ -160,8 +155,7 @@ public class SQLErrorCodesFactory {
 		Connection con = null;
 		try {
 			con = DataSourceUtils.getConnection(ds);
-		}
-		catch (DataAccessException ex) {
+		} catch (DataAccessException ex) {
 			// Log failure and leave connection null
 			logger.warn("Cannot get connection from database to get metadata when trying to create exception translator", ex);
 		}
@@ -186,17 +180,14 @@ public class SQLErrorCodesFactory {
 						}
 						logger.info("Error Codes for " + dbName + " not found");
 					}
-				}
-				else {
+				} else {
 					logger.warn("Null meta data from connection when trying to create exception translator");
 				}
 				// could not find the database among the defined ones
-			}
-			catch (SQLException se) {
+			} catch (SQLException se) {
 				// this is bad - we probably lost the connection
 				logger.warn("Could not read database meta data for exception translator", se);
-			}
-			finally {
+			} finally {
 				DataSourceUtils.closeConnectionIfNecessary(con, ds);
 			}
 		}

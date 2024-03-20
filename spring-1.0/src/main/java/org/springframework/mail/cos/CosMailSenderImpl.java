@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.mail.cos;
 
@@ -38,10 +38,10 @@ import org.springframework.mail.SimpleMailMessage;
  * the JavaMailSender interface for the JavaMailSenderImpl implementation.
  *
  * @author Juergen Hoeller
- * @since 09.10.2003
+ * @version $Id: CosMailSenderImpl.java,v 1.6 2004/03/18 02:46:10 trisberg Exp $
  * @see com.oreilly.servlet.MailMessage
  * @see org.springframework.mail.javamail.JavaMailSenderImpl
- * @version $Id: CosMailSenderImpl.java,v 1.6 2004/03/18 02:46:10 trisberg Exp $
+ * @since 09.10.2003
  */
 public class CosMailSenderImpl implements MailSender {
 
@@ -55,7 +55,7 @@ public class CosMailSenderImpl implements MailSender {
 	}
 
 	public void send(SimpleMailMessage simpleMessage) throws MailException {
-		send(new SimpleMailMessage[] {simpleMessage});
+		send(new SimpleMailMessage[]{simpleMessage});
 	}
 
 	public void send(SimpleMailMessage[] simpleMessages) throws MailException {
@@ -83,8 +83,7 @@ public class CosMailSenderImpl implements MailSender {
 				PrintStream textStream = cosMessage.getPrintStream();
 				textStream.print(simpleMessages[i].getText());
 				cosMessage.sendAndClose();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				failedMessages.put(simpleMessages[i], ex);
 			}
 		}

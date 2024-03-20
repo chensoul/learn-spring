@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.context;
 
@@ -37,13 +37,14 @@ public interface MessageSource {
 
 	/**
 	 * Try to resolve the message. Return default message if no message was found.
-	 * @param code code to lookup up, such as 'calculator.noRateSet'. Users of
-	 * this class are encouraged to base message names on the relevant fully
-	 * qualified class name, thus avoiding conflict and ensuring maximum clarity.
-	 * @param args array of arguments that will be filled in for params within
-	 * the message (params look like "{0}", "{1,date}", "{2,time}" within a message),
-	 * or null if none.
-	 * @param locale the Locale in which to do lookup
+	 *
+	 * @param code           code to lookup up, such as 'calculator.noRateSet'. Users of
+	 *                       this class are encouraged to base message names on the relevant fully
+	 *                       qualified class name, thus avoiding conflict and ensuring maximum clarity.
+	 * @param args           array of arguments that will be filled in for params within
+	 *                       the message (params look like "{0}", "{1,date}", "{2,time}" within a message),
+	 *                       or null if none.
+	 * @param locale         the Locale in which to do lookup
 	 * @param defaultMessage String to return if the lookup fails
 	 * @return the resolved message if the lookup is successful;
 	 * otherwise the default message passed as a parameter
@@ -53,10 +54,11 @@ public interface MessageSource {
 
 	/**
 	 * Try to resolve the message. Treat as an error if the message can't be found.
-	 * @param code code to lookup up, such as 'calculator.noRateSet'
-	 * @param args Array of arguments that will be filled in for params within
-	 * the message (params look like "{0}", "{1,date}", "{2,time}" within a message),
-	 * or null if none.
+	 *
+	 * @param code   code to lookup up, such as 'calculator.noRateSet'
+	 * @param args   Array of arguments that will be filled in for params within
+	 *               the message (params look like "{0}", "{1,date}", "{2,time}" within a message),
+	 *               or null if none.
 	 * @param locale Locale in which to do lookup
 	 * @return the resolved message
 	 * @throws NoSuchMessageException if not found in any locale
@@ -70,8 +72,9 @@ public interface MessageSource {
 	 * <p>NOTE: We must throw a <code>NoSuchMessageException</code> on this method
 	 * since at the time of calling this method we aren't able to determine if the
 	 * <code>defaultMessage</code> property of the resolvable is null or not.
+	 *
 	 * @param resolvable value object storing attributes required to properly resolve a message
-	 * @param locale Locale to be used as the "driver" to figuring out what message to return
+	 * @param locale     Locale to be used as the "driver" to figuring out what message to return
 	 * @return the resolved message
 	 * @throws NoSuchMessageException if not found in any locale
 	 * @see <a href="http://java.sun.com/j2se/1.3/docs/api/java/text/MessageFormat.html">java.text.MessageFormat</a>

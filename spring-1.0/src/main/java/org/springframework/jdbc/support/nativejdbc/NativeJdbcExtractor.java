@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.support.nativejdbc;
 
@@ -55,11 +55,11 @@ import java.sql.Statement;
  * to leverage in your applications, like InterMedia.
  *
  * @author Juergen Hoeller
- * @since 25.08.2003
  * @see SimpleNativeJdbcExtractor
  * @see CommonsDbcpNativeJdbcExtractor
  * @see org.springframework.jdbc.core.JdbcTemplate#setNativeJdbcExtractor
  * @see org.springframework.jdbc.support.lob.OracleLobHandler#setNativeJdbcExtractor
+ * @since 25.08.2003
  */
 public interface NativeJdbcExtractor {
 
@@ -99,6 +99,7 @@ public interface NativeJdbcExtractor {
 	/**
 	 * Retrieve the underlying native JDBC Connection for the given Connection.
 	 * Supposed to return the given Connection if not capable of unwrapping.
+	 *
 	 * @param con the Connection handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC Connection, if possible;
 	 * else, the original Connection
@@ -111,7 +112,8 @@ public interface NativeJdbcExtractor {
 	 * Supposed to return the Statement.getConnection if not capable of unwrapping.
 	 * <p>Having this extra method allows for more efficient unwrapping if data
 	 * access code already has a Statement. Statement.getConnection() often returns
-	 * the native JDBC Connection even if the Statement itself is wrapped by a pool. 
+	 * the native JDBC Connection even if the Statement itself is wrapped by a pool.
+	 *
 	 * @param stmt the Statement handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC Connection, if possible;
 	 * else, the original Connection
@@ -122,6 +124,7 @@ public interface NativeJdbcExtractor {
 	/**
 	 * Retrieve the underlying native JDBC Statement for the given Statement.
 	 * Supposed to return the given Statement if not capable of unwrapping.
+	 *
 	 * @param stmt the Statement handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC Statement, if possible;
 	 * else, the original Connection
@@ -132,6 +135,7 @@ public interface NativeJdbcExtractor {
 	/**
 	 * Retrieve the underlying native JDBC PreparedStatement for the given statement.
 	 * Supposed to return the given PreparedStatement if not capable of unwrapping.
+	 *
 	 * @param ps the PreparedStatement handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC PreparedStatement, if possible;
 	 * else, the original Connection
@@ -142,6 +146,7 @@ public interface NativeJdbcExtractor {
 	/**
 	 * Retrieve the underlying native JDBC CallableStatement for the given statement.
 	 * Supposed to return the given CallableStatement if not capable of unwrapping.
+	 *
 	 * @param cs the CallableStatement handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC CallableStatement, if possible;
 	 * else, the original Connection
@@ -152,6 +157,7 @@ public interface NativeJdbcExtractor {
 	/**
 	 * Retrieve the underlying native JDBC ResultSet for the given statement.
 	 * Supposed to return the given ResultSet if not capable of unwrapping.
+	 *
 	 * @param rs the ResultSet handle, potentially wrapped by a connection pool
 	 * @return the underlying native JDBC ResultSet, if possible;
 	 * else, the original Connection

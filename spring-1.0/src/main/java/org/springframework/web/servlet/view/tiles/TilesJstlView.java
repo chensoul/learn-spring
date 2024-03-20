@@ -35,8 +35,8 @@ import org.springframework.web.servlet.support.JstlUtils;
  * in TilesView itself.
  *
  * @author Juergen Hoeller
- * @since 20.08.2003
  * @see JstlUtils#exposeLocalizationContext
+ * @since 20.08.2003
  */
 public class TilesJstlView extends TilesView {
 

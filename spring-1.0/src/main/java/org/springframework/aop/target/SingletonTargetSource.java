@@ -23,12 +23,15 @@ import org.springframework.aop.TargetSource;
  * holds a local object. This is the default implementation of TargetSource
  * used by the AOP framework. There is no need to create objects of this
  * class in application code.
+ *
  * @author Rod Johnson
  * @version $Id: SingletonTargetSource.java,v 1.5 2004/03/18 02:46:13 trisberg Exp $
  */
 public final class SingletonTargetSource implements TargetSource {
 
-	/** Target cached and invoked using reflection */
+	/**
+	 * Target cached and invoked using reflection
+	 */
 	private Object target;
 
 	public SingletonTargetSource(Object target) {

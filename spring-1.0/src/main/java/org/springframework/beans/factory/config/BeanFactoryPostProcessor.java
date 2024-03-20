@@ -32,9 +32,9 @@ import org.springframework.beans.BeansException;
  * for out-of-the-box solutions that address such configuration needs.
  *
  * @author Juergen Hoeller
- * @since 06.07.2003
  * @see BeanPostProcessor
  * @see PropertyResourceConfigurer
+ * @since 06.07.2003
  */
 public interface BeanFactoryPostProcessor {
 
@@ -43,6 +43,7 @@ public interface BeanFactoryPostProcessor {
 	 * initialization. All bean definitions will have been loaded, but no beans
 	 * will have been instantiated yet. This allows for overriding or adding
 	 * properties even to eager-initializing beans.
+	 *
 	 * @param beanFactory the bean factory used by the application context
 	 * @throws BeansException in case of errors
 	 */

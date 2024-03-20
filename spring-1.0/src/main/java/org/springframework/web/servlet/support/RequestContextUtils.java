@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.support;
 
@@ -42,12 +42,13 @@ public abstract class RequestContextUtils {
 	/**
 	 * Look for the WebApplicationContext associated with the controller servlet that has
 	 * initiated request processing.
+	 *
 	 * @param request current HTTP request
 	 * @return the request-specific web application context
 	 * @throws IllegalStateException if neither a servlet-specific nor global context has been found
 	 */
 	public static WebApplicationContext getWebApplicationContext(ServletRequest request)
-	    throws IllegalStateException {
+		throws IllegalStateException {
 		return getWebApplicationContext(request, null);
 	}
 
@@ -56,16 +57,17 @@ public abstract class RequestContextUtils {
 	 * initiated request processing, and for the global context if none was found associated
 	 * with the current request. This method is useful to allow components outside our framework,
 	 * such as JSP tag handlers, to access the most specific application context available.
-	 * @param request current HTTP request
+	 *
+	 * @param request        current HTTP request
 	 * @param servletContext current servlet context
 	 * @return the request-specific or global web application context if no request-specific
 	 * context has been set
 	 * @throws IllegalStateException if neither a servlet-specific nor global context has been found
 	 */
 	public static WebApplicationContext getWebApplicationContext(ServletRequest request, ServletContext servletContext)
-	    throws IllegalStateException {
+		throws IllegalStateException {
 		WebApplicationContext webApplicationContext = (WebApplicationContext) request.getAttribute(
-				DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+			DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 		if (webApplicationContext == null) {
 			if (servletContext == null) {
 				throw new IllegalStateException("No WebApplicationContext found: not in a DispatcherServlet request?");
@@ -80,6 +82,7 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return the LocaleResolver that has been bound to the request by the DispatcherServlet.
+	 *
 	 * @param request current HTTP request
 	 * @return the current LocaleResolver
 	 * @throws IllegalStateException if no LocaleResolver has been found
@@ -95,6 +98,7 @@ public abstract class RequestContextUtils {
 	/**
 	 * Retrieves the current locale from the given request,
 	 * using the LocaleResolver bound to the request by the DispatcherServlet.
+	 *
 	 * @param request current HTTP request
 	 * @return the current locale
 	 * @throws IllegalStateException if no LocaleResolver has been found
@@ -105,6 +109,7 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return the ThemeResolver that has been bound to the request by the DispatcherServlet.
+	 *
 	 * @param request current HTTP request
 	 * @return the current ThemeResolver
 	 * @throws IllegalStateException if no ThemeResolver has been found
@@ -121,6 +126,7 @@ public abstract class RequestContextUtils {
 	 * Retrieves the current theme from the given request,
 	 * using the ThemeResolver bound to the request by the DispatcherServlet,
 	 * and the current WebApplicationContext.
+	 *
 	 * @param request current HTTP request
 	 * @return the current theme
 	 * @throws IllegalStateException if no ThemeResolver has been found
@@ -133,6 +139,7 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return the MultipartResolver that has been bound to the request by the DispatcherServlet.
+	 *
 	 * @param request current HTTP request
 	 * @return the current MultipartResolver, or null if not a multipart request
 	 */

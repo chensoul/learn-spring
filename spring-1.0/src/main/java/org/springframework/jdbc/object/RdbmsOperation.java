@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.object;
 
@@ -59,39 +59,34 @@ public abstract class RdbmsOperation implements InitializingBean {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Lower-level class used to execute SQL */
+	/**
+	 * Lower-level class used to execute SQL
+	 */
 	private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
-	/** List of SqlParameter objects */
+	/**
+	 * List of SqlParameter objects
+	 */
 	private List declaredParameters = new LinkedList();
 
-	/** SQL statement */
+	/**
+	 * SQL statement
+	 */
 	private String sql;
-	
+
 	/**
 	 * Has this operation been compiled? Compilation means at
 	 * least checking that a DataSource and sql have been provided,
 	 * but subclasses may also implement their own custom validation.
 	 */
 	private boolean compiled;
-	
-	
+
+
 	/**
 	 * Set the JDBC DataSource to obtain connections from.
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate.setDataSource(dataSource);
-	}
-
-	/**
-	 * An alternative to the more commonly used setDataSource() when you want to
-	 * use the same JdbcTemplate in multiple RdbmsOperations. This is appropriate if the
-	 * JdbcTemplate has special configuration such as a SQLExceptionTranslator that should
-	 * apply to multiple RdbmsOperation objects.
-	 * @param jdbcTemplate
-	 */
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	/**
@@ -102,12 +97,25 @@ public abstract class RdbmsOperation implements InitializingBean {
 	}
 
 	/**
+	 * An alternative to the more commonly used setDataSource() when you want to
+	 * use the same JdbcTemplate in multiple RdbmsOperations. This is appropriate if the
+	 * JdbcTemplate has special configuration such as a SQLExceptionTranslator that should
+	 * apply to multiple RdbmsOperation objects.
+	 *
+	 * @param jdbcTemplate
+	 */
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	/**
 	 * Add anonymous parameters, specifying only their SQL types
 	 * as defined in the java.sql.Types class.
 	 * <p>Parameter ordering is significant. This method is an alternative
 	 * to the declareParameter() method, which should normally be preferred.
+	 *
 	 * @param types array of SQL types as defined in the
-	 * java.sql.Types class
+	 *              java.sql.Types class
 	 * @throws InvalidDataAccessApiUsageException if the operation is already compiled
 	 */
 	public void setTypes(int[] types) throws InvalidDataAccessApiUsageException {
@@ -123,10 +131,11 @@ public abstract class RdbmsOperation implements InitializingBean {
 
 	/**
 	 * Declare a parameter. The order in which this method is called is significant.
+	 *
 	 * @param param SqlParameter to add. This will specify SQL type and (optionally)
-	 * the parameter's name.
+	 *              the parameter's name.
 	 * @throws InvalidDataAccessApiUsageException if the operation is already compiled,
-	 * and hence cannot be configured further
+	 *                                            and hence cannot be configured further
 	 */
 	public void declareParameter(SqlParameter param) throws InvalidDataAccessApiUsageException {
 		if (this.compiled) {
@@ -143,20 +152,21 @@ public abstract class RdbmsOperation implements InitializingBean {
 	}
 
 	/**
-	 * Set the SQL executed by this operation.
-	 * @param sql the SQL executed by this operation
-	 */
-	public void setSql(String sql) {
-		this.sql = sql;
-	}
-
-	/**
 	 * Subclasses can override this to supply dynamic SQL if they wish,
 	 * but SQL is normally set by calling the setSql() method
 	 * or in a subclass constructor.
 	 */
 	public String getSql() {
 		return sql;
+	}
+
+	/**
+	 * Set the SQL executed by this operation.
+	 *
+	 * @param sql the SQL executed by this operation
+	 */
+	public void setSql(String sql) {
+		this.sql = sql;
 	}
 
 	/**
@@ -170,6 +180,7 @@ public abstract class RdbmsOperation implements InitializingBean {
 	 * Is this operation "compiled"? Compilation, as in JDO,
 	 * means that the operation is fully configured, and ready to use.
 	 * The exact meaning of compilation will vary between subclasses.
+	 *
 	 * @return whether this operation is compiled, and ready to use.
 	 */
 	public boolean isCompiled() {
@@ -179,8 +190,9 @@ public abstract class RdbmsOperation implements InitializingBean {
 	/**
 	 * Compile this query.
 	 * Ignore subsequent attempts to compile
+	 *
 	 * @throws InvalidDataAccessApiUsageException if the object hasn't
-	 * been correctly initialized, for example if no DataSource has been provided.
+	 *                                            been correctly initialized, for example if no DataSource has been provided.
 	 */
 	public final void compile() throws InvalidDataAccessApiUsageException {
 		if (!isCompiled()) {
@@ -190,11 +202,10 @@ public abstract class RdbmsOperation implements InitializingBean {
 
 			try {
 				this.jdbcTemplate.afterPropertiesSet();
-			}
-			catch (IllegalArgumentException ex) {
+			} catch (IllegalArgumentException ex) {
 				throw new InvalidDataAccessApiUsageException(ex.getMessage());
-			}	
-		
+			}
+
 			compileInternal();
 			this.compiled = true;
 			logger.info("RdbmsOperation with SQL [" + getSql() + "] compiled");
@@ -206,14 +217,16 @@ public abstract class RdbmsOperation implements InitializingBean {
 	 * Invoked after this class's compilation is complete.
 	 * Subclasses can assume that sql has been supplied and that
 	 * a DataSource has been supplied.
+	 *
 	 * @throws InvalidDataAccessApiUsageException if the subclass
-	 * hasn't been properly configured.
+	 *                                            hasn't been properly configured.
 	 */
 	protected abstract void compileInternal() throws InvalidDataAccessApiUsageException;
 
 	/**
 	 * Validate the parameters passed to an execute method based on declared parameters.
 	 * Subclasses should invoke this method before every executeQuery() or update() method.
+	 *
 	 * @param parameters parameters supplied. May be null.
 	 * @throws InvalidDataAccessApiUsageException if the parameters are invalid
 	 */
@@ -240,16 +253,15 @@ public abstract class RdbmsOperation implements InitializingBean {
 			}
 			if (parameters.length < declaredInParameters) {
 				throw new InvalidDataAccessApiUsageException(parameters.length + " parameters were supplied, but " +
-																										 declaredInParameters + " in parameters were declared in class " +
-																										 getClass().getName());
+															 declaredInParameters + " in parameters were declared in class " +
+															 getClass().getName());
 			}
 			if (parameters.length > this.declaredParameters.size()) {
 				throw new InvalidDataAccessApiUsageException(parameters.length + " parameters were supplied, but " +
-																										 this.declaredParameters.size() + " parameters were declared in class " +
-																										 getClass().getName());
+															 this.declaredParameters.size() + " parameters were declared in class " +
+															 getClass().getName());
 			}
-		}
-		else {
+		} else {
 			// no parameters were supplied
 			if (!this.declaredParameters.isEmpty())
 				throw new InvalidDataAccessApiUsageException(this.declaredParameters.size() + " parameters must be supplied");

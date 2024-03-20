@@ -36,7 +36,6 @@ import net.sf.hibernate.engine.SessionFactoryImplementor;
 import net.sf.hibernate.engine.SessionImplementor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.dao.CleanupFailureDataAccessException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -56,11 +55,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * <p>Note: Spring's Hibernate support requires Hibernate 2.1 (as of Spring 1.0).
  *
  * @author Juergen Hoeller
- * @since 02.05.2003
  * @see HibernateTemplate
  * @see HibernateInterceptor
  * @see HibernateTransactionManager
  * @see org.springframework.transaction.jta.JtaTransactionManager
+ * @since 02.05.2003
  */
 public abstract class SessionFactoryUtils {
 
@@ -74,16 +73,17 @@ public abstract class SessionFactoryUtils {
 	 * combination with closeSessionIfNecessary called when done with the Session.
 	 * Note that HibernateTemplate allows to write data access code without caring
 	 * about such resource handling.
+	 *
 	 * @param sessionFactory Hibernate SessionFactory to create the session with
-	 * @param allowCreate if a new Session should be created if no thread-bound found
+	 * @param allowCreate    if a new Session should be created if no thread-bound found
 	 * @return the Hibernate Session
 	 * @throws DataAccessResourceFailureException if the Session couldn't be created
-	 * @throws IllegalStateException if no thread-bound Session found and allowCreate false
+	 * @throws IllegalStateException              if no thread-bound Session found and allowCreate false
 	 * @see #closeSessionIfNecessary
 	 * @see HibernateTemplate
 	 */
 	public static Session getSession(SessionFactory sessionFactory, boolean allowCreate)
-	    throws DataAccessResourceFailureException, IllegalStateException {
+		throws DataAccessResourceFailureException, IllegalStateException {
 		if (!TransactionSynchronizationManager.hasResource(sessionFactory) && !allowCreate) {
 			throw new IllegalStateException("Not allowed to create new Hibernate session");
 		}
@@ -100,18 +100,19 @@ public abstract class SessionFactoryUtils {
 	 * to inspect and change property values before writing to and reading from the
 	 * database. Such an interceptor can also be set at the SessionFactory level,
 	 * i.e. on LocalSessionFactoryBean.
-	 * @param sessionFactory Hibernate SessionFactory to create the session with
-	 * @param entityInterceptor Hibernate entity interceptor, or null if none
+	 *
+	 * @param sessionFactory          Hibernate SessionFactory to create the session with
+	 * @param entityInterceptor       Hibernate entity interceptor, or null if none
 	 * @param jdbcExceptionTranslator SQLExcepionTranslator to use for flushing the
-	 * Session on transaction synchronization (can be null; only used when actually
-	 * registering a transaction synchronization)
+	 *                                Session on transaction synchronization (can be null; only used when actually
+	 *                                registering a transaction synchronization)
 	 * @return the Hibernate Session
 	 * @throws DataAccessResourceFailureException if the Session couldn't be created
 	 * @see LocalSessionFactoryBean#setEntityInterceptor
 	 * @see TransactionSynchronizationManager
 	 */
 	public static Session getSession(SessionFactory sessionFactory, Interceptor entityInterceptor,
-																	 SQLExceptionTranslator jdbcExceptionTranslator) {
+									 SQLExceptionTranslator jdbcExceptionTranslator) {
 		return getSession(sessionFactory, entityInterceptor, jdbcExceptionTranslator, true);
 	}
 
@@ -125,14 +126,15 @@ public abstract class SessionFactoryUtils {
 	 * to inspect and change property values before writing to and reading from the
 	 * database. Such an interceptor can also be set at the SessionFactory level,
 	 * i.e. on LocalSessionFactoryBean.
-	 * @param sessionFactory Hibernate SessionFactory to create the session with
-	 * @param entityInterceptor Hibernate entity interceptor, or null if none
+	 *
+	 * @param sessionFactory          Hibernate SessionFactory to create the session with
+	 * @param entityInterceptor       Hibernate entity interceptor, or null if none
 	 * @param jdbcExceptionTranslator SQLExcepionTranslator to use for flushing the
-	 * Session on transaction synchronization (can be null; only used when actually
-	 * registering a transaction synchronization)
-	 * @param allowSynchronization if a new Hibernate Session is supposed to be
-	 * registered with transaction synchronization (if synchronization is active).
-	 * This will always be true for typical data access code.
+	 *                                Session on transaction synchronization (can be null; only used when actually
+	 *                                registering a transaction synchronization)
+	 * @param allowSynchronization    if a new Hibernate Session is supposed to be
+	 *                                registered with transaction synchronization (if synchronization is active).
+	 *                                This will always be true for typical data access code.
 	 * @return the Hibernate Session
 	 * @throws DataAccessResourceFailureException if the Session couldn't be created
 	 * @see #getSession(SessionFactory, Interceptor, SQLExceptionTranslator)
@@ -140,14 +142,14 @@ public abstract class SessionFactoryUtils {
 	 * @see TransactionSynchronizationManager
 	 */
 	public static Session getSession(SessionFactory sessionFactory, Interceptor entityInterceptor,
-																	 SQLExceptionTranslator jdbcExceptionTranslator, boolean allowSynchronization)
-			throws DataAccessResourceFailureException {
+									 SQLExceptionTranslator jdbcExceptionTranslator, boolean allowSynchronization)
+		throws DataAccessResourceFailureException {
 		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
 		if (sessionHolder != null) {
 			if (allowSynchronization && TransactionSynchronizationManager.isSynchronizationActive() &&
-					!sessionHolder.isSynchronizedWithTransaction()) {
+				!sessionHolder.isSynchronizedWithTransaction()) {
 				TransactionSynchronizationManager.registerSynchronization(
-						new SessionSynchronization(sessionHolder, sessionFactory, jdbcExceptionTranslator, false));
+					new SessionSynchronization(sessionHolder, sessionFactory, jdbcExceptionTranslator, false));
 				sessionHolder.setSynchronizedWithTransaction(true);
 			}
 			return sessionHolder.getSession();
@@ -155,7 +157,7 @@ public abstract class SessionFactoryUtils {
 		try {
 			logger.debug("Opening Hibernate session");
 			Session session = (entityInterceptor != null ?
-			    sessionFactory.openSession(entityInterceptor) : sessionFactory.openSession());
+				sessionFactory.openSession(entityInterceptor) : sessionFactory.openSession());
 			if (allowSynchronization && TransactionSynchronizationManager.isSynchronizationActive()) {
 				logger.debug("Registering transaction synchronization for Hibernate session");
 				// use same Session for further Hibernate actions within the transaction
@@ -163,16 +165,14 @@ public abstract class SessionFactoryUtils {
 				sessionHolder = new SessionHolder(session);
 				TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
 				TransactionSynchronizationManager.registerSynchronization(
-						new SessionSynchronization(sessionHolder, sessionFactory, jdbcExceptionTranslator, true));
+					new SessionSynchronization(sessionHolder, sessionFactory, jdbcExceptionTranslator, true));
 				sessionHolder.setSynchronizedWithTransaction(true);
 			}
 			return session;
-		}
-		catch (JDBCException ex) {
+		} catch (JDBCException ex) {
 			// SQLException underneath
 			throw new DataAccessResourceFailureException("Cannot open Hibernate session", ex.getSQLException());
-		}
-		catch (HibernateException ex) {
+		} catch (HibernateException ex) {
 			throw new DataAccessResourceFailureException("Cannot open Hibernate session", ex);
 		}
 	}
@@ -180,7 +180,8 @@ public abstract class SessionFactoryUtils {
 	/**
 	 * Apply the current transaction timeout, if any, to the given
 	 * Hibernate Query object.
-	 * @param query the Hibernate Query object
+	 *
+	 * @param query          the Hibernate Query object
 	 * @param sessionFactory Hibernate SessionFactory that the Query was created for
 	 */
 	public static void applyTransactionTimeout(Query query, SessionFactory sessionFactory) {
@@ -193,7 +194,8 @@ public abstract class SessionFactoryUtils {
 	/**
 	 * Apply the current transaction timeout, if any, to the given
 	 * Hibernate Criteria object.
-	 * @param criteria the Hibernate Criteria object
+	 *
+	 * @param criteria       the Hibernate Criteria object
 	 * @param sessionFactory Hibernate SessionFactory that the Criteria was created for
 	 */
 	public static void applyTransactionTimeout(Criteria criteria, SessionFactory sessionFactory) {
@@ -207,6 +209,7 @@ public abstract class SessionFactoryUtils {
 	 * Convert the given HibernateException to an appropriate exception from the
 	 * org.springframework.dao hierarchy. Note that it is advisable to handle JDBCException
 	 * specifically by using an SQLExceptionTranslator for the underlying SQLException.
+	 *
 	 * @param ex HibernateException that occured
 	 * @return the corresponding DataAccessException instance
 	 * @see HibernateAccessor#convertHibernateAccessException
@@ -250,24 +253,23 @@ public abstract class SessionFactoryUtils {
 	/**
 	 * Close the given Session, created via the given factory,
 	 * if it isn't bound to the thread.
-	 * @param session Session to close
+	 *
+	 * @param session        Session to close
 	 * @param sessionFactory Hibernate SessionFactory that the Session was created with
 	 * @throws DataAccessResourceFailureException if the Session couldn't be closed
 	 */
 	public static void closeSessionIfNecessary(Session session, SessionFactory sessionFactory)
-	    throws CleanupFailureDataAccessException {
+		throws CleanupFailureDataAccessException {
 		if (session == null || TransactionSynchronizationManager.hasResource(sessionFactory)) {
 			return;
 		}
 		logger.debug("Closing Hibernate session");
 		try {
 			session.close();
-		}
-		catch (JDBCException ex) {
+		} catch (JDBCException ex) {
 			// SQLException underneath
 			throw new CleanupFailureDataAccessException("Cannot close Hibernate session", ex.getSQLException());
-		}
-		catch (HibernateException ex) {
+		} catch (HibernateException ex) {
 			throw new CleanupFailureDataAccessException("Cannot close Hibernate session", ex);
 		}
 	}
@@ -294,14 +296,14 @@ public abstract class SessionFactoryUtils {
 		private boolean hibernateTransactionCompletion;
 
 		private SessionSynchronization(SessionHolder sessionHolder, SessionFactory sessionFactory,
-		                               SQLExceptionTranslator jdbcExceptionTranslator, boolean newSession) {
+									   SQLExceptionTranslator jdbcExceptionTranslator, boolean newSession) {
 			this.sessionHolder = sessionHolder;
 			this.sessionFactory = sessionFactory;
 			this.jdbcExceptionTranslator = jdbcExceptionTranslator;
 			// check whether the SessionFactory has a looked-up JTA TransactionManager
 			this.hibernateTransactionCompletion =
-					(sessionFactory instanceof SessionFactoryImplementor &&
-					 ((SessionFactoryImplementor) sessionFactory).getTransactionManager() != null);
+				(sessionFactory instanceof SessionFactoryImplementor &&
+				 ((SessionFactoryImplementor) sessionFactory).getTransactionManager() != null);
 			this.newSession = newSession;
 		}
 
@@ -318,16 +320,13 @@ public abstract class SessionFactoryUtils {
 				logger.debug("Flushing Hibernate session on transaction synchronization");
 				try {
 					this.sessionHolder.getSession().flush();
-				}
-				catch (JDBCException ex) {
+				} catch (JDBCException ex) {
 					if (this.jdbcExceptionTranslator != null) {
 						throw this.jdbcExceptionTranslator.translate("SessionSynchronization", null, ex.getSQLException());
-					}
-					else {
+					} else {
 						throw new HibernateJdbcException(ex);
 					}
-				}
-				catch (HibernateException ex) {
+				} catch (HibernateException ex) {
 					throw convertHibernateAccessException(ex);
 				}
 			}

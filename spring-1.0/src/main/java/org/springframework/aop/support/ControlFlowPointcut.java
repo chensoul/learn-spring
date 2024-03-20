@@ -17,7 +17,6 @@
 package org.springframework.aop.support;
 
 import java.lang.reflect.Method;
-
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -28,9 +27,10 @@ import org.springframework.core.ControlFlowFactory;
  * Pointcut and method matcher for use in simple <b>cflow</b>-style pointcut.
  * Note that evaluating such pointcuts is 10-15 times slower than evaluating
  * normal pointcuts, but they are useful in some cases.
- * @see ControlFlow
+ *
  * @author Rod Johnson
  * @version $Id: ControlFlowPointcut.java,v 1.6 2004/03/18 02:46:11 trisberg Exp $
+ * @see ControlFlow
  */
 public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher {
 
@@ -48,6 +48,7 @@ public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher
 	 * Construct a new pointcut that matches all calls below the
 	 * given method in the given class. If the method name is null,
 	 * matches all control flows below that class.
+	 *
 	 * @param clazz
 	 * @param methodName
 	 */

@@ -30,13 +30,14 @@ import org.springframework.web.servlet.HandlerMapping;
 /**
  * Abstract base class for HandlerMapping implementations.
  * Supports ordering, a default handler, and handler interceptors.
+ *
  * @author Juergen Hoeller
- * @since 07.04.2003
  * @see #getHandlerInternal
  * @see HandlerInterceptor
+ * @since 07.04.2003
  */
 public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
-    implements HandlerMapping, Ordered {
+	implements HandlerMapping, Ordered {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
@@ -46,19 +47,28 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 	private HandlerInterceptor[] interceptors;
 
-
-	public final void setOrder(int order) {
-	  this.order = order;
+	public final int getOrder() {
+		return order;
 	}
 
-	public final int getOrder() {
-	  return order;
+	public final void setOrder(int order) {
+		this.order = order;
+	}
+
+	/**
+	 * Return the default handler for this handler mapping.
+	 *
+	 * @return the default handler instance, or null if none
+	 */
+	protected final Object getDefaultHandler() {
+		return defaultHandler;
 	}
 
 	/**
 	 * Set the default handler for this handler mapping.
 	 * This handler will be returned if no specific mapping was found.
 	 * Default is null.
+	 *
 	 * @param defaultHandler default handler instance, or null if none
 	 */
 	public final void setDefaultHandler(Object defaultHandler) {
@@ -67,16 +77,9 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	}
 
 	/**
-	 * Return the default handler for this handler mapping.
-	 * @return the default handler instance, or null if none
-	 */
-	protected final Object getDefaultHandler() {
-		return defaultHandler;
-	}
-
-	/**
 	 * Set the handler interceptors to apply for all handlers mapped by
 	 * this handler mapping.
+	 *
 	 * @param interceptors array of handler interceptors, or null if none
 	 */
 	public final void setInterceptors(HandlerInterceptor[] interceptors) {
@@ -87,6 +90,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	/**
 	 * Look up a handler for the given request, falling back to the default
 	 * handler if no specific one is found.
+	 *
 	 * @param request current HTTP request
 	 * @return the looked up handler instance, or the default handler
 	 * @see #getHandlerInternal
@@ -111,6 +115,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * Lookup a handler for the given request, returning null if no specific
 	 * one is found. This method is called by getHandler, a null return value
 	 * will lead to the default handler, if one is set.
+	 *
 	 * @param request current HTTP request
 	 * @return the looked up handler instance, or null
 	 * @throws Exception if there is an internal error

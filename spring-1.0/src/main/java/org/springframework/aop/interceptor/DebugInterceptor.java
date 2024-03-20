@@ -22,6 +22,7 @@ import org.aopalliance.intercept.MethodInvocation;
 /**
  * AOP Alliance MethodInterceptor that can be introduced in a chain to display
  * verbose information about intercepted invocations to the console.
+ *
  * @author Rod Johnson
  * @version $Id: DebugInterceptor.java,v 1.3 2004/03/18 02:46:09 trisberg Exp $
  */
@@ -35,7 +36,7 @@ public class DebugInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		++count;
 		System.out.println("Debug interceptor: count=" + count +
-			" invocation=[" + invocation + "]");
+						   " invocation=[" + invocation + "]");
 		Object rval = invocation.proceed();
 		System.out.println("Debug interceptor: next returned");
 		return rval;
@@ -43,6 +44,7 @@ public class DebugInterceptor implements MethodInterceptor {
 
 	/**
 	 * Return the number of times this interceptor has been invoked
+	 *
 	 * @return the number of times this interceptor has been invoked
 	 */
 	public int getCount() {

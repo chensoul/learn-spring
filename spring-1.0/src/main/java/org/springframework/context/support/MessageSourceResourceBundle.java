@@ -19,18 +19,18 @@ package org.springframework.context.support;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
 /**
  * Helper class that allows for accessing a MessageSource as a ResourceBundle.
  * Used for example to expose a Spring MessageSource to JSTL web views.
+ *
  * @author Juergen Hoeller
- * @since 27.02.2003
  * @see MessageSource
  * @see ResourceBundle
  * @see org.springframework.web.servlet.support.JstlUtils#exposeLocalizationContext
+ * @since 27.02.2003
  */
 public class MessageSourceResourceBundle extends ResourceBundle {
 
@@ -50,8 +50,7 @@ public class MessageSourceResourceBundle extends ResourceBundle {
 	protected Object handleGetObject(String code) {
 		try {
 			return this.source.getMessage(code, null, this.locale);
-		}
-		catch (NoSuchMessageException ex) {
+		} catch (NoSuchMessageException ex) {
 			return null;
 		}
 	}

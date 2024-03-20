@@ -40,23 +40,16 @@ import org.springframework.jdbc.support.SQLExceptionTranslator;
  * or with org.springframework.jdbc.object classes.
  *
  * @author Juergen Hoeller
- * @since 28.07.2003
  * @see #setDataSource
  * @see JdbcTemplate
  * @see DataSourceUtils
+ * @since 28.07.2003
  */
 public abstract class JdbcDaoSupport implements InitializingBean {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private JdbcTemplate jdbcTemplate;
-
-	/**
-	 * Set the JDBC DataSource to be used by this DAO.
-	 */
-	public final void setDataSource(DataSource dataSource) {
-	  this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	/**
 	 * Return the JDBC DataSource used by this DAO.
@@ -66,11 +59,10 @@ public abstract class JdbcDaoSupport implements InitializingBean {
 	}
 
 	/**
-	 * Set the JdbcTemplate for this DAO explicitly,
-	 * as an alternative to specifying a DataSource.
+	 * Set the JDBC DataSource to be used by this DAO.
 	 */
-	public final void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	public final void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
 	/**
@@ -78,7 +70,15 @@ public abstract class JdbcDaoSupport implements InitializingBean {
 	 * pre-initialized with the DataSource or set explicitly.
 	 */
 	protected final JdbcTemplate getJdbcTemplate() {
-	  return jdbcTemplate;
+		return jdbcTemplate;
+	}
+
+	/**
+	 * Set the JdbcTemplate for this DAO explicitly,
+	 * as an alternative to specifying a DataSource.
+	 */
+	public final void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public final void afterPropertiesSet() throws Exception {
@@ -91,6 +91,7 @@ public abstract class JdbcDaoSupport implements InitializingBean {
 	/**
 	 * Subclasses can override this for custom initialization behavior.
 	 * Gets called after population of this instance's bean properties.
+	 *
 	 * @throws Exception if initialization fails
 	 */
 	protected void initDao() throws Exception {
@@ -98,6 +99,7 @@ public abstract class JdbcDaoSupport implements InitializingBean {
 
 	/**
 	 * Get a JDBC Connection, either from the current transaction or a new one.
+	 *
 	 * @return the JDBC Connection
 	 * @throws CannotGetJdbcConnectionException if the attempt to get a Connection failed
 	 */
@@ -116,9 +118,10 @@ public abstract class JdbcDaoSupport implements InitializingBean {
 	/**
 	 * Close the given JDBC Connection if necessary, created via this bean's
 	 * DataSource, if it isn't bound to the thread.
+	 *
 	 * @param con Connection to close
 	 * @throws CannotCloseJdbcConnectionException if the attempt to close the
-	 * Connection failed
+	 *                                            Connection failed
 	 */
 	protected final void closeConnectionIfNecessary(Connection con) throws CannotCloseJdbcConnectionException {
 		DataSourceUtils.closeConnectionIfNecessary(con, getDataSource());

@@ -98,36 +98,30 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Log4j logger used by this class. Available to subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
-
-	/**
-	 * Parent context
-	 */
-	private ApplicationContext parent;
-
 	/**
 	 * BeanFactoryPostProcessors to apply on refresh
 	 */
 	private final List beanFactoryPostProcessors = new ArrayList();
-
-	/**
-	 * Display name
-	 */
-	private String displayName = getClass().getName() + ";hashCode=" + hashCode();
-
-	/**
-	 * System time in milliseconds when this context started
-	 */
-	private long startupTime;
-
-	/**
-	 * MessageSource helper we delegate our implementation of this interface to
-	 */
-	private MessageSource messageSource;
-
 	/**
 	 * Helper class used in event publishing
 	 */
 	private final ApplicationEventMulticaster eventMulticaster = new ApplicationEventMulticasterImpl();
+	/**
+	 * Parent context
+	 */
+	private ApplicationContext parent;
+	/**
+	 * Display name
+	 */
+	private String displayName = getClass().getName() + ";hashCode=" + hashCode();
+	/**
+	 * System time in milliseconds when this context started
+	 */
+	private long startupTime;
+	/**
+	 * MessageSource helper we delegate our implementation of this interface to
+	 */
+	private MessageSource messageSource;
 
 
 	//---------------------------------------------------------------------
@@ -164,12 +158,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return parent;
 	}
 
-	/**
-	 * To avoid endless constructor chaining, only concrete classes
-	 * take this in their constructor, and then invoke this method
-	 */
-	protected void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setParent(ApplicationContext parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -182,6 +172,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * To avoid endless constructor chaining, only concrete classes
+	 * take this in their constructor, and then invoke this method
+	 */
+	protected void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	/**
 	 * Return the timestamp when this context was first loaded
 	 *
 	 * @return the timestamp (ms) when this context was first loaded
@@ -189,6 +187,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public long getStartupDate() {
 		return startupTime;
 	}
+
+
+	//---------------------------------------------------------------------
+	// Implementation of ConfigurableApplicationContext
+	//---------------------------------------------------------------------
 
 	/**
 	 * Publish the given event to all listeners.
@@ -207,15 +210,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		if (this.parent != null) {
 			parent.publishEvent(event);
 		}
-	}
-
-
-	//---------------------------------------------------------------------
-	// Implementation of ConfigurableApplicationContext
-	//---------------------------------------------------------------------
-
-	public void setParent(ApplicationContext parent) {
-		this.parent = parent;
 	}
 
 	public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
@@ -239,26 +233,26 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @throws BeansException                                          if the bean factory could not be initialized
 	 */
 	public void refresh() throws BeansException {
-		//1. 准备工作
+		// 1. 准备工作
 		this.startupTime = System.currentTimeMillis();
 
 		// tell subclass to refresh the internal bean factory
-		// 2. 获取 beanFactory
+		// 2. 获取 beanFactory，由子类实现
 		refreshBeanFactory();
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 
 		// configure the bean factory with context semantics
-		// 3. 配置 beanFactory：添加后置处理器
+		// 3. 配置 beanFactory：添加 bean 后置处理器，忽略指定依赖类型
 		beanFactory.registerCustomEditor(Resource.class, new ContextResourceEditor(this));
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		beanFactory.ignoreDependencyType(ResourceLoader.class);
 		beanFactory.ignoreDependencyType(ApplicationContext.class);
 
-		// 4. bean工厂后置操作  此处为空方法，由子类实现
+		// 4. bean工厂后置操作，此处为空方法，由子类实现
 		postProcessBeanFactory(beanFactory);
 
 		// invoke factory processors registered with the context instance
-		// 5. 调用bean工厂后置处理器
+		// 5. 执行 bean 工厂后置处理器：对 beanFactoryPostProcessors 属性进行实例化，然后调用 postProcessBeanFactory 方法
 		for (Iterator it = getBeanFactoryPostProcessors().iterator(); it.hasNext(); ) {
 			BeanFactoryPostProcessor factoryProcessor = (BeanFactoryPostProcessor) it.next();
 			factoryProcessor.postProcessBeanFactory(beanFactory);
@@ -271,14 +265,19 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// invoke factory processors registered as beans in the context
+		// 5. 执行 bean 工厂后置处理器：对容器中定义的 BeanFactoryPostProcessor 进行实例化，然后调用 postProcessBeanFactory 方法
+		// getBean
+		// -> createBean
+		// -> populateBean
+		// -> 设置 Aware 属性 -> applyBeanPostProcessorsBeforeInitialization -> invokeInitMethods -> applyBeanPostProcessorsAfterInitialization
 		invokeBeanFactoryPostProcessors();
 
 		// register bean processor that intercept bean creation
-		//【6.注册bean后置处理器】只是注册，但是还不会调用，逻辑：找出所有实现BeanPostProcessor接口的类,分类、排序、注册
+		// 6. beanfactory 注册 bean 后置处理器（只注册不执行）：找出所有实现BeanPostProcessor接口的类,分类、排序、注册
 		registerBeanPostProcessors();
 
 		// initialize message source for this context
-		//【7.初始化消息源】国际化问题i18n
+		//7. 初始化消息源
 		initMessageSource();
 
 		// initialize other special beans in specific context subclasses
@@ -286,17 +285,19 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		onRefresh();
 
 		// check for listener beans and register them
-		// 注册监听器
+		//9. 注册监听器
 		refreshListeners();
 
 		// instantiate singletons this late to allow them to access the message source
-		//实例化所有剩余的（非惰性初始化）单例】
-		//（1）初始化所有的 singleton beans,反射生成对象/填充
-		//2）调用Bean的前置处理器和后置处理器
+		//10. 实例化所有剩余的（非惰性初始化）单例
+		//1）初始化所有的 singleton beans，反射生成对象/填充
+		//   a. 如果是普通 bean，则执行实例化
+		//   b. 如果是工厂 bean，则通过工厂创建实例
+		//2）调用 Bean 的前置处理器和后置处理器
 		beanFactory.preInstantiateSingletons();
 
 		// last step: publish respective event
-		//发布事件
+		//11. 发布事件
 		publishEvent(new ContextRefreshedEvent(this));
 	}
 
@@ -323,7 +324,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		for (int i = 0; i < beanNames.length; i++) {
 			factoryProcessors[i] = (BeanFactoryPostProcessor) getBean(beanNames[i]);
 		}
+		//排序
 		Arrays.sort(factoryProcessors, new OrderComparator());
+
+		//对 BeanFactory 进行后置处理
 		for (int i = 0; i < factoryProcessors.length; i++) {
 			BeanFactoryPostProcessor factoryProcessor = factoryProcessors[i];
 			factoryProcessor.postProcessBeanFactory(getBeanFactory());

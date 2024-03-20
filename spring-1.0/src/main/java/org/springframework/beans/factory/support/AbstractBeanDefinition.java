@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans.factory.support;
 
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 /**
  * Common base class for bean definitions, factoring out common
  * functionality from RootBeanDefinition and ChildBeanDefinition.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @version $Id: AbstractBeanDefinition.java,v 1.12 2004/03/19 17:45:36 jhoeller Exp $
@@ -42,6 +43,7 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 
 	/**
 	 * Create a new bean definition.
+	 *
 	 * @param pvs the PropertyValues to be applied to a new instance of the bean
 	 */
 	protected AbstractBeanDefinition(MutablePropertyValues pvs) {
@@ -60,6 +62,10 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 		return null;
 	}
 
+	public String getResourceDescription() {
+		return resourceDescription;
+	}
+
 	/**
 	 * Set a description of the resource that this bean definition
 	 * came from (for the purpose of showing context in case of errors).
@@ -68,8 +74,12 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 		this.resourceDescription = resourceDescription;
 	}
 
-	public String getResourceDescription() {
-		return resourceDescription;
+	/**
+	 * Return whether this a <b>Singleton</b>, with a single, shared instance
+	 * returned on all calls,
+	 */
+	public boolean isSingleton() {
+		return singleton;
 	}
 
 	/**
@@ -84,11 +94,10 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 	}
 
 	/**
-	 * Return whether this a <b>Singleton</b>, with a single, shared instance
-	 * returned on all calls,
+	 * Return whether this bean should be lazily initialized.
 	 */
-	public boolean isSingleton() {
-		return singleton;
+	public boolean isLazyInit() {
+		return lazyInit;
 	}
 
 	/**
@@ -102,14 +111,8 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
 	}
 
 	/**
-	 * Return whether this bean should be lazily initialized.
-	 */
-	public boolean isLazyInit() {
-		return lazyInit;
-	}
-
-	/**
 	 * Validate this bean definition.
+	 *
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
 	public void validate() throws BeanDefinitionValidationException {

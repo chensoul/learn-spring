@@ -49,7 +49,6 @@ import java.sql.SQLException;
  * on some database because of their size (take Oracle's numbers as a guideline).
  *
  * @author Juergen Hoeller
- * @since 23.12.2003
  * @see DefaultLobHandler
  * @see OracleLobHandler
  * @see ResultSet#getBytes
@@ -57,6 +56,7 @@ import java.sql.SQLException;
  * @see ResultSet#getString
  * @see ResultSet#getAsciiStream
  * @see ResultSet#getCharacterStream
+ * @since 23.12.2003
  */
 public interface LobHandler {
 
@@ -64,7 +64,8 @@ public interface LobHandler {
 	 * Retrieve the given column as bytes from the given ResultSet.
 	 * Might simply invoke ResultSet.getBytes or work with
 	 * ResultSet.getBlob, depending on the database and driver.
-	 * @param rs the ResultSet to retrieve the content from
+	 *
+	 * @param rs          the ResultSet to retrieve the content from
 	 * @param columnIndex the column index to use
 	 * @return the content as byte array
 	 * @throws SQLException if thrown by JDBC methods
@@ -75,7 +76,8 @@ public interface LobHandler {
 	 * Retrieve the given column as binary stream from the given ResultSet.
 	 * Might simply invoke ResultSet.getBinaryStream or work with
 	 * ResultSet.getBlob, depending on the database and driver.
-	 * @param rs the ResultSet to retrieve the content from
+	 *
+	 * @param rs          the ResultSet to retrieve the content from
 	 * @param columnIndex the column index to use
 	 * @return the content as binary stream
 	 * @throws SQLException if thrown by JDBC methods
@@ -86,7 +88,8 @@ public interface LobHandler {
 	 * Retrieve the given column as String from the given ResultSet.
 	 * Might simply invoke ResultSet.getString or work with
 	 * ResultSet.getClob, depending on the database and driver.
-	 * @param rs the ResultSet to retrieve the content from
+	 *
+	 * @param rs          the ResultSet to retrieve the content from
 	 * @param columnIndex the column index to use
 	 * @return the content as String
 	 * @throws SQLException if thrown by JDBC methods
@@ -97,7 +100,8 @@ public interface LobHandler {
 	 * Retrieve the given column as ASCII stream from the given ResultSet.
 	 * Might simply invoke ResultSet.getAsciiStream or work with
 	 * ResultSet.getClob, depending on the database and driver.
-	 * @param rs the ResultSet to retrieve the content from
+	 *
+	 * @param rs          the ResultSet to retrieve the content from
 	 * @param columnIndex the column index to use
 	 * @return the content as ASCII stream
 	 * @throws SQLException if thrown by JDBC methods
@@ -108,7 +112,8 @@ public interface LobHandler {
 	 * Retrieve the given column as character stream from the given ResultSet.
 	 * Might simply invoke ResultSet.getCharacterStream or work with
 	 * ResultSet.getClob, depending on the database and driver.
-	 * @param rs the ResultSet to retrieve the content from
+	 *
+	 * @param rs          the ResultSet to retrieve the content from
 	 * @param columnIndex the column index to use
 	 * @return the content as character stream
 	 * @throws SQLException if thrown by JDBC methods
@@ -119,6 +124,7 @@ public interface LobHandler {
 	 * Create a new LobCreator instance, i.e. a session for creating BLOBs
 	 * and CLOBs. Needs to be closed after the created LOBs are not needed
 	 * anymore, i.e. after statement execution or transaction completion.
+	 *
 	 * @return the new LobCreator instance
 	 * @see LobCreator#close
 	 */

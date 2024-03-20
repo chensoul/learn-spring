@@ -19,17 +19,19 @@ package org.springframework.core;
 /**
  * Exception thrown when the Constants class is asked for an invalid
  * constant name.
- * @see Constants
- * @version $Id: ConstantException.java,v 1.2 2004/03/18 02:46:06 trisberg Exp $
+ *
  * @author Rod Johnson
+ * @version $Id: ConstantException.java,v 1.2 2004/03/18 02:46:06 trisberg Exp $
+ * @see Constants
  * @since 28-Apr-2003
  */
 public class ConstantException extends IllegalArgumentException {
 
 	/**
 	 * Thrown when an invalid constant name is requested.
-	 * @param clazz class containing the constant definitions
-	 * @param field invalid constant name
+	 *
+	 * @param clazz   class containing the constant definitions
+	 * @param field   invalid constant name
 	 * @param message description of the problem
 	 */
 	public ConstantException(Class clazz, String field, String message) {
@@ -38,9 +40,10 @@ public class ConstantException extends IllegalArgumentException {
 
 	/**
 	 * Thrown when an invalid constant value is looked up.
-	 * @param clazz class containing the constant definitions
+	 *
+	 * @param clazz      class containing the constant definitions
 	 * @param namePrefix prefix of the searched constant names
-	 * @param value the looked up constant value
+	 * @param value      the looked up constant value
 	 */
 	public ConstantException(Class clazz, String namePrefix, Object value) {
 		super("No '" + namePrefix + "' field with value '" + value + "' found in " + clazz);

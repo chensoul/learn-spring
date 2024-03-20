@@ -51,6 +51,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 
 	/**
 	 * Create a new InternalResourceView with the given URL.
+	 *
 	 * @param url the URL to forward to
 	 */
 	public InternalResourceView(String url) {
@@ -62,7 +63,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * This includes setting the model as request attributes.
 	 */
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
-	                                       HttpServletResponse response) throws Exception {
+										   HttpServletResponse response) throws Exception {
 
 		// expose the model object as request attributes
 		exposeModelAsRequestAttributes(model, request);
@@ -75,15 +76,14 @@ public class InternalResourceView extends AbstractUrlBasedView {
 		RequestDispatcher rd = request.getRequestDispatcher(dispatcherPath);
 		if (rd == null) {
 			throw new ServletException("Could not get RequestDispatcher for [" + getUrl() +
-			                           "]: check that this file exists within your WAR");
+									   "]: check that this file exists within your WAR");
 		}
 
 		// if already included, include again, else forward
 		if (request.getAttribute(UrlPathHelper.INCLUDE_URI_REQUEST_ATTRIBUTE) != null) {
 			rd.include(request, response);
 			logger.debug("Included resource [" + getUrl() + "] in InternalResourceView '" + getBeanName() + "'");
-		}
-		else {
+		} else {
 			rd.forward(request, response);
 			logger.debug("Forwarded to resource [" + getUrl() + "] in InternalResourceView '" + getBeanName() + "'");
 		}
@@ -93,7 +93,8 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * Expose the model objects in the given map as request attributes.
 	 * Names will be taken from the map.
 	 * This method is suitable for all resources reachable by RequestDispatcher.
-	 * @param model Map of model objects to expose
+	 *
+	 * @param model   Map of model objects to expose
 	 * @param request current HTTP request
 	 */
 	protected void exposeModelAsRequestAttributes(Map model, HttpServletRequest request) throws ServletException {
@@ -110,12 +111,11 @@ public class InternalResourceView extends AbstractUrlBasedView {
 					request.setAttribute(modelName, modelValue);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Added model object '" + modelName + "' of type [" + modelValue.getClass().getName() +
-						    "] to request in InternalResourceView '" + getBeanName() + "' ");
+									 "] to request in InternalResourceView '" + getBeanName() + "' ");
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			logger.debug("Model is null. Nothing to expose to request.");
 		}
 	}
@@ -126,7 +126,8 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * <p>This implementation simply returns the configured URL.
 	 * Subclasses can override this to determine a resource to render,
 	 * typically interpreting the URL in a different manner.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
 	 * @return the request dispatcher path to use
 	 * @throws Exception if preparations failed
@@ -134,7 +135,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * @see org.springframework.web.servlet.view.tiles.TilesView#prepareForRendering
 	 */
 	protected String prepareForRendering(HttpServletRequest request, HttpServletResponse response)
-	    throws Exception {
+		throws Exception {
 		return getUrl();
 	}
 

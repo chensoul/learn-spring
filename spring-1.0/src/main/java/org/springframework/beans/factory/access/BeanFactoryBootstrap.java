@@ -28,7 +28,7 @@ import org.springframework.beans.factory.support.PropertiesBeanDefinitionReader;
  * the Properties syntax supported by PropertiesBeanDefinitionReader.
  *
  * <oo>The name of the bootstrap factory must be "bootstrapBeanFactory".
- *
+ * <p>
  * Thus a typical definition might be:
  * <code>
  * bootstrapBeanFactory.class=com.mycompany.MyBeanFactory
@@ -40,9 +40,9 @@ import org.springframework.beans.factory.support.PropertiesBeanDefinitionReader;
  * </code>
  *
  * @author Rod Johnson
- * @since December 2, 2002
- * @see PropertiesBeanDefinitionReader
  * @version $Id: BeanFactoryBootstrap.java,v 1.3 2004/03/18 02:46:14 trisberg Exp $
+ * @see PropertiesBeanDefinitionReader
+ * @since December 2, 2002
  */
 public class BeanFactoryBootstrap {
 
@@ -52,15 +52,6 @@ public class BeanFactoryBootstrap {
 
 	private static BeansException startupException;
 
-	private static void initializeSingleton() {
-		try {
-			instance = new BeanFactoryBootstrap();
-		}
-		catch (BeansException ex) {
-			startupException = ex;
-		}
-	}
-
 	// Do initialization when this class is loaded to avoid
 	// potential concurrency issues or the need to synchronize later
 	static {
@@ -68,7 +59,39 @@ public class BeanFactoryBootstrap {
 	}
 
 	/**
+	 * The Singleton instance
+	 */
+	private BeanFactory bootstrapFactory;
+
+	/**
+	 * Apply rules to load factory.
+	 */
+	private BeanFactoryBootstrap() throws BeansException {
+		DefaultListableBeanFactory startupFactory = new DefaultListableBeanFactory();
+		PropertiesBeanDefinitionReader propReader = new PropertiesBeanDefinitionReader(startupFactory);
+		try {
+			propReader.registerBeanDefinitions(System.getProperties());
+			this.bootstrapFactory = (BeanFactory) startupFactory.getBean(BEAN_FACTORY_BEAN_NAME);
+		} catch (ClassCastException ex) {
+			throw new BootstrapException("Bootstrap bean factory class does not implement BeanFactory interface", ex);
+		} catch (NoSuchBeanDefinitionException ex) {
+			throw new BootstrapException("No bean named '" + BEAN_FACTORY_BEAN_NAME + "' in system properties: [" + startupFactory + "]", null);
+		} catch (BeansException ex) {
+			throw new BootstrapException("Failed to bootstrap bean factory", ex);
+		}
+	}
+
+	private static void initializeSingleton() {
+		try {
+			instance = new BeanFactoryBootstrap();
+		} catch (BeansException ex) {
+			startupException = ex;
+		}
+	}
+
+	/**
 	 * Return the singleton instance of the bootstrap factory
+	 *
 	 * @return BeanFactoryBootstrap
 	 * @throws BeansException
 	 */
@@ -89,31 +112,6 @@ public class BeanFactoryBootstrap {
 		instance = null;
 		startupException = null;
 		initializeSingleton();
-	}
-
-
-	/** The Singleton instance */
-	private BeanFactory bootstrapFactory;
-
-	/**
-	 * Apply rules to load factory.
-	 */
-	private BeanFactoryBootstrap() throws BeansException {
-		DefaultListableBeanFactory startupFactory = new DefaultListableBeanFactory();
-		PropertiesBeanDefinitionReader propReader = new PropertiesBeanDefinitionReader(startupFactory);
-		try {
-			propReader.registerBeanDefinitions(System.getProperties());
-			this.bootstrapFactory = (BeanFactory) startupFactory.getBean(BEAN_FACTORY_BEAN_NAME);
-		}
-		catch (ClassCastException ex) {
-			throw new BootstrapException("Bootstrap bean factory class does not implement BeanFactory interface", ex);
-		}
-		catch (NoSuchBeanDefinitionException ex) {
-			throw new BootstrapException("No bean named '" + BEAN_FACTORY_BEAN_NAME + "' in system properties: [" + startupFactory + "]", null);
-		}
-		catch (BeansException ex) {
-			throw new BootstrapException("Failed to bootstrap bean factory", ex);
-		}
 	}
 
 	/**

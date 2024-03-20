@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.context.support;
 
@@ -20,10 +20,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.context.HierarchicalMessageSource;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
@@ -54,19 +52,19 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 
 	private boolean useCodeAsDefaultMessage = false;
 
+	public MessageSource getParentMessageSource() {
+		return parentMessageSource;
+	}
 
 	public void setParentMessageSource(MessageSource parent) {
 		this.parentMessageSource = parent;
-	}
-
-	public MessageSource getParentMessageSource() {
-		return parentMessageSource;
 	}
 
 	/**
 	 * Set whether to use the message code as default message
 	 * instead of throwing a NoSuchMessageException.
 	 * Useful for development and debugging. Default is false.
+	 *
 	 * @see #getMessage(String, Object[], Locale)
 	 */
 	public void setUseCodeAsDefaultMessage(boolean useCodeAsDefaultMessage) {
@@ -77,8 +75,7 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 	public final String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
 		try {
 			return getMessage(code, args, locale);
-		}
-		catch (NoSuchMessageException ex) {
+		} catch (NoSuchMessageException ex) {
 			return defaultMessage;
 		}
 	}
@@ -86,12 +83,10 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 	public final String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
 		try {
 			return getMessageInternal(code, args, locale);
-		}
-		catch (NoSuchMessageException ex) {
+		} catch (NoSuchMessageException ex) {
 			if (this.useCodeAsDefaultMessage) {
 				return code;
-			}
-			else {
+			} else {
 				throw ex;
 			}
 		}
@@ -102,18 +97,15 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 		for (int i = 0; i < codes.length; i++) {
 			try {
 				return getMessageInternal(codes[i], resolvable.getArguments(), locale);
-			}
-			catch (NoSuchMessageException ex) {
+			} catch (NoSuchMessageException ex) {
 				// swallow it, we'll retry the other codes
 			}
 		}
 		if (resolvable.getDefaultMessage() != null) {
 			return resolvable.getDefaultMessage();
-		}
-		else if (this.useCodeAsDefaultMessage && codes.length > 0) {
+		} else if (this.useCodeAsDefaultMessage && codes.length > 0) {
 			return codes[0];
-		}
-		else {
+		} else {
 			throw new NoSuchMessageException(codes[codes.length - 1], locale);
 		}
 	}
@@ -122,6 +114,7 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 	 * Resolve the given code and arguments as message in the given Locale,
 	 * throwing a NoSuchMessageException if not found. Does <i>not</i> fall
 	 * back to the code as default message. Invoked by getMessage methods.
+	 *
 	 * @see #getMessage(String, Object[], Locale)
 	 * @see #getMessage(MessageSourceResolvable, Locale)
 	 * @see #setUseCodeAsDefaultMessage
@@ -133,12 +126,10 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 		MessageFormat messageFormat = resolveCode(code, locale);
 		if (messageFormat != null) {
 			return messageFormat.format(resolveArguments(args, locale));
-		}
-		else {
+		} else {
 			if (this.parentMessageSource != null) {
 				return this.parentMessageSource.getMessage(code, args, locale);
-			}
-			else {
+			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Could not resolve message code [" + code + "] in locale [" + locale + "]");
 				}
@@ -151,7 +142,8 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 	 * Search through the given array of objects, find any
 	 * MessageSourceResolvable objects and resolve them.
 	 * <p>Allows for messages to have MessageSourceResolvables as arguments.
-	 * @param args array of arguments for a message
+	 *
+	 * @param args   array of arguments for a message
 	 * @param locale the locale to resolve through
 	 * @return an array of arguments with any MessageSourceResolvables resolved
 	 */
@@ -163,23 +155,23 @@ public abstract class AbstractMessageSource implements HierarchicalMessageSource
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] instanceof MessageSourceResolvable) {
 				resolvedArgs.add(getMessage((MessageSourceResolvable) args[i],
-				                            locale));
-			}
-			else {
+					locale));
+			} else {
 				resolvedArgs.add(args[i]);
 			}
 		}
 		return resolvedArgs.toArray(new Object[resolvedArgs.size()]);
 	}
-	
+
 
 	/**
 	 * Subclasses must implement this method to resolve a message.
 	 * <p>Returns a MessageFormat instance rather than a message String,
 	 * to allow for appropriate caching of MessageFormats in subclasses.
-	 * @param code the code of the message to resolve
+	 *
+	 * @param code   the code of the message to resolve
 	 * @param locale the Locale to resolve the code for
-	 * (subclasses are encouraged to support internationalization)
+	 *               (subclasses are encouraged to support internationalization)
 	 * @return the MessageFormat for the message, or null if not found
 	 */
 	protected abstract MessageFormat resolveCode(String code, Locale locale);

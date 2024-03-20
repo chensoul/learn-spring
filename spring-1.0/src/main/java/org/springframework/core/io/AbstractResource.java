@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.core.io;
 
@@ -46,15 +46,13 @@ public abstract class AbstractResource implements Resource {
 		// try file existence
 		try {
 			return getFile().exists();
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			// fall back to stream existence
 			try {
 				InputStream is = getInputStream();
 				is.close();
 				return true;
-			}
-			catch (IOException ex2) {
+			} catch (IOException ex2) {
 				return false;
 			}
 		}
@@ -85,6 +83,7 @@ public abstract class AbstractResource implements Resource {
 
 	/**
 	 * This implementation returns the description of this resource.
+	 *
 	 * @see #getDescription
 	 */
 	public String toString() {
@@ -93,6 +92,7 @@ public abstract class AbstractResource implements Resource {
 
 	/**
 	 * This implementation compares description strings.
+	 *
 	 * @see #getDescription
 	 */
 	public boolean equals(Object obj) {
@@ -101,6 +101,7 @@ public abstract class AbstractResource implements Resource {
 
 	/**
 	 * This implementation returns the description's hash code.
+	 *
 	 * @see #getDescription
 	 */
 	public int hashCode() {

@@ -27,19 +27,25 @@ import org.springframework.transaction.TransactionDefinition;
  * <p>Base class for both TransactionTemplate and DefaultTransactionAttribute.
  *
  * @author Juergen Hoeller
- * @since 08.05.2003
  * @see TransactionTemplate
  * @see org.springframework.transaction.interceptor.DefaultTransactionAttribute
+ * @since 08.05.2003
  */
 public class DefaultTransactionDefinition implements TransactionDefinition {
 
-	/** Prefix for transaction timeout values in description strings */
+	/**
+	 * Prefix for transaction timeout values in description strings
+	 */
 	public static final String TIMEOUT_PREFIX = "timeout_";
 
-	/** Marker for read-only transactions in description strings */
+	/**
+	 * Marker for read-only transactions in description strings
+	 */
 	public static final String READ_ONLY_MARKER = "readOnly";
 
-	/** Constants instance for TransactionDefinition */
+	/**
+	 * Constants instance for TransactionDefinition
+	 */
 	private static final Constants constants = new Constants(TransactionDefinition.class);
 
 
@@ -62,6 +68,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 	/**
 	 * Set the propagation behavior by the name of the corresponding constant in
 	 * TransactionDefinition, e.g. "PROPAGATION_REQUIRED".
+	 *
 	 * @param constantName name of the constant
 	 * @throws IllegalArgumentException if an invalid constant was specified
 	 * @see TransactionDefinition#PROPAGATION_REQUIRED
@@ -73,6 +80,10 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 		setPropagationBehavior(constants.asNumber(constantName).intValue());
 	}
 
+	public final int getPropagationBehavior() {
+		return propagationBehavior;
+	}
+
 	public final void setPropagationBehavior(int propagationBehavior) {
 		if (!constants.getValues(PROPAGATION_CONSTANT_PREFIX).contains(new Integer(propagationBehavior))) {
 			throw new IllegalArgumentException("Only values of propagation constants allowed");
@@ -80,13 +91,10 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 		this.propagationBehavior = propagationBehavior;
 	}
 
-	public final int getPropagationBehavior() {
-		return propagationBehavior;
-	}
-
 	/**
 	 * Set the isolation level by the name of the corresponding constant in
 	 * TransactionDefinition, e.g. "ISOLATION_DEFAULT".
+	 *
 	 * @param constantName name of the constant
 	 * @throws IllegalArgumentException if an invalid constant was specified
 	 * @see TransactionDefinition#ISOLATION_DEFAULT
@@ -98,6 +106,10 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 		setIsolationLevel(constants.asNumber(constantName).intValue());
 	}
 
+	public final int getIsolationLevel() {
+		return isolationLevel;
+	}
+
 	public final void setIsolationLevel(int isolationLevel) {
 		if (!constants.getValues(ISOLATION_CONSTANT_PREFIX).contains(new Integer(isolationLevel))) {
 			throw new IllegalArgumentException("Only values of isolation constants allowed");
@@ -105,8 +117,8 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 		this.isolationLevel = isolationLevel;
 	}
 
-	public final int getIsolationLevel() {
-		return isolationLevel;
+	public final int getTimeout() {
+		return timeout;
 	}
 
 	public final void setTimeout(int timeout) {
@@ -116,21 +128,17 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 		this.timeout = timeout;
 	}
 
-	public final int getTimeout() {
-		return timeout;
+	public final boolean isReadOnly() {
+		return readOnly;
 	}
 
 	public final void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
 
-	public final boolean isReadOnly() {
-		return readOnly;
-	}
-
-
 	/**
 	 * This implementation of equals compares the toString results.
+	 *
 	 * @see #toString
 	 */
 	public boolean equals(Object other) {
@@ -139,6 +147,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 
 	/**
 	 * This implementation of hashCode returns toString's hash code.
+	 *
 	 * @see #toString
 	 */
 	public int hashCode() {
@@ -151,6 +160,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
 	 * to be able to feed toString results into TransactionAttribute properties.
 	 * <p>Has to be overridden in subclasses for correct equals and hashCode
 	 * behavior. Alternatively, equals and hashCode can be overridden themselves.
+	 *
 	 * @see org.springframework.transaction.interceptor.TransactionAttributeEditor
 	 */
 	public String toString() {

@@ -17,10 +17,8 @@
 package org.springframework.ui.context.support;
 
 import java.util.Arrays;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ui.context.HierarchicalThemeSource;
@@ -28,6 +26,7 @@ import org.springframework.ui.context.ThemeSource;
 
 /**
  * Utilities common to all UI application context implementations.
+ *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller
  * @since 17.06.2003
@@ -37,6 +36,7 @@ public abstract class UiApplicationContextUtils {
 	/**
 	 * Name of the ThemeSource bean in the factory.
 	 * If none is supplied, theme resolution is delegated to the parent.
+	 *
 	 * @see ThemeSource
 	 */
 	public static final String THEME_SOURCE_BEAN_NAME = "themeSource";
@@ -47,6 +47,7 @@ public abstract class UiApplicationContextUtils {
 	 * Initialize the ThemeSource for the given application context,
 	 * auto-detecting a bean with the name "themeSource". If no such
 	 * bean is found, a default (empty) ThemeSource will be used.
+	 *
 	 * @param context current application context
 	 * @return the initialized theme source (will never be null)
 	 * @see #THEME_SOURCE_BEAN_NAME
@@ -58,14 +59,13 @@ public abstract class UiApplicationContextUtils {
 			// set parent theme source if applicable,
 			// and if the theme source is defined in this context, not in a parent
 			if (context.getParent() instanceof ThemeSource &&
-					themeSource instanceof HierarchicalThemeSource &&
-					Arrays.asList(context.getBeanDefinitionNames()).contains(THEME_SOURCE_BEAN_NAME)) {
+				themeSource instanceof HierarchicalThemeSource &&
+				Arrays.asList(context.getBeanDefinitionNames()).contains(THEME_SOURCE_BEAN_NAME)) {
 				((HierarchicalThemeSource) themeSource).setParentThemeSource((ThemeSource) context.getParent());
 			}
-		}
-		catch (NoSuchBeanDefinitionException ex) {
+		} catch (NoSuchBeanDefinitionException ex) {
 			logger.info("No ThemeSource found for [" + context.getDisplayName() +
-									"]: using ResourceBundleThemeSource");
+						"]: using ResourceBundleThemeSource");
 			themeSource = new ResourceBundleThemeSource();
 		}
 		return themeSource;

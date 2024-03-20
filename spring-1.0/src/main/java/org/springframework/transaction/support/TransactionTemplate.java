@@ -18,7 +18,6 @@ package org.springframework.transaction.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionException;
@@ -49,12 +48,12 @@ import org.springframework.transaction.TransactionStatus;
  * for convenient configuration in context definitions.
  *
  * @author Juergen Hoeller
- * @since 17.03.2003
  * @see TransactionCallback
  * @see PlatformTransactionManager
  * @see org.springframework.transaction.jta.JtaTransactionManager
+ * @since 17.03.2003
  */
-public class TransactionTemplate extends DefaultTransactionDefinition implements InitializingBean{
+public class TransactionTemplate extends DefaultTransactionDefinition implements InitializingBean {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
@@ -64,6 +63,7 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 	 * Create a new TransactionTemplate instance.
 	 * Mainly targetted at configuration by a bean factory.
 	 * Note: Transaction manager property needs to be set before any execute calls.
+	 *
 	 * @see #setTransactionManager
 	 */
 	public TransactionTemplate() {
@@ -71,16 +71,10 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 
 	/**
 	 * Create a new TransactionTemplate instance.
+	 *
 	 * @param transactionManager transaction management strategy to be used
 	 */
 	public TransactionTemplate(PlatformTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
-
-	/**
-	 * Set the transaction management strategy to be used.
-	 */
-	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}
 
@@ -89,6 +83,13 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 	 */
 	public PlatformTransactionManager getTransactionManager() {
 		return transactionManager;
+	}
+
+	/**
+	 * Set the transaction management strategy to be used.
+	 */
+	public void setTransactionManager(PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
 	}
 
 	public void afterPropertiesSet() {
@@ -103,6 +104,7 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 	 * a domain object or a collection of domain objects. A RuntimeException thrown
 	 * by the callback is treated as application exception that enforces a rollback.
 	 * An exception gets propagated to the caller of the template.
+	 *
 	 * @param action callback object that specifies the transactional action
 	 * @return a result object returned by the callback, or null
 	 * @throws TransactionException in case of initialization, rollback, or system errors
@@ -112,13 +114,11 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 		Object result = null;
 		try {
 			result = action.doInTransaction(status);
-		}
-		catch (RuntimeException ex) {
+		} catch (RuntimeException ex) {
 			// transactional code threw application exception -> rollback
 			rollbackOnException(status, ex);
 			throw ex;
-		}
-		catch (Error err) {
+		} catch (Error err) {
 			// transactional code threw error -> rollback
 			rollbackOnException(status, err);
 			throw err;
@@ -129,8 +129,9 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 
 	/**
 	 * Perform a rollback, handling rollback exceptions properly.
+	 *
 	 * @param status object representing the transaction
-	 * @param ex the thrown application exception or error
+	 * @param ex     the thrown application exception or error
 	 * @throws TransactionException in case of a rollback error
 	 */
 	private void rollbackOnException(TransactionStatus status, Throwable ex) throws TransactionException {
@@ -139,8 +140,7 @@ public class TransactionTemplate extends DefaultTransactionDefinition implements
 		}
 		try {
 			this.transactionManager.rollback(status);
-		}
-		catch (TransactionException tex) {
+		} catch (TransactionException tex) {
 			logger.error("Application exception overridden by rollback exception", ex);
 			throw tex;
 		}

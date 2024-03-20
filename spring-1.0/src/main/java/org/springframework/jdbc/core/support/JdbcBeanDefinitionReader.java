@@ -32,6 +32,7 @@ import org.springframework.jdbc.core.RowCallbackHandler;
  * Expects columns for bean name, property name and value as string.
  * Formats for each are identical to the properties format recognized by
  * PropertiesBeanDefinitionReader.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see PropertiesBeanDefinitionReader
@@ -67,12 +68,13 @@ public class JdbcBeanDefinitionReader {
 
 	/**
 	 * Load bean definitions from the database via the given SQL string.
+	 *
 	 * @param sql SQL query to use for loading bean definitions.
-	 * The first three columns must be bean name, property name and value.
-	 * Any join and any other columns are permitted: e.g.
-	 * SELECT BEAN_NAME, PROPERTY, VALUE FROM CONFIG WHERE CONFIG.APP_ID = 1
-	 * It's also possible to perform a join. Column names are not significant --
-	 * only the ordering of these first three columns.
+	 *            The first three columns must be bean name, property name and value.
+	 *            Any join and any other columns are permitted: e.g.
+	 *            SELECT BEAN_NAME, PROPERTY, VALUE FROM CONFIG WHERE CONFIG.APP_ID = 1
+	 *            It's also possible to perform a join. Column names are not significant --
+	 *            only the ordering of these first three columns.
 	 */
 	public void loadBeanDefinitions(String sql) {
 		final Properties props = new Properties();

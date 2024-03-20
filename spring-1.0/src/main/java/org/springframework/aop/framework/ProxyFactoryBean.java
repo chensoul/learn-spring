@@ -22,10 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.aopalliance.aop.AspectException;
 import org.aopalliance.intercept.Interceptor;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry;
@@ -80,7 +78,7 @@ import org.springframework.core.OrderComparator;
  * @see SingletonTargetSource
  */
 public class ProxyFactoryBean extends AdvisedSupport
-    implements FactoryBean, BeanFactoryAware, AdvisedSupportListener {
+	implements FactoryBean, BeanFactoryAware, AdvisedSupportListener {
 
 	/**
 	 * This suffix in a value in an interceptor list indicates to expand globals.
@@ -89,7 +87,9 @@ public class ProxyFactoryBean extends AdvisedSupport
 
 	private boolean singleton = true;
 
-	/** If this is a singleton, the cached instance */
+	/**
+	 * If this is a singleton, the cached instance
+	 */
 	private Object singletonInstance;
 
 	/**
@@ -131,25 +131,13 @@ public class ProxyFactoryBean extends AdvisedSupport
 	 * The last entry in the list can be the name of any bean in the factory.
 	 * If it's neither an Interceptor nor an Advisor, a new SingletonTargetSource
 	 * is added to wrap it.
+	 *
 	 * @see org.aopalliance.intercept.MethodInterceptor
 	 * @see Advisor
 	 * @see SingletonTargetSource
 	 */
 	public void setInterceptorNames(String[] interceptorNames) {
 		this.interceptorNames = interceptorNames;
-	}
-
-	/**
-	 * Set the value of the singleton property. Governs whether this factory
-	 * should always return the same proxy instance (which implies the same target)
-	 * or whether it should return a new prototype instance, which implies that
-	 * the target and interceptors may be new instances also, if they are obtained
-	 * from prototype bean definitions.
-	 * This allows for fine control of independence/uniqueness in the object graph.
-	 * @param singleton
-	 */
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
@@ -166,12 +154,12 @@ public class ProxyFactoryBean extends AdvisedSupport
 		}
 	}
 
-
 	/**
 	 * Return a proxy. Invoked when clients obtain beans
 	 * from this factory bean. Create an instance of the AOP proxy to be returned by this factory.
 	 * The instance will be cached for a singleton, and create on each call to
 	 * getObject() for a proxy.
+	 *
 	 * @return Object a fresh AOP proxy reflecting the current
 	 * state of this factory
 	 * @see FactoryBean#getObject()
@@ -190,6 +178,19 @@ public class ProxyFactoryBean extends AdvisedSupport
 		return this.singleton;
 	}
 
+	/**
+	 * Set the value of the singleton property. Governs whether this factory
+	 * should always return the same proxy instance (which implies the same target)
+	 * or whether it should return a new prototype instance, which implies that
+	 * the target and interceptors may be new instances also, if they are obtained
+	 * from prototype bean definitions.
+	 * This allows for fine control of independence/uniqueness in the object graph.
+	 *
+	 * @param singleton
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
+	}
 
 	private Object getSingletonInstance() {
 		if (this.singletonInstance == null) {
@@ -242,13 +243,11 @@ public class ProxyFactoryBean extends AdvisedSupport
 			if (name.endsWith(GLOBAL_SUFFIX)) {
 				if (!(this.beanFactory instanceof ListableBeanFactory)) {
 					throw new AopConfigException("Can only use global advisors or interceptors with a ListableBeanFactory");
-				}
-				else {
+				} else {
 					addGlobalAdvisor((ListableBeanFactory) this.beanFactory,
-					                 name.substring(0, name.length() - GLOBAL_SUFFIX.length()));
+						name.substring(0, name.length() - GLOBAL_SUFFIX.length()));
 				}
-			}
-			else {
+			} else {
 				// add a named interceptor
 				Object advice = this.beanFactory.getBean(this.interceptorNames[i]);
 				addAdvisor(advice, this.interceptorNames[i]);
@@ -273,18 +272,16 @@ public class ProxyFactoryBean extends AdvisedSupport
 				if (refreshedAdvisor instanceof Advisor) {
 					// What about aspect interfaces!? we're only updating
 					replaceAdvisor(advisors[i], (Advisor) refreshedAdvisor);
-				}
-				else {
+				} else {
 					setTargetSource((TargetSource) refreshedAdvisor);
 				}
 				// keep name mapping up to date
 				this.sourceMap.put(refreshedAdvisor, beanName);
-			}
-			else {
+			} else {
 				// We can't throw an exception here, as the user may have added additional
 				// pointcuts programmatically we don't know about
 				logger.info("Cannot find bean name for Advisor [" + advisors[i] +
-					"] when refreshing advisor chain");
+							"] when refreshing advisor chain");
 			}
 		}
 	}
@@ -310,7 +307,7 @@ public class ProxyFactoryBean extends AdvisedSupport
 			names.put(bean, name);
 		}
 		Collections.sort(beans, new OrderComparator());
-		for (Iterator it = beans.iterator(); it.hasNext();) {
+		for (Iterator it = beans.iterator(); it.hasNext(); ) {
 			Object bean = it.next();
 			String name = (String) names.get(bean);
 			if (name.startsWith(prefix)) {
@@ -323,9 +320,10 @@ public class ProxyFactoryBean extends AdvisedSupport
 	 * Add the given interceptor, pointcut or object to the interceptor list.
 	 * Because of these three possibilities, we can't type the signature
 	 * more strongly.
+	 *
 	 * @param next interceptor, pointcut or target object.
 	 * @param name bean name from which we obtained this object in our owning
-	 * bean factory
+	 *             bean factory
 	 */
 	private void addAdvisor(Object next, String name) {
 		logger.debug("Adding advisor or TargetSource [" + next + "] with name [" + name + "]");
@@ -342,8 +340,7 @@ public class ProxyFactoryBean extends AdvisedSupport
 			// prototype instance wouldn't be truly independent, because it might
 			// reference the original instances of prototype interceptors.
 			this.sourceMap.put(advisor, name);
-		}
-		else {
+		} else {
 			logger.debug("Adding TargetSource [" + advisor + "] with name [" + name + "]");
 			setTargetSource((TargetSource) advisor);
 			// save target name
@@ -367,13 +364,11 @@ public class ProxyFactoryBean extends AdvisedSupport
 		try {
 			Advisor adv = GlobalAdvisorAdapterRegistry.getInstance().wrap(next);
 			return adv;
-		}
-		catch (UnknownAdviceTypeException ex) {
+		} catch (UnknownAdviceTypeException ex) {
 			// TODO consider checking that it's the last in the list?
 			if (next instanceof TargetSource) {
 				return (TargetSource) next;
-			}
-			else {
+			} else {
 				// It's not a pointcut or interceptor.
 				// It's a bean that needs an invoker around it.
 				return new SingletonTargetSource(next);
@@ -390,6 +385,7 @@ public class ProxyFactoryBean extends AdvisedSupport
 
 	/**
 	 * Blow away and recache singleton to allow for advice changes.
+	 *
 	 * @see AdvisedSupportListener#adviceChanged(AdvisedSupport)
 	 */
 	public void adviceChanged(AdvisedSupport advisedSupport) {

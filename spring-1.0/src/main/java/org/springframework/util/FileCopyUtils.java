@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.util;
 
@@ -28,26 +28,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Utility methods for file and stream copying.
  * Mainly for use within the framework.
+ *
  * @author Juergen Hoeller
  * @since 06.10.2003
  */
 public abstract class FileCopyUtils {
 
-	private static final Log logger = LogFactory.getLog(FileCopyUtils.class);
-
 	public static final int BLOCK_SIZE = 1024;
+	private static final Log logger = LogFactory.getLog(FileCopyUtils.class);
 
 	/**
 	 * Copy the contents of the given InputStream to the given OutputStream.
 	 * Closes both streams when done.
-	 * @param in the stream to copy from
+	 *
+	 * @param in  the stream to copy from
 	 * @param out the stream to copy to
 	 * @throws IOException in case of I/O errors
 	 */
@@ -59,18 +59,15 @@ public abstract class FileCopyUtils {
 				out.write(buffer, 0, nrOfBytes);
 			}
 			out.flush();
-		}
-		finally {
+		} finally {
 			try {
 				in.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				logger.warn("Could not close Reader", ex);
 			}
 			try {
 				out.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				logger.warn("Could not close Writer", ex);
 			}
 		}
@@ -79,7 +76,8 @@ public abstract class FileCopyUtils {
 	/**
 	 * Copy the contents of the given InputStream to the given OutputStream.
 	 * Closes both streams when done.
-	 * @param in the stream to copy from
+	 *
+	 * @param in  the stream to copy from
 	 * @param out the stream to copy to
 	 * @throws IOException in case of I/O errors
 	 */
@@ -91,18 +89,15 @@ public abstract class FileCopyUtils {
 				out.write(buffer, 0, nrOfBytes);
 			}
 			out.flush();
-		}
-		finally {
+		} finally {
 			try {
 				in.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				logger.warn("Could not close InputStream", ex);
 			}
 			try {
 				out.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				logger.warn("Could not close OutputStream", ex);
 			}
 		}
@@ -110,7 +105,8 @@ public abstract class FileCopyUtils {
 
 	/**
 	 * Copy the contents of the given input File to the given output File.
-	 * @param in the file to copy from
+	 *
+	 * @param in  the file to copy from
 	 * @param out the file to copy to
 	 * @throws IOException in case of I/O errors
 	 */
@@ -120,7 +116,8 @@ public abstract class FileCopyUtils {
 
 	/**
 	 * Copy the contents of the given byte array to the given output File.
-	 * @param in the byte array to copy from
+	 *
+	 * @param in  the byte array to copy from
 	 * @param out the file to copy to
 	 * @throws IOException in case of I/O errors
 	 */
@@ -132,6 +129,7 @@ public abstract class FileCopyUtils {
 
 	/**
 	 * Copy the contents of the given InputStream into a new byte array.
+	 *
 	 * @param in the stream to copy from
 	 * @return the new byte array that has been copied to
 	 * @throws IOException in case of I/O errors
@@ -144,6 +142,7 @@ public abstract class FileCopyUtils {
 
 	/**
 	 * Copy the contents of the given input File into a new byte array.
+	 *
 	 * @param in the file to copy from
 	 * @return the new byte array that has been copied to
 	 * @throws IOException in case of I/O errors

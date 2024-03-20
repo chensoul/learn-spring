@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.util;
 
@@ -48,14 +48,15 @@ public abstract class PathMatcher {
 
 	/**
 	 * Matches a strign agains the given pattern
+	 *
 	 * @param pattern the pattern to match against
-	 * @param str the string to test
+	 * @param str     the string to test
 	 * @return <code>true</code> is the arguments matched, <code>false</code>
 	 * otherwise
 	 */
 	public static boolean match(String pattern, String str) {
 		if (str.startsWith("/") !=
-		    pattern.startsWith("/")) {
+			pattern.startsWith("/")) {
 			return false;
 		}
 
@@ -88,8 +89,7 @@ public abstract class PathMatcher {
 				}
 			}
 			return true;
-		}
-		else {
+		} else {
 			if (patIdxStart > patIdxEnd) {
 				// String not exhausted, but pattern is. Failure.
 				return false;
@@ -137,18 +137,18 @@ public abstract class PathMatcher {
 			int strLength = (strIdxEnd - strIdxStart + 1);
 			int foundIdx = -1;
 			strLoop:
-			    for (int i = 0; i <= strLength - patLength; i++) {
-				    for (int j = 0; j < patLength; j++) {
-					    String subPat = (String) patDirs.get(patIdxStart + j + 1);
-					    String subStr = (String) strDirs.get(strIdxStart + i + j);
-					    if (!matchStrings(subPat, subStr)) {
-						    continue strLoop;
-					    }
-				    }
+			for (int i = 0; i <= strLength - patLength; i++) {
+				for (int j = 0; j < patLength; j++) {
+					String subPat = (String) patDirs.get(patIdxStart + j + 1);
+					String subStr = (String) strDirs.get(strIdxStart + i + j);
+					if (!matchStrings(subPat, subStr)) {
+						continue strLoop;
+					}
+				}
 
-				    foundIdx = strIdxStart + i;
-				    break;
-			    }
+				foundIdx = strIdxStart + i;
+				break;
+			}
 
 			if (foundIdx == -1) {
 				return false;
@@ -173,10 +173,11 @@ public abstract class PathMatcher {
 	 * The pattern may contain two special characters:<br>
 	 * '*' means zero or more characters<br>
 	 * '?' means one and only one character
+	 *
 	 * @param pattern pattern to match against.
-	 * Must not be <code>null</code>.
-	 * @param str string which must be matched against the pattern.
-	 * Must not be <code>null</code>.
+	 *                Must not be <code>null</code>.
+	 * @param str     string which must be matched against the pattern.
+	 *                Must not be <code>null</code>.
 	 * @return <code>true</code> if the string matches against the
 	 * pattern, or <code>false</code> otherwise.
 	 */
@@ -315,6 +316,7 @@ public abstract class PathMatcher {
 
 	/**
 	 * Breaks up a given path in a List of elements.
+	 *
 	 * @param path Path to tokenize. Must not be <code>null</code>.
 	 * @return a List of path elements from the tokenized path
 	 */

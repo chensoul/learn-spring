@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.tags;
 
@@ -57,16 +57,8 @@ public class BindTag extends RequestContextAwareTag {
 	private PropertyEditor editor;
 
 	/**
-	 * Set the path that this tag should apply.
-	 * Can be a bean (e.g. "person"), or a bean property
-	 * (e.g. "person.name"), also supporting nested beans.
-	 */
-	public void setPath(String path) throws JspException {
-		this.path = path;
-	}
-
-	/**
 	 * Retrieve the path that this tag should apply to
+	 *
 	 * @return the path that this tag should apply to or <code>null</code>
 	 * if it is not set
 	 * @see #setPath(String)
@@ -76,8 +68,18 @@ public class BindTag extends RequestContextAwareTag {
 	}
 
 	/**
+	 * Set the path that this tag should apply.
+	 * Can be a bean (e.g. "person"), or a bean property
+	 * (e.g. "person.name"), also supporting nested beans.
+	 */
+	public void setPath(String path) throws JspException {
+		this.path = path;
+	}
+
+	/**
 	 * Retrieve the Errors instance that this tag is currently bound to.
 	 * Intended for cooperating nesting tags.
+	 *
 	 * @return an instance of Errors
 	 */
 	public Errors getErrors() {
@@ -96,6 +98,7 @@ public class BindTag extends RequestContextAwareTag {
 	/**
 	 * Retrieve the property editor for the property that this tag is
 	 * currently bound to. Intended for cooperating nesting tags.
+	 *
 	 * @return the property editor, or null if none applicable
 	 */
 	public PropertyEditor getEditor() {
@@ -113,8 +116,7 @@ public class BindTag extends RequestContextAwareTag {
 		if (dotPos == -1) {
 			// property not set, only the object itself
 			name = resolvedPath;
-		}
-		else {
+		} else {
 			name = resolvedPath.substring(0, dotPos);
 			this.property = resolvedPath.substring(dotPos + 1);
 		}
@@ -123,7 +125,7 @@ public class BindTag extends RequestContextAwareTag {
 		this.errors = getRequestContext().getErrors(name, false);
 		if (this.errors == null) {
 			throw new JspTagException("Could not find Errors instance for bean '" + name + "' in request: " +
-			                          "add the Errors model to your ModelAndView via errors.getModel()");
+									  "add the Errors model to your ModelAndView via errors.getModel()");
 		}
 
 		List fes = null;
@@ -132,23 +134,20 @@ public class BindTag extends RequestContextAwareTag {
 		if (this.property != null) {
 			if ("*".equals(this.property)) {
 				fes = this.errors.getAllErrors();
-			}
-			else {
+			} else {
 				fes = this.errors.getFieldErrors(this.property);
 				value = this.errors.getFieldValue(this.property);
 				if (this.errors instanceof BindException) {
 					this.editor = ((BindException) this.errors).getCustomEditor(this.property);
-				}
-				else {
+				} else {
 					logger.warn("Cannot not expose custom property editor because Errors instance [" + this.errors +
-											"] is not of type BindException");
+								"] is not of type BindException");
 				}
 				if (isHtmlEscape() && value instanceof String) {
-					value = HtmlUtils.htmlEscape((String)value);
+					value = HtmlUtils.htmlEscape((String) value);
 				}
 			}
-		}
-		else {
+		} else {
 			fes = this.errors.getGlobalErrors();
 		}
 

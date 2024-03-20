@@ -37,22 +37,27 @@ import java.util.Set;
  * the same names as the constants themselves, and freeing them from
  * maintaining their own mapping.
  *
- * @version $Id: Constants.java,v 1.2 2004/03/18 02:46:06 trisberg Exp $
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @version $Id: Constants.java,v 1.2 2004/03/18 02:46:06 trisberg Exp $
  * @since 16-Mar-2003
  */
 public class Constants {
 
-	/** Map from String field name to object value */
+	/**
+	 * Map from String field name to object value
+	 */
 	private final Map map = new HashMap();
 
-	/** Class analyzed */
+	/**
+	 * Class analyzed
+	 */
 	private final Class clazz;
 
 	/**
 	 * Create a new Constants converter class wrapping the given class.
 	 * All public static final variables will be exposed, whatever their type.
+	 *
 	 * @param clazz class to analyze.
 	 */
 	public Constants(Class clazz) {
@@ -60,14 +65,13 @@ public class Constants {
 		Field[] fields = clazz.getFields();
 		for (int i = 0; i < fields.length; i++) {
 			Field f = fields[i];
-			if (Modifier.isFinal(f.getModifiers()) && Modifier.isStatic(f.getModifiers())	&&
-			    Modifier.isPublic(f.getModifiers())) {
+			if (Modifier.isFinal(f.getModifiers()) && Modifier.isStatic(f.getModifiers()) &&
+				Modifier.isPublic(f.getModifiers())) {
 				String name = f.getName();
 				try {
 					Object value = f.get(null);
 					this.map.put(name, value);
-				}
-				catch (IllegalAccessException ex) {
+				} catch (IllegalAccessException ex) {
 					// just leave this field and continue
 				}
 			}
@@ -76,6 +80,7 @@ public class Constants {
 
 	/**
 	 * Return the number of constants exposed.
+	 *
 	 * @return int the number of constants exposed
 	 */
 	public int getSize() {
@@ -84,11 +89,12 @@ public class Constants {
 
 	/**
 	 * Return a constant value cast to a Number.
+	 *
 	 * @param code name of the field
 	 * @return long value if successful
-	 * @see #asObject
 	 * @throws ConstantException if the field name wasn't found or
-	 * if the type wasn't compatible with Number
+	 *                           if the type wasn't compatible with Number
+	 * @see #asObject
 	 */
 	public Number asNumber(String code) throws ConstantException {
 		Object o = asObject(code);
@@ -99,11 +105,12 @@ public class Constants {
 
 	/**
 	 * Return a constant value as a String.
+	 *
 	 * @param code name of the field
 	 * @return String string value if successful.
 	 * Works even if it's not a string (invokes toString()).
-	 * @see #asObject
 	 * @throws ConstantException if the field name wasn't found
+	 * @see #asObject
 	 */
 	public String asString(String code) throws ConstantException {
 		return asObject(code).toString();
@@ -113,6 +120,7 @@ public class Constants {
 	 * Parse the given string (upper or lower case accepted) and return
 	 * the appropriate value if it's the name of a constant field in the
 	 * class we're analysing.
+	 *
 	 * @throws ConstantException if there's no such field
 	 */
 	public Object asObject(String code) throws ConstantException {
@@ -126,13 +134,14 @@ public class Constants {
 
 	/**
 	 * Return all values of the given group of constants.
+	 *
 	 * @param namePrefix prefix of the constant names to search
 	 * @return the set of values
 	 */
 	public Set getValues(String namePrefix) {
 		namePrefix = namePrefix.toUpperCase();
 		Set values = new HashSet();
-		for (Iterator it = this.map.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = this.map.keySet().iterator(); it.hasNext(); ) {
 			String code = (String) it.next();
 			if (code.startsWith(namePrefix)) {
 				values.add(this.map.get(code));
@@ -144,6 +153,7 @@ public class Constants {
 	/**
 	 * Return all values of the group of constants for the
 	 * given bean property name.
+	 *
 	 * @param propertyName the name of the bean property
 	 * @return the set of values
 	 * @see #propertyToConstantNamePrefix
@@ -155,14 +165,15 @@ public class Constants {
 	/**
 	 * Look up the given value within the given group of constants.
 	 * Will return the first match.
-	 * @param value constant value to look up
+	 *
+	 * @param value      constant value to look up
 	 * @param namePrefix prefix of the constant names to search
 	 * @return the name of the constant field
 	 * @throws ConstantException if the value wasn't found
 	 */
 	public String toCode(Object value, String namePrefix) throws ConstantException {
 		namePrefix = namePrefix.toUpperCase();
-		for (Iterator it = this.map.entrySet().iterator(); it.hasNext();) {
+		for (Iterator it = this.map.entrySet().iterator(); it.hasNext(); ) {
 			Map.Entry entry = (Map.Entry) it.next();
 			String key = (String) entry.getKey();
 			if (key.startsWith(namePrefix) && entry.getValue().equals(value)) {
@@ -175,7 +186,8 @@ public class Constants {
 	/**
 	 * Look up the given value within the group of constants for
 	 * the given bean property name. Will return the first match.
-	 * @param value constant value to look up
+	 *
+	 * @param value        constant value to look up
 	 * @param propertyName the name of the bean property
 	 * @return the name of the constant field
 	 * @throws ConstantException if the value wasn't found
@@ -190,23 +202,23 @@ public class Constants {
 	 * Uses a common naming idiom: turning all lower case characters to
 	 * upper case, and prepending upper case characters with an underscore.
 	 * <p>Example: "imageSize" -> "IMAGE_SIZE".
+	 *
 	 * @param propertyName the name of the bean property
 	 * @return the corresponding constant name prefix
 	 * @see #getValuesForProperty
 	 * @see #toCodeForProperty
 	 */
 	public String propertyToConstantNamePrefix(String propertyName) {
-	  StringBuffer parsedPrefix = new StringBuffer();
-	  for(int i = 0; i < propertyName.length(); i++) {
-	    char c = propertyName.charAt(i);
-	    if (Character.isUpperCase(c)) {
-	      parsedPrefix.append("_");
-	      parsedPrefix.append(c);
-	    }
-	    else {
-	      parsedPrefix.append(Character.toUpperCase(c));
-	    }
-	  }
+		StringBuffer parsedPrefix = new StringBuffer();
+		for (int i = 0; i < propertyName.length(); i++) {
+			char c = propertyName.charAt(i);
+			if (Character.isUpperCase(c)) {
+				parsedPrefix.append("_");
+				parsedPrefix.append(c);
+			} else {
+				parsedPrefix.append(Character.toUpperCase(c));
+			}
+		}
 		return parsedPrefix.toString();
 	}
 

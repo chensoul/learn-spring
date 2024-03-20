@@ -21,7 +21,6 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.CleanupFailureDataAccessException;
 import org.springframework.dao.DataAccessException;
@@ -44,24 +43,17 @@ import org.springframework.orm.hibernate.SessionFactoryUtils;
  * for that usage.
  *
  * @author Juergen Hoeller
- * @since 28.07.2003
  * @see #setSessionFactory
  * @see #setHibernateTemplate
  * @see HibernateTemplate
  * @see org.springframework.orm.hibernate.HibernateInterceptor
+ * @since 28.07.2003
  */
 public abstract class HibernateDaoSupport implements InitializingBean {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private HibernateTemplate hibernateTemplate;
-
-	/**
-	 * Set the Hibernate SessionFactory to be used by this DAO.
-	 */
-	public final void setSessionFactory(SessionFactory sessionFactory) {
-	  this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-	}
 
 	/**
 	 * Return the Hibernate SessionFactory used by this DAO.
@@ -71,11 +63,10 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	}
 
 	/**
-	 * Set the HibernateTemplate for this DAO explicitly,
-	 * as an alternative to specifying a SessionFactory.
+	 * Set the Hibernate SessionFactory to be used by this DAO.
 	 */
-	public final void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
-		this.hibernateTemplate = hibernateTemplate;
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.hibernateTemplate = new HibernateTemplate(sessionFactory);
 	}
 
 	/**
@@ -83,7 +74,15 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	 * pre-initialized with the SessionFactory or set explicitly.
 	 */
 	protected final HibernateTemplate getHibernateTemplate() {
-	  return hibernateTemplate;
+		return hibernateTemplate;
+	}
+
+	/**
+	 * Set the HibernateTemplate for this DAO explicitly,
+	 * as an alternative to specifying a SessionFactory.
+	 */
+	public final void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
 	}
 
 	public final void afterPropertiesSet() throws Exception {
@@ -96,6 +95,7 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	/**
 	 * Subclasses can override this for custom initialization behavior.
 	 * Gets called after population of this instance's bean properties.
+	 *
 	 * @throws Exception if initialization fails
 	 */
 	protected void initDao() throws Exception {
@@ -105,32 +105,34 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	 * Get a Hibernate Session, either from the current transaction or
 	 * a new one. The latter is only allowed if the "allowCreate" setting
 	 * of this bean's HibernateTemplate is true.
+	 *
 	 * @return the Hibernate Session
 	 * @throws DataAccessResourceFailureException if the Session couldn't be created
-	 * @throws IllegalStateException if no thread-bound Session found and allowCreate false
+	 * @throws IllegalStateException              if no thread-bound Session found and allowCreate false
 	 * @see HibernateTemplate
 	 */
 	protected final Session getSession()
-	    throws DataAccessResourceFailureException, IllegalStateException {
+		throws DataAccessResourceFailureException, IllegalStateException {
 		return getSession(this.hibernateTemplate.isAllowCreate());
 	}
 
 	/**
 	 * Get a Hibernate Session, either from the current transaction or
 	 * a new one. The latter is only allowed if "allowCreate" is true.
+	 *
 	 * @param allowCreate if a new Session should be created if no thread-bound found
 	 * @return the Hibernate Session
 	 * @throws DataAccessResourceFailureException if the Session couldn't be created
-	 * @throws IllegalStateException if no thread-bound Session found and allowCreate false
+	 * @throws IllegalStateException              if no thread-bound Session found and allowCreate false
 	 * @see SessionFactoryUtils#getSession(SessionFactory, boolean)
 	 */
 	protected final Session getSession(boolean allowCreate)
-	    throws DataAccessResourceFailureException, IllegalStateException {
+		throws DataAccessResourceFailureException, IllegalStateException {
 		return (!allowCreate ?
-		    SessionFactoryUtils.getSession(getSessionFactory(), false) :
-				SessionFactoryUtils.getSession(getSessionFactory(),
-				                               this.hibernateTemplate.getEntityInterceptor(),
-																			 this.hibernateTemplate.getJdbcExceptionTranslator()));
+			SessionFactoryUtils.getSession(getSessionFactory(), false) :
+			SessionFactoryUtils.getSession(getSessionFactory(),
+				this.hibernateTemplate.getEntityInterceptor(),
+				this.hibernateTemplate.getJdbcExceptionTranslator()));
 	}
 
 	/**
@@ -139,6 +141,7 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	 * wrapped SQLExceptions and convert them accordingly.
 	 * <p>Delegates to the convertHibernateAccessException method of this
 	 * DAO's HibernateTemplate.
+	 *
 	 * @param ex HibernateException that occured
 	 * @return the corresponding DataAccessException instance
 	 * @see #setHibernateTemplate
@@ -151,12 +154,13 @@ public abstract class HibernateDaoSupport implements InitializingBean {
 	/**
 	 * Close the given Hibernate Session if necessary, created via this bean's
 	 * SessionFactory, if it isn't bound to the thread.
+	 *
 	 * @param session Session to close
 	 * @throws DataAccessResourceFailureException if the Session couldn't be closed
 	 * @see SessionFactoryUtils#closeSessionIfNecessary
 	 */
 	protected final void closeSessionIfNecessary(Session session)
-	    throws CleanupFailureDataAccessException {
+		throws CleanupFailureDataAccessException {
 		SessionFactoryUtils.closeSessionIfNecessary(session, getSessionFactory());
 	}
 

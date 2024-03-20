@@ -17,10 +17,8 @@
 package org.springframework.scheduling.quartz;
 
 import java.util.Map;
-
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
-
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -33,11 +31,11 @@ import org.springframework.beans.factory.InitializingBean;
  * default group ("DEFAULT") as job group if not specified.
  *
  * @author Juergen Hoeller
- * @since 18.02.2004
  * @see #setName
  * @see #setGroup
  * @see BeanNameAware
  * @see org.quartz.Scheduler#DEFAULT_GROUP
+ * @since 18.02.2004
  */
 public class JobDetailBean extends JobDetail implements BeanNameAware, InitializingBean {
 

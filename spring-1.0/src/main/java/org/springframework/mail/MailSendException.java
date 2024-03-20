@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.mail;
 
@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * Exception thrown when a mail sending error is encountered.
  * Can register failed messages with their exceptions.
+ *
  * @author Dmitriy Kopylenko
  * @author Juergen Hoeller
  * @version $Id: MailSendException.java,v 1.6 2004/03/18 02:46:05 trisberg Exp $
@@ -62,6 +63,7 @@ public class MailSendException extends MailException {
 	 * generic MailSender interface.
 	 * <p>In case of sending MimeMessage instances via JavaMailSender,
 	 * the messages will be of type MimeMessage.
+	 *
 	 * @return the Map of failed messages as keys and thrown exceptions as
 	 * values, or an empty Map if no failed messages
 	 */
@@ -73,7 +75,7 @@ public class MailSendException extends MailException {
 		StringBuffer msg = new StringBuffer();
 		String superMsg = super.getMessage();
 		msg.append(superMsg != null ? superMsg : "Could not send mails: ");
-		for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext();) {
+		for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext(); ) {
 			Exception subEx = (Exception) subExs.next();
 			msg.append(subEx.getMessage());
 			if (subExs.hasNext()) {
@@ -86,10 +88,9 @@ public class MailSendException extends MailException {
 	public void printStackTrace(PrintStream ps) {
 		if (this.failedMessages.isEmpty()) {
 			super.printStackTrace(ps);
-		}
-		else {
+		} else {
 			ps.println(this);
-			for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext();) {
+			for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext(); ) {
 				Exception subEx = (Exception) subExs.next();
 				subEx.printStackTrace(ps);
 				if (subExs.hasNext()) {
@@ -102,10 +103,9 @@ public class MailSendException extends MailException {
 	public void printStackTrace(PrintWriter pw) {
 		if (this.failedMessages.isEmpty()) {
 			super.printStackTrace(pw);
-		}
-		else {
+		} else {
 			pw.println(this);
-			for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext();) {
+			for (Iterator subExs = this.failedMessages.values().iterator(); subExs.hasNext(); ) {
 				Exception subEx = (Exception) subExs.next();
 				subEx.printStackTrace(pw);
 				if (subExs.hasNext()) {

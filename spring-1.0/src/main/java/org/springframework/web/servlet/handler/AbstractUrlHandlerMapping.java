@@ -37,10 +37,10 @@ import org.springframework.web.util.UrlPathHelper;
  * both "/test" and "/team". For details, see the PathMatcher class.
  *
  * @author Juergen Hoeller
- * @since 16.04.2003
  * @see #setAlwaysUseFullPath
  * @see #setUrlDecode
  * @see PathMatcher
+ * @since 16.04.2003
  */
 public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 
@@ -56,6 +56,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 	 * context. Else, the path within the current servlet mapping is used
 	 * if applicable (i.e. in the case of a ".../*" servlet mapping in web.xml).
 	 * Default is false.
+	 *
 	 * @see UrlPathHelper#setAlwaysUseFullPath
 	 */
 	public void setAlwaysUseFullPath(boolean alwaysUseFullPath) {
@@ -70,6 +71,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 	 * to the Servlet spec (ISO-8859-1).
 	 * <p>Note: Setting this to true requires J2SE 1.4, as J2SE 1.3's
 	 * URLDecoder class does not offer a way to specify the encoding.
+	 *
 	 * @see UrlPathHelper#setUrlDecode
 	 */
 	public void setUrlDecode(boolean urlDecode) {
@@ -81,6 +83,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 	 * <p>Use this to override the default UrlPathHelper with a custom subclass,
 	 * or to share common UrlPathHelper settings across multiple HandlerMappings
 	 * and MethodNameResolvers.
+	 *
 	 * @see org.springframework.web.servlet.mvc.multiaction.AbstractUrlMethodNameResolver#setUrlPathHelper
 	 */
 	public void setUrlPathHelper(UrlPathHelper urlPathHelper) {
@@ -104,6 +107,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 
 	/**
 	 * Look up a handler for the URL path of the given request.
+	 *
 	 * @param request current HTTP request
 	 * @return the looked up handler instance, or null
 	 */
@@ -118,6 +122,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 	 * <p>Supports direct matches, e.g. a registered "/test" matches "/test",
 	 * and various Ant-style pattern matches, e.g. a registered "/t*" matches
 	 * both "/test" and "/team". For details, see the PathMatcher class.
+	 *
 	 * @param urlPath URL the bean is mapped to
 	 * @return the associated handler instance, or null if not found
 	 * @see PathMatcher
@@ -127,7 +132,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 		Object handler = this.handlerMap.get(urlPath);
 		if (handler == null) {
 			// pattern match?
-			for (Iterator it = this.handlerMap.keySet().iterator(); it.hasNext();) {
+			for (Iterator it = this.handlerMap.keySet().iterator(); it.hasNext(); ) {
 				String registeredPath = (String) it.next();
 				if (PathMatcher.match(registeredPath, urlPath)) {
 					handler = this.handlerMap.get(registeredPath);
@@ -139,6 +144,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 
 	/**
 	 * Register the given handler instance for the given URL path.
+	 *
 	 * @param urlPath URL the bean is mapped to
 	 * @param handler the handler instance
 	 * @throws BeansException if the handler couldn't be registered
@@ -147,7 +153,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 		Object mappedHandler = this.handlerMap.get(urlPath);
 		if (mappedHandler != null) {
 			throw new ApplicationContextException("Cannot map handler [" + handler + "] to URL path [" + urlPath +
-			                                      "]: there's already handler [" + mappedHandler + "] mapped");
+												  "]: there's already handler [" + mappedHandler + "] mapped");
 		}
 
 		// eagerly resolve handler if referencing singleton via name
@@ -160,8 +166,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping {
 
 		if (urlPath.equals("/*")) {
 			setDefaultHandler(handler);
-		}
-		else {
+		} else {
 			this.handlerMap.put(urlPath, handler);
 			logger.info("Mapped URL path [" + urlPath + "] onto handler [" + handler + "]");
 		}

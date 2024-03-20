@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+
+    <bean id="p" class="org.springframework.beans.ParentBean">
+        <property name="name">
+            <value>aa</value>
+        </property>
+    </bean>
+
+    <bean id="c1" parent="p">
+        <property name="id">
+            <value>1</value>
+        </property>
+    </bean>
+    <bean id="c2" parent="p">
+        <property name="id">
+            <value>2</value>
+        </property>
+    </bean>
+
+
+    <bean id="myEntity" class="org.springframework.beans.MyEntity">
+        <property name="clz">
+            <value>org.springframework.beans.ParentBean</value>
+        </property>
+    </bean>
+
     <!--
 		bean标签：表示配置bean
     	id：唯一标识
@@ -9,7 +34,7 @@
 	-->
 
     <!--方式二：使用构造方法实例化bean-->
-    <bean id="testBean" name="testBean,test" class="org.springframework.config.TestBean" lazy-init="false"
+    <bean id="testBean" name="testBean,test" class="org.springframework.context.TestBean" lazy-init="false"
           singleton="true"
           init-method="init" destroy-method="destroy" autowire="autodetect">
         <property name="name">
@@ -18,16 +43,17 @@
     </bean>
 
     <!--方式二：使用静态工厂实例化bean-->
-    <!--    <bean id="testBean2" class="org.springframework.config.TestBeanFactory" factory-method="getTestBean"/>-->
+    <!--    <bean id="testBean2" class="org.springframework.context.TestBeanFactory" factory-method="getTestBean"/>-->
 
     <!--    &lt;!&ndash;方式三：使用实例工厂实例化bean&ndash;&gt;-->
-    <!--    <bean id="testBeanFactory" class="org.springframework.config.TestBeanFactory"/>-->
+    <!--    <bean id="testBeanFactory" class="org.springframework.context.TestBeanFactory"/>-->
     <!--    <bean id="testBean3" factory-method="getTestBean" factory-bean="testBeanFactory"/>-->
 
     <!--方式四：使用FactoryBean实例化bean-->
-    <bean id="testBean4" class="org.springframework.config.TestBeanFactoryBean"/>
+    <bean id="testBean4" class="org.springframework.context.TestBeanFactoryBean"/>
 
     <!--后置处理器-->
-    <bean id="testBeanPostProcessor" class="org.springframework.config.TestBeanPostProcessor"/>
-    <bean id="testBeanFactoryPostProcessor" class="org.springframework.config.TestBeanFactoryPostProcessor"/>
+    <bean id="testBeanPostProcessor" class="org.springframework.context.TestBeanPostProcessor"/>
+    <bean id="testBeanFactoryPostProcessor" class="org.springframework.context.TestBeanFactoryPostProcessor"
+          singleton="false"/>
 </beans>

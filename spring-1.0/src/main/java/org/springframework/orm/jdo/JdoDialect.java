@@ -1,26 +1,24 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.orm.jdo;
 
 import java.sql.Connection;
-
 import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
-
 import org.springframework.dao.DataAccessException;
 
 /**
@@ -46,6 +44,7 @@ public interface JdoDialect {
 	 * <p>This strategy is necessary as JDO 1.0 does not provide a standard way to retrieve
 	 * the underlying JDBC Connection (due to the fact that a JDO implementation might not
 	 * work with a relational database at all).
+	 *
 	 * @param pm the current JDO persistence manager
 	 * @return the underlying JDBC connection
 	 * @throws JDOException in case of retrieval errors
@@ -58,6 +57,7 @@ public interface JdoDialect {
 	 * to persistent objects) to the underlying database. This method will just get invoked
 	 * if eager flushing is actually necessary, for example if JDBC access code needs to
 	 * see changes within the same transaction.
+	 *
 	 * @param pm the current JDO persistence manager
 	 * @throws JDOException in case of errors
 	 * @see JdoAccessor#setFlushEager
@@ -73,6 +73,7 @@ public interface JdoDialect {
 	 * ObjectRetrievalFailureException, ObjectOptimisticLockingFailureException,
 	 * and DataIntegrityViolationException. Unfortunately, standard JDO does not
 	 * allow for portable detection of those.
+	 *
 	 * @param ex the JDOException thrown
 	 * @return the corresponding DataAccessException (must not be null)
 	 * @see JdoAccessor#convertJdoAccessException

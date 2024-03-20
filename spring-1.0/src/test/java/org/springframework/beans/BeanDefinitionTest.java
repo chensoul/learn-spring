@@ -2,31 +2,40 @@ package org.springframework.beans;
 
 import org.junit.Test;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.ChildBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import static org.springframework.beans.factory.support.RootBeanDefinition.AUTOWIRE_NO;
-import org.springframework.config.TestBean;
-import org.springframework.config.TestBeanFactoryBean;
+import org.springframework.context.TestBean;
+import org.springframework.context.TestBeanFactoryBean;
 
 public class BeanDefinitionTest {
 	@Test
-	public void testWithNoConstructor() {
-		RootBeanDefinition rbd = new RootBeanDefinition(TestBean.class, 0);
+	public void testRootBeanDefinition() {
+		RootBeanDefinition rbd = new RootBeanDefinition(EmptyBean.class, 0);
 		rbd.setSingleton(false);
 
-		BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
-		registry.registerBeanDefinition("TestBean", rbd);
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
+		registry.registerBeanDefinition("EmptyBean", rbd);
 
-		Object bean = ((DefaultListableBeanFactory) registry).getBean("TestBean");
+		Object bean = registry.getBean("EmptyBean");
 		System.out.println(bean);
-
-		Object bean2 = ((DefaultListableBeanFactory) registry).getBean("TestBean");
-		System.out.println(bean2);
 
 		for (String beanDefinitionName : registry.getBeanDefinitionNames()) {
 			System.out.println(beanDefinitionName);
 		}
+	}
+
+	@Test
+	public void testChildBeanDefinition() {
+		RootBeanDefinition rbd = new RootBeanDefinition(ParentBean.class, 0);
+		ChildBeanDefinition cbd = new ChildBeanDefinition("p", null);
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
+		registry.registerBeanDefinition("p", rbd);
+		registry.registerBeanDefinition("c", cbd);
+
+		Object bean = registry.getBean("c");
+		System.out.println(bean);
 	}
 
 	@Test
@@ -38,10 +47,10 @@ public class BeanDefinitionTest {
 
 		rbd.getPropertyValues().addPropertyValue(pv1);
 
-		BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
 		registry.registerBeanDefinition("TestBean", rbd);
 
-		Object bean = ((DefaultListableBeanFactory) registry).getBean("TestBean");
+		Object bean = registry.getBean("TestBean");
 		System.out.println(bean);
 	}
 
@@ -53,10 +62,10 @@ public class BeanDefinitionTest {
 		rbd.setSingleton(false);
 		System.out.println("--- 是否有构造函数参数值设置:" + rbd.hasConstructorArgumentValues());
 
-		BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
 		registry.registerBeanDefinition("TestBean", rbd);
 
-		Object bean = ((DefaultListableBeanFactory) registry).getBean("TestBean");
+		Object bean = registry.getBean("TestBean");
 		System.out.println(bean);
 	}
 
@@ -69,22 +78,22 @@ public class BeanDefinitionTest {
 		rbd.setInitMethodName("init");
 		rbd.setDestroyMethodName("destroy");
 
-		BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
 		registry.registerBeanDefinition("TestBean", rbd);
 
-		Object bean = ((DefaultListableBeanFactory) registry).getBean("TestBean");
+		Object bean = registry.getBean("TestBean");
 		System.out.println(bean);
 	}
 
 	@Test
 	public void testWithFactoryBean() {
 		RootBeanDefinition rbd = new RootBeanDefinition(TestBeanFactoryBean.class, AUTOWIRE_NO);
-		BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+		DefaultListableBeanFactory registry = new DefaultListableBeanFactory();
 		registry.registerBeanDefinition("TestBean", rbd);
 
 		rbd.setLazyInit(true);
 
-		Object bean = ((DefaultListableBeanFactory) registry).getBean("TestBean");
+		Object bean = registry.getBean("TestBean");
 		System.out.println(bean);
 	}
 }

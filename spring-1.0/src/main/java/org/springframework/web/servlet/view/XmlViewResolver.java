@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view;
 
@@ -38,13 +38,15 @@ import org.springframework.web.servlet.View;
  * <p>Extends AbstractCachingViewResolver for decent performance.
  *
  * @author Juergen Hoeller
- * @since 18.06.2003
  * @see org.springframework.context.ApplicationContext#getResource
  * @see ResourceBundleViewResolver
+ * @since 18.06.2003
  */
 public class XmlViewResolver extends AbstractCachingViewResolver {
 
-	/** Default if no other location is supplied */
+	/**
+	 * Default if no other location is supplied
+	 */
 	public final static String DEFAULT_LOCATION = "/WEB-INF/views.xml";
 
 	private Resource location;
@@ -54,6 +56,7 @@ public class XmlViewResolver extends AbstractCachingViewResolver {
 	/**
 	 * Set the location of the XML file that defines the view beans.
 	 * <p>The default is "/WEB-INF/views.xml".
+	 *
 	 * @param location the location of the XML file.
 	 */
 	public void setLocation(Resource location) {
@@ -85,6 +88,7 @@ public class XmlViewResolver extends AbstractCachingViewResolver {
 	/**
 	 * Initialize the BeanFactory from the XML file.
 	 * Synchronized because of access by parallel threads.
+	 *
 	 * @throws BeansException in case of initialization errors
 	 */
 	protected synchronized BeanFactory initFactory() throws BeansException {

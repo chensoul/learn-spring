@@ -22,7 +22,6 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.MethodBeforeAdvice;
 
 /**
- *
  * @author Rod Johnson
  * @version $Id: BeforeAdviceAdapter.java,v 1.5 2004/03/19 16:54:41 johnsonr Exp $
  */
@@ -40,7 +39,7 @@ class BeforeAdviceAdapter implements AdvisorAdapter {
 	 */
 	public Interceptor getInterceptor(Advisor advisor) {
 		MethodBeforeAdvice advice = (MethodBeforeAdvice) advisor.getAdvice();
-		return new MethodBeforeAdviceInterceptor(advice) ;
+		return new MethodBeforeAdviceInterceptor(advice);
 	}
 
 }

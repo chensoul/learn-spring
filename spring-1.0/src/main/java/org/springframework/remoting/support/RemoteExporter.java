@@ -1,24 +1,23 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.remoting.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -42,6 +41,13 @@ public abstract class RemoteExporter implements InitializingBean {
 	private Object service;
 
 	/**
+	 * Return the interface of the service to export.
+	 */
+	protected Class getServiceInterface() {
+		return serviceInterface;
+	}
+
+	/**
 	 * Set the interface of the service to export.
 	 * Typically optional: If not set, all implement interfaces will be exported.
 	 * The interface must be suitable for the particular service and remoting tool.
@@ -54,10 +60,10 @@ public abstract class RemoteExporter implements InitializingBean {
 	}
 
 	/**
-	 * Return the interface of the service to export.
+	 * Return the service to export.
 	 */
-	protected Class getServiceInterface() {
-		return serviceInterface;
+	protected Object getService() {
+		return service;
 	}
 
 	/**
@@ -66,13 +72,6 @@ public abstract class RemoteExporter implements InitializingBean {
 	 */
 	public void setService(Object service) {
 		this.service = service;
-	}
-
-	/**
-	 * Return the service to export.
-	 */
-	protected Object getService() {
-		return service;
 	}
 
 	public void afterPropertiesSet() throws Exception {
@@ -84,7 +83,7 @@ public abstract class RemoteExporter implements InitializingBean {
 		}
 		if (!this.serviceInterface.isInstance(this.service)) {
 			throw new IllegalArgumentException("serviceInterface [" + this.serviceInterface.getName() +
-																				 "] needs to be implemented by service [" + this.service + "]");
+											   "] needs to be implemented by service [" + this.service + "]");
 		}
 	}
 
@@ -94,6 +93,7 @@ public abstract class RemoteExporter implements InitializingBean {
 	 * <p>Used to export a proxy that does not expose any internals but just
 	 * a specific interface intended for remote access. Only applied if the
 	 * remoting tool itself does not offer such means itself.
+	 *
 	 * @return the proxy
 	 * @see #setServiceInterface
 	 */

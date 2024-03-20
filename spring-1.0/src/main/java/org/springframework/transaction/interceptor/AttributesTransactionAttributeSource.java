@@ -22,10 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.framework.support.AopUtils;
 import org.springframework.metadata.Attributes;
 
@@ -41,20 +39,19 @@ import org.springframework.metadata.Attributes;
  * If it's ever desirable to allow dynamic changing of transaction attributes
  * (unlikely) caching could be made configurable. Caching is desirable because
  * of the cost of evaluating rollback rules.
+ *
  * @author Rod Johnson
- * @see Attributes
  * @version $Id: AttributesTransactionAttributeSource.java,v 1.6 2004/03/18 02:46:05 trisberg Exp $
+ * @see Attributes
  */
 public class AttributesTransactionAttributeSource implements TransactionAttributeSource {
-
-	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
 	 * Canonical value held in cache to indicate no transaction attribute was
 	 * found for this method, and we don't need to look again
 	 */
 	private final static Object NULL_TX_ATTRIBUTE = new Object();
-
+	protected final Log logger = LogFactory.getLog(getClass());
 	/**
 	 * Underlying Attributes implementation we're using
 	 */
@@ -73,7 +70,8 @@ public class AttributesTransactionAttributeSource implements TransactionAttribut
 	 * Return the transaction attribute for this method invocation.
 	 * Defaults to the class's transaction attribute if no method
 	 * attribute is found
-	 * @param method method for the current invocation. Can't be null
+	 *
+	 * @param method      method for the current invocation. Can't be null
 	 * @param targetClass target class for this invocation. May be null.
 	 * @return TransactionAttribute for this method, or null if the method is non-transactional
 	 */
@@ -86,19 +84,16 @@ public class AttributesTransactionAttributeSource implements TransactionAttribut
 			// or an actual transaction attribute
 			if (cached == NULL_TX_ATTRIBUTE) {
 				return null;
-			}
-			else {
+			} else {
 				return (TransactionAttribute) cached;
 			}
-		}
-		else {
+		} else {
 			// We need to work it out
 			TransactionAttribute txAtt = computeTransactionAttribute(method, targetClass);
 			// Put it in the cache
 			if (txAtt == null) {
 				cache.put(cacheKey, NULL_TX_ATTRIBUTE);
-			}
-			else {
+			} else {
 				cache.put(cacheKey, txAtt);
 			}
 			return txAtt;
@@ -130,7 +125,7 @@ public class AttributesTransactionAttributeSource implements TransactionAttribut
 		if (txAtt != null)
 			return txAtt;
 
-		if (specificMethod != method ) {
+		if (specificMethod != method) {
 			// Fallback is to look at the original method
 			txAtt = findTransactionAttribute(attributes.getAttributes(method));
 			if (txAtt != null)
@@ -151,8 +146,9 @@ public class AttributesTransactionAttributeSource implements TransactionAttribut
 	 * This implementation takes into account RollbackRuleAttributes, if
 	 * the TransactionAttribute is a RuleBasedTransactionAttribute.
 	 * Return null if it's not transactional.
+	 *
 	 * @param atts attributes attached to a method or class. May
-	 * be null, in which case a null TransactionAttribute will be returned.
+	 *             be null, in which case a null TransactionAttribute will be returned.
 	 * @return TransactionAttribute configured transaction attribute, or null
 	 * if none was found
 	 */

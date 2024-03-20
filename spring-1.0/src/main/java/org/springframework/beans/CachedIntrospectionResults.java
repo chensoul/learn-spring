@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans;
 
@@ -22,7 +22,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,40 +39,21 @@ import org.apache.commons.logging.LogFactory;
  * and a public static forClass() method to obtain instances.
  *
  * @author Rod Johnson
+ * @version $Id: CachedIntrospectionResults.java,v 1.8 2004/03/19 07:40:13 jhoeller Exp $
  * @since 05 May 2001
-*  @version $Id: CachedIntrospectionResults.java,v 1.8 2004/03/19 07:40:13 jhoeller Exp $
  */
 final class CachedIntrospectionResults {
 
 	private static final Log logger = LogFactory.getLog(CachedIntrospectionResults.class);
 
-	/** Map keyed by class containing CachedIntrospectionResults */
-	private static HashMap classCache = new HashMap();
-
 	/**
-	 * We might use this from the EJB tier, so we don't want to use synchronization.
-	 * Object references are atomic, so we can live with doing the occasional
-	 * unnecessary lookup at startup only.
+	 * Map keyed by class containing CachedIntrospectionResults
 	 */
-	protected static CachedIntrospectionResults forClass(Class clazz) throws BeansException {
-		Object results = classCache.get(clazz);
-		if (results == null) {
-			// can throw BeansException
-			results = new CachedIntrospectionResults(clazz);
-			classCache.put(clazz, results);
-		}
-		else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Using cached introspection results for class " + clazz.getName());
-			}
-		}
-		return (CachedIntrospectionResults) results;
-	}
-
-
+	private static HashMap classCache = new HashMap();
 	private BeanInfo beanInfo;
-
-	/** Property descriptors keyed by property name */
+	/**
+	 * Property descriptors keyed by property name
+	 */
 	private Map propertyDescriptorMap;
 
 	/**
@@ -90,13 +70,31 @@ final class CachedIntrospectionResults {
 			PropertyDescriptor[] pds = this.beanInfo.getPropertyDescriptors();
 			for (int i = 0; i < pds.length; i++) {
 				logger.debug("Found property '" + pds[i].getName() + "' of type [" + pds[i].getPropertyType() +
-										 "]; editor=[" + pds[i].getPropertyEditorClass() + "]");
+							 "]; editor=[" + pds[i].getPropertyEditorClass() + "]");
 				this.propertyDescriptorMap.put(pds[i].getName(), pds[i]);
 			}
-		}
-		catch (IntrospectionException ex) {
+		} catch (IntrospectionException ex) {
 			throw new FatalBeanException("Cannot get BeanInfo for object of class [" + clazz.getName() + "]", ex);
 		}
+	}
+
+	/**
+	 * We might use this from the EJB tier, so we don't want to use synchronization.
+	 * Object references are atomic, so we can live with doing the occasional
+	 * unnecessary lookup at startup only.
+	 */
+	protected static CachedIntrospectionResults forClass(Class clazz) throws BeansException {
+		Object results = classCache.get(clazz);
+		if (results == null) {
+			// can throw BeansException
+			results = new CachedIntrospectionResults(clazz);
+			classCache.put(clazz, results);
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Using cached introspection results for class " + clazz.getName());
+			}
+		}
+		return (CachedIntrospectionResults) results;
 	}
 
 	protected BeanInfo getBeanInfo() {

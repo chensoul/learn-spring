@@ -20,15 +20,17 @@ package org.springframework.util;
  * Miscellaneous object utility methods. Mainly for internal use
  * within the framework; consider Jakarta's Commons Lang for a more
  * comprehensive suite of object utilities.
+ *
  * @author Juergen Hoeller
- * @since 19.03.2004
  * @see org.apache.commons.lang.ObjectUtils
+ * @since 19.03.2004
  */
 public abstract class ObjectUtils {
 
 	/**
 	 * Determine if the given Objects are equal, returning true if both
 	 * are null respectively false if only one is null.
+	 *
 	 * @param o1 first Object to compare
 	 * @param o2 second Object to compare
 	 * @return whether the given Objects are equal

@@ -1,4 +1,4 @@
-package org.springframework.config;
+package org.springframework.context;
 
 public class TestBeanFactory {
 	public static TestBean getTestBean() {

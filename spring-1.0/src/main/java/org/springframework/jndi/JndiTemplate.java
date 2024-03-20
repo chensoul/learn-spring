@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jndi;
 
@@ -35,12 +35,12 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @version $Id: JndiTemplate.java,v 1.6 2004/03/18 02:46:17 trisberg Exp $
  * @see JndiCallback
  * @see org.springframework.jdbc.core.JdbcTemplate
- * @version $Id: JndiTemplate.java,v 1.6 2004/03/18 02:46:17 trisberg Exp $
  */
 public class JndiTemplate {
-	
+
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private Properties environment;
@@ -59,13 +59,6 @@ public class JndiTemplate {
 	}
 
 	/**
-	 * Set the environment for the JNDI InitialContext.
-	 */
-	public void setEnvironment(Properties environment) {
-		this.environment = environment;
-	}
-
-	/**
 	 * Return the environment for the JNDI InitialContext.
 	 */
 	public Properties getEnvironment() {
@@ -73,7 +66,15 @@ public class JndiTemplate {
 	}
 
 	/**
+	 * Set the environment for the JNDI InitialContext.
+	 */
+	public void setEnvironment(Properties environment) {
+		this.environment = environment;
+	}
+
+	/**
 	 * Execute the given JNDI context callback implementation.
+	 *
 	 * @param contextCallback JndiCallback implementation
 	 * @return a result object returned by the callback, or null
 	 * @throws NamingException thrown by the callback implementation
@@ -83,12 +84,10 @@ public class JndiTemplate {
 		Context ctx = createInitialContext();
 		try {
 			return contextCallback.doInContext(ctx);
-		}
-		finally {
+		} finally {
 			try {
 				ctx.close();
-			}
-			catch (NamingException ex) {
+			} catch (NamingException ex) {
 				logger.warn("Could not close JNDI InitialContext", ex);
 			}
 		}
@@ -98,6 +97,7 @@ public class JndiTemplate {
 	 * Create a new JNDI initial context. Invoked by execute.
 	 * The default implementation use this template's environment settings.
 	 * Can be subclassed for custom contexts, e.g. for testing.
+	 *
 	 * @return the initial Context instance
 	 * @throws NamingException in case of initialization errors
 	 */
@@ -107,11 +107,12 @@ public class JndiTemplate {
 
 	/**
 	 * Look up the object with the given name in the current JNDI context.
+	 *
 	 * @param name the JNDI name of the object
 	 * @return object found (cannot be null; if a not so well-behaved
 	 * JNDI implementations returns null, a NamingException gets thrown)
 	 * @throws NamingException if there is no object with the given
-	 * name bound to JNDI
+	 *                         name bound to JNDI
 	 */
 	public Object lookup(final String name) throws NamingException {
 		return execute(new JndiCallback() {
@@ -120,7 +121,7 @@ public class JndiTemplate {
 				Object located = ctx.lookup(name);
 				if (located == null) {
 					throw new NamingException("JNDI object with '" + name +
-																		"' not found: JNDI implementation returned null");
+											  "' not found: JNDI implementation returned null");
 				}
 				return located;
 			}
@@ -129,7 +130,8 @@ public class JndiTemplate {
 
 	/**
 	 * Bind the given object to the current JNDI context, using the given name.
-	 * @param name the JNDI name of the object
+	 *
+	 * @param name   the JNDI name of the object
 	 * @param object the object to bind
 	 * @throws NamingException thrown by JNDI, mostly name already bound
 	 */
@@ -142,9 +144,10 @@ public class JndiTemplate {
 			}
 		});
 	}
-	
+
 	/**
 	 * Remove the binding for the given name from the current JNDI context.
+	 *
 	 * @param name the JNDI name of the object
 	 * @throws NamingException thrown by JNDI, mostly name not found
 	 */
@@ -157,5 +160,5 @@ public class JndiTemplate {
 			}
 		});
 	}
-	
+
 }

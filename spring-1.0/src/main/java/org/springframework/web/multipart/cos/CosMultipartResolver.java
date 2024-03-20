@@ -44,9 +44,9 @@ import org.springframework.web.util.WebUtils;
  * Default maximum file size is unlimited; fallback encoding is the platform's default.
  *
  * @author Juergen Hoeller
- * @since 06.10.2003
  * @see CosMultipartHttpServletRequest
  * @see com.oreilly.servlet.MultipartRequest
+ * @since 06.10.2003
  */
 public class CosMultipartResolver implements MultipartResolver, ServletContextAware {
 
@@ -66,6 +66,7 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	 * Constructor for use as bean. Determines the servlet container's
 	 * temporary directory via the ServletContext passed in as through the
 	 * ServletContextAware interface (typically by a WebApplicationContext).
+	 *
 	 * @see #setServletContext
 	 * @see ServletContextAware
 	 * @see org.springframework.web.context.WebApplicationContext
@@ -76,19 +77,11 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	/**
 	 * Constructor for standalone usage. Determines the servlet container's
 	 * temporary directory via the given ServletContext.
+	 *
 	 * @param servletContext the ServletContext to use
 	 */
 	public CosMultipartResolver(ServletContext servletContext) {
 		this.uploadTempDir = WebUtils.getTempDir(servletContext);
-	}
-
-	/**
-	 * Set the maximum allowed file size (in bytes) before uploads are refused.
-	 * -1 indicates no limit (the default).
-	 * @param maxUploadSize the maximum file size allowed
-	 */
-	public void setMaxUploadSize(int maxUploadSize) {
-		this.maxUploadSize = maxUploadSize;
 	}
 
 	/**
@@ -99,6 +92,23 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	}
 
 	/**
+	 * Set the maximum allowed file size (in bytes) before uploads are refused.
+	 * -1 indicates no limit (the default).
+	 *
+	 * @param maxUploadSize the maximum file size allowed
+	 */
+	public void setMaxUploadSize(int maxUploadSize) {
+		this.maxUploadSize = maxUploadSize;
+	}
+
+	/**
+	 * Return the default character encoding to use for parsing requests.
+	 */
+	protected String getDefaultEncoding() {
+		return defaultEncoding;
+	}
+
+	/**
 	 * Set the default character encoding to use for parsing requests,
 	 * to be applied to headers of individual parts and to form fields.
 	 * Default is ISO-8859-1, according to the Servlet spec.
@@ -106,6 +116,7 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	 * encoding will override this setting. This also allows for generically
 	 * overriding the character encoding in a filter that invokes the
 	 * ServletRequest.setCharacterEncoding method.
+	 *
 	 * @param defaultEncoding the character encoding to use
 	 * @see #determineEncoding
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -117,30 +128,24 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	}
 
 	/**
-	 * Return the default character encoding to use for parsing requests.
+	 * Return the temporary directory where uploaded files get stored.
 	 */
-	protected String getDefaultEncoding() {
-		return defaultEncoding;
+	protected File getUploadTempDir() {
+		return uploadTempDir;
 	}
 
 	/**
 	 * Set the temporary directory where uploaded files get stored.
 	 * Default is the servlet container's temporary directory for the web application.
+	 *
 	 * @see WebUtils#TEMP_DIR_CONTEXT_ATTRIBUTE
 	 */
 	public void setUploadTempDir(Resource uploadTempDir) throws IOException {
 		if (!uploadTempDir.exists() && !uploadTempDir.getFile().mkdirs()) {
 			throw new IllegalArgumentException("Given uploadTempDir [" + uploadTempDir +
-																				 "] could not be created");
+											   "] could not be created");
 		}
 		this.uploadTempDir = uploadTempDir.getFile();
-	}
-
-	/**
-	 * Return the temporary directory where uploaded files get stored.
-	 */
-	protected File getUploadTempDir() {
-		return uploadTempDir;
 	}
 
 	public void setServletContext(ServletContext servletContext) {
@@ -163,13 +168,12 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 					String fileName = (String) fileNames.nextElement();
 					File file = multipartRequest.getFile(fileName);
 					logger.debug("Found multipart file '" + fileName + "' of size " + (file != null ? file.length() : 0) +
-											 " bytes with original file name [" + multipartRequest.getOriginalFileName(fileName) +
-											 "], " + (file != null ? "stored at [" + file.getAbsolutePath() + "]" : "empty"));
+								 " bytes with original file name [" + multipartRequest.getOriginalFileName(fileName) +
+								 "], " + (file != null ? "stored at [" + file.getAbsolutePath() + "]" : "empty"));
 				}
 			}
 			return new CosMultipartHttpServletRequest(request, multipartRequest);
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new MultipartException("Could not parse multipart request", ex);
 		}
 	}
@@ -177,6 +181,7 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	/**
 	 * Create a com.oreilly.servlet.MultipartRequest for the given HTTP request.
 	 * Can be overridden to use a custom subclass, e.g. for testing purposes.
+	 *
 	 * @param request current HTTP request
 	 * @return the new MultipartRequest
 	 * @throws IOException if thrown by the MultipartRequest constructor
@@ -192,6 +197,7 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 	 * Can be overridden in subclasses.
 	 * <p>The default implementation checks the request encoding,
 	 * falling back to the default encoding specified for this resolver.
+	 *
 	 * @param request current HTTP request
 	 * @return the encoding for the request (never null)
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding
@@ -215,22 +221,20 @@ public class CosMultipartResolver implements MultipartResolver, ServletContextAw
 				if (file.exists()) {
 					if (file.delete()) {
 						if (logger.isDebugEnabled()) {
-						logger.debug("Cleaned up multipart file '" + fileName + "' with original file name [" +
-												 multipartRequest.getOriginalFileName(fileName) +
-												 "], stored at [" + file.getAbsolutePath() + "]");
+							logger.debug("Cleaned up multipart file '" + fileName + "' with original file name [" +
+										 multipartRequest.getOriginalFileName(fileName) +
+										 "], stored at [" + file.getAbsolutePath() + "]");
 						}
-					}
-					else {
+					} else {
 						logger.warn("Could not delete multipart file '" + fileName + "' with original file name [" +
-						            multipartRequest.getOriginalFileName(fileName) +
-						            "], stored at [" + file.getAbsolutePath() + "]");
+									multipartRequest.getOriginalFileName(fileName) +
+									"], stored at [" + file.getAbsolutePath() + "]");
 					}
-				}
-				else {
+				} else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Multipart file '" + fileName + "' with original file name [" +
-												 multipartRequest.getOriginalFileName(fileName) +
-												 "] has already been moved - no cleanup necessary");
+									 multipartRequest.getOriginalFileName(fileName) +
+									 "] has already been moved - no cleanup necessary");
 					}
 				}
 			}

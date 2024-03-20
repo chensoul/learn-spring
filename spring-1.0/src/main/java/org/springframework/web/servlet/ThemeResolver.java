@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet;
 
@@ -38,28 +38,30 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller
- * @since 17.06.2003
  * @see org.springframework.web.servlet.theme.FixedThemeResolver
  * @see org.springframework.ui.context.Theme
  * @see org.springframework.ui.context.ThemeSource
  * @see org.springframework.web.servlet.support.RequestContext#getTheme
+ * @since 17.06.2003
  */
 public interface ThemeResolver {
 
-  /**
-   * Resolve the current theme name via the given request.
-   * Should return a default theme as fallback in any case.
-   * @param request request to be used for resolution
-   * @return the current theme name
-   */
+	/**
+	 * Resolve the current theme name via the given request.
+	 * Should return a default theme as fallback in any case.
+	 *
+	 * @param request request to be used for resolution
+	 * @return the current theme name
+	 */
 	String resolveThemeName(HttpServletRequest request);
 
-  /**
-   * Set the current theme name to the given one.
-   * @param request request to be used for theme name modification
-   * @param response response to be used for theme name modification
-   * @param themeName the new theme name
-   */
+	/**
+	 * Set the current theme name to the given one.
+	 *
+	 * @param request   request to be used for theme name modification
+	 * @param response  response to be used for theme name modification
+	 * @param themeName the new theme name
+	 */
 	void setThemeName(HttpServletRequest request, HttpServletResponse response, String themeName);
 
 }

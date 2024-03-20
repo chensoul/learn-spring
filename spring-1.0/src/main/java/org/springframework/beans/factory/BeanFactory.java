@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans.factory;
 
@@ -65,7 +65,6 @@ import org.springframework.beans.BeansException;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 13 April 2001
  * @version $Revision: 1.7 $
  * @see BeanNameAware#setBeanName
  * @see BeanFactoryAware#setBeanFactory
@@ -76,6 +75,7 @@ import org.springframework.beans.BeansException;
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getInitMethodName
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getDestroyMethodName
  * @see org.springframework.context.ApplicationContextAware#setApplicationContext
+ * @since 13 April 2001
  */
 public interface BeanFactory {
 
@@ -87,10 +87,11 @@ public interface BeanFactory {
 	 * no guarantee that this method will be implemented to be efficient. For example,
 	 * it may be synchronized, or may need to run an RDBMS query.
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
+	 *
 	 * @param name name of the bean to return
 	 * @return the instance of the bean
 	 * @throws NoSuchBeanDefinitionException if there's no such bean definition
-	 * @throws BeansException if the bean could not be created
+	 * @throws BeansException                if the bean could not be created
 	 */
 	Object getBean(String name) throws BeansException;
 
@@ -102,20 +103,22 @@ public interface BeanFactory {
 	 * no guarantee that this method will be implemented to be efficient. For example,
 	 * it may be synchronized, or may need to run an RDBMS query.
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
-	 * @param name name of the bean to return
+	 *
+	 * @param name         name of the bean to return
 	 * @param requiredType type the bean may match. Can be an interface or superclass
-	 * of the actual class. For example, if the value is Object.class, this method will
-	 * succeed whatever the class of the returned instance.
+	 *                     of the actual class. For example, if the value is Object.class, this method will
+	 *                     succeed whatever the class of the returned instance.
 	 * @return the instance of the bean
 	 * @throws BeanNotOfRequiredTypeException if the bean is not of the required type
-	 * @throws NoSuchBeanDefinitionException if there's no such bean definition
-	 * @throws BeansException if the bean could not be created
+	 * @throws NoSuchBeanDefinitionException  if there's no such bean definition
+	 * @throws BeansException                 if the bean could not be created
 	 */
 	Object getBean(String name, Class requiredType) throws BeansException;
 
 	/**
 	 * Does this bean factory contain a bean with the given name?
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
+	 *
 	 * @param name name of the bean to query
 	 * @return whether a bean with the given name is defined
 	 */
@@ -124,6 +127,7 @@ public interface BeanFactory {
 	/**
 	 * Is this bean a singleton? That is, will getBean() always return the same object?
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
+	 *
 	 * @param name name of the bean to query
 	 * @return is this bean a singleton
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
@@ -133,6 +137,7 @@ public interface BeanFactory {
 	/**
 	 * Return the aliases for the given bean name, if defined.
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
+	 *
 	 * @param name the bean name to check for aliases
 	 * @return the aliases, or an empty array if none
 	 * @throws NoSuchBeanDefinitionException if there's no such bean definition

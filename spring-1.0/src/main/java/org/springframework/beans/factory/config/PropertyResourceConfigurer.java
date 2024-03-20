@@ -19,10 +19,8 @@ package org.springframework.beans.factory.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.Ordered;
@@ -42,9 +40,9 @@ import org.springframework.core.io.Resource;
  * </ul>
  *
  * @author Juergen Hoeller
- * @since 02.10.2003
  * @see PropertyOverrideConfigurer
  * @see PropertyPlaceholderConfigurer
+ * @since 02.10.2003
  */
 public abstract class PropertyResourceConfigurer implements BeanFactoryPostProcessor, Ordered {
 
@@ -58,13 +56,12 @@ public abstract class PropertyResourceConfigurer implements BeanFactoryPostProce
 
 	private boolean ignoreResourceNotFound = false;
 
-
-	public void setOrder(int order) {
-	  this.order = order;
+	public int getOrder() {
+		return order;
 	}
 
-	public int getOrder() {
-	  return order;
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	/**
@@ -80,7 +77,7 @@ public abstract class PropertyResourceConfigurer implements BeanFactoryPostProce
 	 * Set a location of a properties file to be loaded.
 	 */
 	public void setLocation(Resource location) {
-		this.locations = new Resource[] {location};
+		this.locations = new Resource[]{location};
 	}
 
 	/**
@@ -118,17 +115,14 @@ public abstract class PropertyResourceConfigurer implements BeanFactoryPostProce
 					InputStream is = location.getInputStream();
 					try {
 						props.load(is);
-					}
-					finally {
+					} finally {
 						is.close();
 					}
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					String msg = "Could not load properties from " + location;
 					if (this.ignoreResourceNotFound) {
 						logger.warn(msg + ": " + ex.getMessage());
-					}
-					else {
+					} else {
 						throw new BeanInitializationException(msg, ex);
 					}
 				}
@@ -140,11 +134,12 @@ public abstract class PropertyResourceConfigurer implements BeanFactoryPostProce
 
 	/**
 	 * Apply the given Properties to the bean factory.
-	 * @param beanFactory	the bean factory used by the application context
-	 * @param props the Properties to apply
+	 *
+	 * @param beanFactory the bean factory used by the application context
+	 * @param props       the Properties to apply
 	 * @throws BeansException in case of errors
 	 */
 	protected abstract void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)
-			throws BeansException;
+		throws BeansException;
 
 }

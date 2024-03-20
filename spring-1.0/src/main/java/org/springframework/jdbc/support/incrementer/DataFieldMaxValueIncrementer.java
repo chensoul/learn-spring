@@ -34,6 +34,7 @@ public interface DataFieldMaxValueIncrementer {
 
 	/**
 	 * Increments data store field's max value as int.
+	 *
 	 * @return int next data store value such as <b>max + 1</b>
 	 * @throws DataAccessException
 	 */
@@ -41,6 +42,7 @@ public interface DataFieldMaxValueIncrementer {
 
 	/**
 	 * Increments data store field's max value as long.
+	 *
 	 * @return int next data store value such as <b>max + 1</b>
 	 * @throws DataAccessException
 	 */
@@ -48,6 +50,7 @@ public interface DataFieldMaxValueIncrementer {
 
 	/**
 	 * Increments data store field's max value as String.
+	 *
 	 * @return next data store value such as <b>max + 1</b>
 	 * @throws DataAccessException
 	 */

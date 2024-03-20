@@ -134,6 +134,12 @@ public abstract class BaseCommandController extends AbstractController {
 
 	private boolean validateOnBinding = true;
 
+	/**
+	 * Return the name of the command in the model.
+	 */
+	protected final String getCommandName() {
+		return this.commandName;
+	}
 
 	/**
 	 * Set the name of the command in the model.
@@ -144,10 +150,10 @@ public abstract class BaseCommandController extends AbstractController {
 	}
 
 	/**
-	 * Return the name of the command in the model.
+	 * Return the command class for this controller.
 	 */
-	protected final String getCommandName() {
-		return this.commandName;
+	protected final Class getCommandClass() {
+		return this.commandClass;
 	}
 
 	/**
@@ -160,10 +166,10 @@ public abstract class BaseCommandController extends AbstractController {
 	}
 
 	/**
-	 * Return the command class for this controller.
+	 * Return the Validator for this controller.
 	 */
-	protected final Class getCommandClass() {
-		return this.commandClass;
+	protected final Validator getValidator() {
+		return validator;
 	}
 
 	/**
@@ -176,10 +182,10 @@ public abstract class BaseCommandController extends AbstractController {
 	}
 
 	/**
-	 * Return the Validator for this controller.
+	 * Return if the Validator should get applied when binding.
 	 */
-	protected final Validator getValidator() {
-		return validator;
+	protected final boolean isValidateOnBinding() {
+		return validateOnBinding;
 	}
 
 	/**
@@ -190,27 +196,21 @@ public abstract class BaseCommandController extends AbstractController {
 	}
 
 	/**
-	 * Return if the Validator should get applied when binding.
-	 */
-	protected final boolean isValidateOnBinding() {
-		return validateOnBinding;
-	}
-
-
-	/**
 	 * Check if the given Validator and command class match.
-	 * @param validator Validator instance
+	 *
+	 * @param validator    Validator instance
 	 * @param commandClass command class
 	 */
 	private void checkValidator(Validator validator, Class commandClass) throws IllegalArgumentException {
 		if (validator != null && commandClass != null && !validator.supports(commandClass))
 			throw new IllegalArgumentException("Validator [" + validator + "] does not support command class [" +
-			                                   commandClass.getName() + "]");
+											   commandClass.getName() + "]");
 	}
 
 	/**
 	 * Retrieve a command object for the given request.
 	 * <p>Default implementation calls createCommand. Subclasses can override this.
+	 *
 	 * @param request current HTTP request
 	 * @return object command to bind onto
 	 * @see #createCommand
@@ -221,6 +221,7 @@ public abstract class BaseCommandController extends AbstractController {
 
 	/**
 	 * Create a new command instance for the command class of this controller.
+	 *
 	 * @return the new command instance
 	 * @throws InstantiationException if the command class could not be instantiated
 	 * @throws IllegalAccessException if the class or its constructor is not accessible
@@ -228,7 +229,7 @@ public abstract class BaseCommandController extends AbstractController {
 	protected final Object createCommand() throws InstantiationException, IllegalAccessException {
 		if (this.commandClass == null) {
 			throw new IllegalStateException("Cannot create command without commandClass being set - " +
-																			"either set commandClass or override formBackingObject");
+											"either set commandClass or override formBackingObject");
 		}
 		logger.debug("Creating new command of class [" + this.commandClass.getName() + "]");
 		return this.commandClass.newInstance();
@@ -237,6 +238,7 @@ public abstract class BaseCommandController extends AbstractController {
 	/**
 	 * Check if the given command object is a valid for this controller,
 	 * i.e. its command class.
+	 *
 	 * @param command command object to check
 	 * @return if the command object is valid for this controller
 	 */
@@ -246,13 +248,14 @@ public abstract class BaseCommandController extends AbstractController {
 
 	/**
 	 * Bind the parameters of the given request to the given command object.
+	 *
 	 * @param request current HTTP request
 	 * @param command command to bind onto
 	 * @return the ServletRequestDataBinder instance for additional custom validation
 	 * @throws Exception in case of invalid state or arguments
 	 */
 	protected final ServletRequestDataBinder bindAndValidate(HttpServletRequest request, Object command)
-			throws Exception {
+		throws Exception {
 		ServletRequestDataBinder binder = createBinder(request, command);
 		binder.bind(request);
 		onBind(request, command);
@@ -270,6 +273,7 @@ public abstract class BaseCommandController extends AbstractController {
 	 * <p>Default implementation creates a standard ServletRequestDataBinder
 	 * and invokes initBinder. Note that initBinder will not be invoked
 	 * automatically if you override this method!
+	 *
 	 * @param command command to bind onto
 	 * @param request current request
 	 * @return the new binder instance
@@ -278,7 +282,7 @@ public abstract class BaseCommandController extends AbstractController {
 	 * @see #initBinder
 	 */
 	protected ServletRequestDataBinder createBinder(HttpServletRequest request, Object command)
-	    throws Exception {
+		throws Exception {
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(command, getCommandName());
 		initBinder(request, binder);
 		return binder;
@@ -291,43 +295,46 @@ public abstract class BaseCommandController extends AbstractController {
 	 * command class. For instance, you will be able to transform Date objects into a
 	 * String pattern and back, in order to allow your JavaBeans to have Date properties
 	 * and still be able to set and display them in an HTML interface.
+	 *
 	 * @param request current request
-	 * @param binder new binder instance
+	 * @param binder  new binder instance
 	 * @throws Exception in case of invalid state or arguments
 	 * @see #createBinder
 	 * @see org.springframework.validation.DataBinder#registerCustomEditor
 	 * @see org.springframework.beans.propertyeditors.CustomDateEditor
 	 */
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
-	    throws Exception {
+		throws Exception {
 	}
 
 	/**
 	 * Callback for custom post-processing in terms of binding.
 	 * Called on each submit, after standard binding but before validation.
+	 *
 	 * @param request current HTTP request
 	 * @param command command object to perform further binding on
 	 * @throws Exception in case of invalid state or arguments
 	 * @see #bindAndValidate
 	 */
 	protected void onBind(HttpServletRequest request, Object command)
-			throws Exception {
+		throws Exception {
 	}
 
 	/**
 	 * Callback for custom post-processing in terms of binding and validation.
 	 * Called on each submit, after standard binding and validation,
 	 * but before error evaluation.
+	 *
 	 * @param request current HTTP request
 	 * @param command command object, still allowing for further binding
-	 * @param errors validation errors holder, allowing for additional
-	 * custom validation
+	 * @param errors  validation errors holder, allowing for additional
+	 *                custom validation
 	 * @throws Exception in case of invalid state or arguments
 	 * @see #bindAndValidate
 	 * @see org.springframework.validation.Errors
 	 */
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors)
-			throws Exception {
+		throws Exception {
 	}
 
 }

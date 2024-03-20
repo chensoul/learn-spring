@@ -43,8 +43,8 @@ import org.springframework.jdbc.support.JdbcUtils;
  * true. If none of the statement types is wrapped, the defaults are fine.
  *
  * @author Juergen Hoeller
- * @since 05.12.2003
  * @see Statement#getConnection
+ * @since 05.12.2003
  */
 public class SimpleNativeJdbcExtractor implements NativeJdbcExtractor {
 
@@ -55,6 +55,10 @@ public class SimpleNativeJdbcExtractor implements NativeJdbcExtractor {
 
 	public boolean isNativeConnectionNecessaryForNativeStatements() {
 		return false;
+	}
+
+	public boolean isNativeConnectionNecessaryForNativePreparedStatements() {
+		return nativeConnectionNecessaryForNativePreparedStatements;
 	}
 
 	/**
@@ -68,8 +72,8 @@ public class SimpleNativeJdbcExtractor implements NativeJdbcExtractor {
 		this.nativeConnectionNecessaryForNativePreparedStatements = nativeConnectionNecessary;
 	}
 
-	public boolean isNativeConnectionNecessaryForNativePreparedStatements() {
-		return nativeConnectionNecessaryForNativePreparedStatements;
+	public boolean isNativeConnectionNecessaryForNativeCallableStatements() {
+		return nativeConnectionNecessaryForNativeCallableStatements;
 	}
 
 	/**
@@ -83,19 +87,13 @@ public class SimpleNativeJdbcExtractor implements NativeJdbcExtractor {
 		this.nativeConnectionNecessaryForNativeCallableStatements = nativeConnectionNecessary;
 	}
 
-	public boolean isNativeConnectionNecessaryForNativeCallableStatements() {
-		return nativeConnectionNecessaryForNativeCallableStatements;
-	}
-
-
 	public Connection getNativeConnection(Connection con) throws SQLException {
 		Statement stmt = con.createStatement();
 		try {
 			// assuming a non-wrapped Statement:
 			// getConnection() will return the native Connection
 			return stmt.getConnection();
-		}
-		finally {
+		} finally {
 			JdbcUtils.closeStatement(stmt);
 		}
 	}

@@ -1,24 +1,23 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.aop.framework.adapter;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.Interceptor;
 import org.springframework.aop.Advisor;
@@ -29,9 +28,9 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
  * @version $Id: DefaultAdvisorAdapterRegistry.java,v 1.10 2004/03/19 16:54:41 johnsonr Exp $
  */
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry {
-	
+
 	private List adapters = new LinkedList();
-	
+
 	public DefaultAdvisorAdapterRegistry() {
 		// register well-known adapters
 		registerAdvisorAdapter(new BeforeAdviceAdapter());
@@ -43,12 +42,12 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry {
 		if (adviceObject instanceof Advisor) {
 			return (Advisor) adviceObject;
 		}
-		
+
 		if (!(adviceObject instanceof Advice)) {
 			throw new UnknownAdviceTypeException(adviceObject);
 		}
 		Advice advice = (Advice) adviceObject;
-		
+
 		if (advice instanceof Interceptor) {
 			// So well-known it doesn't even need an adapter
 			return new DefaultPointcutAdvisor(advice);

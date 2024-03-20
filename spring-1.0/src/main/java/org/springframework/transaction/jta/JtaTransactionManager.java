@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.transaction.jta;
 
@@ -27,7 +27,6 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.transaction.CannotCreateTransactionException;
@@ -111,7 +110,6 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * custom isolation levels, and transaction suspension without JTA's restrictions.
  *
  * @author Juergen Hoeller
- * @since 24.03.2003
  * @see #setUserTransactionName
  * @see #setTransactionManagerName
  * @see #applyIsolationLevel
@@ -120,6 +118,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * @see org.springframework.orm.hibernate.LocalSessionFactoryBean#setJtaTransactionManager
  * @see org.springframework.orm.hibernate.HibernateTransactionManager
  * @see org.springframework.jdbc.datasource.DataSourceTransactionManager
+ * @since 24.03.2003
  */
 public class JtaTransactionManager extends AbstractPlatformTransactionManager implements InitializingBean {
 
@@ -159,6 +158,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	/**
 	 * Set the JNDI name of the JTA UserTransaction.
 	 * The default one is used if not set.
+	 *
 	 * @see #DEFAULT_USER_TRANSACTION_NAME
 	 */
 	public void setUserTransactionName(String userTransactionName) {
@@ -188,22 +188,19 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 		if (this.userTransaction == null) {
 			if (this.userTransactionName != null) {
 				this.userTransaction = lookupUserTransaction(this.userTransactionName);
-			}
-			else {
+			} else {
 				throw new IllegalArgumentException("Either userTransaction or userTransactionName must be set");
 			}
 		}
 		if (this.transactionManager == null) {
 			if (this.transactionManagerName != null) {
 				this.transactionManager = lookupTransactionManager(this.transactionManagerName);
-			}
-			else if (this.userTransaction instanceof TransactionManager) {
+			} else if (this.userTransaction instanceof TransactionManager) {
 				if (logger.isInfoEnabled()) {
 					logger.info("JTA UserTransaction object [" + this.userTransaction + "] implements TransactionManager");
 				}
 				this.transactionManager = (TransactionManager) this.userTransaction;
-			}
-			else {
+			} else {
 				logger.info("No JTA TransactionManager specified - transaction suspension not available");
 			}
 		}
@@ -213,6 +210,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	 * Look up the JTA UserTransaction in JNDI via the configured name.
 	 * Called by afterPropertiesSet if no direct UserTransaction reference was set.
 	 * Can be overridden in subclasses to provide a different UserTransaction object.
+	 *
 	 * @param userTransactionName the JNDI name of the UserTransaction
 	 * @return the UserTransaction object
 	 * @throws CannotCreateTransactionException if the JNDI lookup failed
@@ -220,24 +218,23 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	 * @see #setUserTransactionName
 	 */
 	protected UserTransaction lookupUserTransaction(String userTransactionName)
-			throws CannotCreateTransactionException {
+		throws CannotCreateTransactionException {
 		try {
 			Object jndiObj = this.jndiTemplate.lookup(userTransactionName);
 			if (!(jndiObj instanceof UserTransaction)) {
 				throw new CannotCreateTransactionException("Object [" + jndiObj + "] available at JNDI location [" +
-				                                           userTransactionName + "] does not implement " +
-				                                           "javax.transaction.UserTransaction");
+														   userTransactionName + "] does not implement " +
+														   "javax.transaction.UserTransaction");
 			}
 			UserTransaction ut = (UserTransaction) jndiObj;
 			if (logger.isInfoEnabled()) {
 				logger.info("Using JTA UserTransaction [" + ut + "] from JNDI location [" +
-				            userTransactionName + "]");
+							userTransactionName + "]");
 			}
 			return ut;
-		}
-		catch (NamingException ex) {
+		} catch (NamingException ex) {
 			throw new CannotCreateTransactionException("JTA UserTransaction is not available at JNDI location [" +
-			                                           userTransactionName + "]", ex);
+													   userTransactionName + "]", ex);
 		}
 	}
 
@@ -245,6 +242,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	 * Look up the JTA TransactionManager in JNDI via the configured name.
 	 * Called by afterPropertiesSet if no direct TransactionManager reference was set.
 	 * Can be overridden in subclasses to provide a different TransactionManager object.
+	 *
 	 * @param transactionManagerName the JNDI name of the TransactionManager
 	 * @return the UserTransaction object
 	 * @throws CannotCreateTransactionException if the JNDI lookup failed
@@ -252,24 +250,23 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	 * @see #setTransactionManagerName
 	 */
 	protected TransactionManager lookupTransactionManager(String transactionManagerName)
-			throws CannotCreateTransactionException {
+		throws CannotCreateTransactionException {
 		try {
 			Object jndiObj = this.jndiTemplate.lookup(transactionManagerName);
 			if (!(jndiObj instanceof TransactionManager)) {
 				throw new CannotCreateTransactionException("Object [" + jndiObj + "] available at JNDI location [" +
-				                                           transactionManagerName + "] does not implement " +
-				                                           "javax.transaction.TransactionManager");
+														   transactionManagerName + "] does not implement " +
+														   "javax.transaction.TransactionManager");
 			}
 			TransactionManager tm = (TransactionManager) jndiObj;
 			if (logger.isInfoEnabled()) {
 				logger.info("Using JTA TransactionManager [" + tm + "] from JNDI location [" +
-				            transactionManagerName + "]");
+							transactionManagerName + "]");
 			}
 			return tm;
-		}
-		catch (NamingException ex) {
+		} catch (NamingException ex) {
 			throw new CannotCreateTransactionException("JTA TransactionManager is not available at JNDI location [" +
-			                                           transactionManagerName + "]", ex);
+													   transactionManagerName + "]", ex);
 		}
 	}
 
@@ -281,8 +278,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 		try {
 			int status = ((UserTransaction) transaction).getStatus();
 			return (status != Status.STATUS_NO_TRANSACTION);
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on getStatus", ex);
 		}
 	}
@@ -298,18 +294,15 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 				ut.setTransactionTimeout(definition.getTimeout());
 			}
 			ut.begin();
-		}
-		catch (NotSupportedException ex) {
+		} catch (NotSupportedException ex) {
 			// assume "nested transactions not supported"
 			throw new IllegalTransactionStateException(
-			    "JTA implementation does not support nested transactions", ex);
-		}
-		catch (UnsupportedOperationException ex) {
+				"JTA implementation does not support nested transactions", ex);
+		} catch (UnsupportedOperationException ex) {
 			// assume "nested transactions not supported"
 			throw new IllegalTransactionStateException(
-			    "JTA implementation does not support nested transactions", ex);
-		}
-		catch (SystemException ex) {
+				"JTA implementation does not support nested transactions", ex);
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on begin", ex);
 		}
 	}
@@ -318,9 +311,10 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	 * Apply the given transaction isolation level. Default implementation
 	 * will throw an exception for any level other than ISOLATION_DEFAULT.
 	 * To be overridden in subclasses for specific JTA implementations.
+	 *
 	 * @param isolationLevel isolation level taken from transaction definition
 	 * @throws InvalidIsolationLevelException if the given isolation level
-	 * cannot be applied
+	 *                                        cannot be applied
 	 */
 	protected void applyIsolationLevel(int isolationLevel) throws InvalidIsolationLevelException {
 		if (isolationLevel != TransactionDefinition.ISOLATION_DEFAULT) {
@@ -331,13 +325,12 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	protected Object doSuspend(Object transaction) {
 		if (this.transactionManager == null) {
 			throw new IllegalTransactionStateException("JtaTransactionManager needs a JTA TransactionManager for " +
-																								 "suspending a transaction - specify the 'transactionManager' " +
-																								 "or 'transactionManagerName' property");
+													   "suspending a transaction - specify the 'transactionManager' " +
+													   "or 'transactionManagerName' property");
 		}
 		try {
 			return this.transactionManager.suspend();
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on suspend", ex);
 		}
 	}
@@ -345,16 +338,14 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	protected void doResume(Object transaction, Object suspendedResources) {
 		if (this.transactionManager == null) {
 			throw new IllegalTransactionStateException("JtaTransactionManager needs a JTA TransactionManager for " +
-																								 "suspending a transaction - specify the 'transactionManager' " +
-																								 "or 'transactionManagerName' property");
+													   "suspending a transaction - specify the 'transactionManager' " +
+													   "or 'transactionManagerName' property");
 		}
 		try {
 			this.transactionManager.resume((Transaction) suspendedResources);
-		}
-		catch (InvalidTransactionException ex) {
+		} catch (InvalidTransactionException ex) {
 			throw new IllegalTransactionStateException("Tried to resume invalid JTA transaction", ex);
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on resume", ex);
 		}
 	}
@@ -362,8 +353,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 	protected boolean isRollbackOnly(Object transaction) throws TransactionException {
 		try {
 			return ((UserTransaction) transaction).getStatus() == Status.STATUS_MARKED_ROLLBACK;
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on getStatus", ex);
 		}
 	}
@@ -374,17 +364,13 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 		}
 		try {
 			((UserTransaction) status.getTransaction()).commit();
-		}
-		catch (RollbackException ex) {
+		} catch (RollbackException ex) {
 			throw new UnexpectedRollbackException("JTA transaction rolled back", ex);
-		}
-		catch (HeuristicMixedException ex) {
+		} catch (HeuristicMixedException ex) {
 			throw new HeuristicCompletionException(HeuristicCompletionException.STATE_MIXED, ex);
-		}
-		catch (HeuristicRollbackException ex) {
+		} catch (HeuristicRollbackException ex) {
 			throw new HeuristicCompletionException(HeuristicCompletionException.STATE_ROLLED_BACK, ex);
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on commit", ex);
 		}
 	}
@@ -395,8 +381,7 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 		}
 		try {
 			((UserTransaction) status.getTransaction()).rollback();
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on rollback", ex);
 		}
 	}
@@ -407,11 +392,9 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager im
 		}
 		try {
 			((UserTransaction) status.getTransaction()).setRollbackOnly();
-		}
-		catch (IllegalStateException ex) {
+		} catch (IllegalStateException ex) {
 			throw new NoTransactionException("No active JTA transaction");
-		}
-		catch (SystemException ex) {
+		} catch (SystemException ex) {
 			throw new TransactionSystemException("JTA failure on setRollbackOnly", ex);
 		}
 	}

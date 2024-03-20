@@ -28,9 +28,9 @@ package org.springframework.beans.factory;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since March 08, 2003
  * @version $Id: FactoryBean.java,v 1.8 2004/03/18 02:46:07 trisberg Exp $
  * @see BeanFactory
+ * @since March 08, 2003
  */
 public interface FactoryBean {
 
@@ -38,6 +38,7 @@ public interface FactoryBean {
 	 * Return an instance (possibly shared or independent) of the object
 	 * managed by this factory. As with a BeanFactory, this allows
 	 * support for both the Singleton and Prototype design pattern.
+	 *
 	 * @return an instance of the bean (should never be null)
 	 * @throws Exception in case of creation errors
 	 */
@@ -51,6 +52,7 @@ public interface FactoryBean {
 	 * or even null, as autowiring will always check the actual objects
 	 * for singletons. For prototypes, returning a meaningful type here
 	 * is highly advisable, as autowiring will simply ignore them else.
+	 *
 	 * @return the type of object that this FactoryBean creates, or null
 	 * @see ListableBeanFactory#getBeansOfType
 	 */
@@ -61,6 +63,7 @@ public interface FactoryBean {
 	 * That is, will getObject() always return the same object?
 	 * <p>The singleton status of the FactoryBean itself will
 	 * generally be provided by the owning BeanFactory.
+	 *
 	 * @return if this bean is a singleton
 	 */
 	boolean isSingleton();

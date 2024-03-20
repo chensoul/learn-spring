@@ -50,9 +50,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * to another DataSource is just a matter of configuration then: You can even
  * replace the definition of the FactoryBean with a non-JNDI DataSource!
  *
- * @version $Id: DataSourceUtils.java,v 1.9 2004/03/18 02:46:05 trisberg Exp $
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @version $Id: DataSourceUtils.java,v 1.9 2004/03/18 02:46:05 trisberg Exp $
  * @see DataSourceTransactionManager
  * @see org.springframework.jndi.JndiObjectFactoryBean
  */
@@ -65,27 +65,29 @@ public abstract class DataSourceUtils {
 	 * occurs in a J2EE container, i.e. adding the prefix "java:comp/env/"
 	 * to the JNDI name if it doesn't already contain it.
 	 * <p>Use getDataSourceFromJndi(jndiName,false) in case of a custom JNDI name.
+	 *
 	 * @param jndiName jndiName of the DataSource
 	 * @return the DataSource
 	 * @throws CannotGetJdbcConnectionException if the data source cannot be located
 	 * @see #getDataSourceFromJndi(String, boolean)
 	 */
 	public static DataSource getDataSourceFromJndi(String jndiName)
-	    throws CannotGetJdbcConnectionException {
+		throws CannotGetJdbcConnectionException {
 		return getDataSourceFromJndi(jndiName, true);
 	}
 
 	/**
 	 * Look up the specified DataSource in JNDI, explicitly specifying
 	 * if the lookup occurs in a J2EE container.
-	 * @param jndiName jndiName of the DataSource
+	 *
+	 * @param jndiName    jndiName of the DataSource
 	 * @param resourceRef if the lookup occurs in a J2EE container, i.e. if the prefix
-	 * "java:comp/env/" needs to be added if the JNDI name doesn't already contain it.
+	 *                    "java:comp/env/" needs to be added if the JNDI name doesn't already contain it.
 	 * @return the DataSource
 	 * @throws CannotGetJdbcConnectionException if the data source cannot be located
 	 */
 	public static DataSource getDataSourceFromJndi(String jndiName, boolean resourceRef)
-	    throws CannotGetJdbcConnectionException {
+		throws CannotGetJdbcConnectionException {
 		if (jndiName == null || "".equals(jndiName)) {
 			throw new IllegalArgumentException("jndiName must not be empty");
 		}
@@ -95,8 +97,7 @@ public abstract class DataSourceUtils {
 		try {
 			// Perform JNDI lookup to obtain resource manager connection factory
 			return (DataSource) new JndiTemplate().lookup(jndiName);
-		}
-		catch (NamingException ex) {
+		} catch (NamingException ex) {
 			throw new CannotGetJdbcConnectionException("Naming exception looking up JNDI data source [" + jndiName + "]", ex);
 		}
 	}
@@ -108,6 +109,7 @@ public abstract class DataSourceUtils {
 	 * <p>Is aware of a respective connection bound to the current thread, for example
 	 * when using DataSourceTransactionManager. Will bind a Connection to the thread
 	 * if transaction synchronization is active (e.g. if in a JTA transaction).
+	 *
 	 * @param ds DataSource to get connection from
 	 * @return a JDBC connection from this DataSource
 	 * @throws CannotGetJdbcConnectionException if the attempt to get a Connection failed
@@ -119,12 +121,11 @@ public abstract class DataSourceUtils {
 	}
 
 	public static Connection getConnection(DataSource ds, boolean allowSynchronization)
-	    throws CannotGetJdbcConnectionException {
+		throws CannotGetJdbcConnectionException {
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(ds);
 		if (conHolder != null) {
 			return conHolder.getConnection();
-		}
-		else {
+		} else {
 			try {
 				Connection con = ds.getConnection();
 				if (allowSynchronization && TransactionSynchronizationManager.isSynchronizationActive()) {
@@ -136,8 +137,7 @@ public abstract class DataSourceUtils {
 					TransactionSynchronizationManager.registerSynchronization(new ConnectionSynchronization(conHolder, ds));
 				}
 				return con;
-			}
-			catch (SQLException ex) {
+			} catch (SQLException ex) {
 				throw new CannotGetJdbcConnectionException("Could not get JDBC connection", ex);
 			}
 		}
@@ -146,8 +146,9 @@ public abstract class DataSourceUtils {
 	/**
 	 * Apply the current transaction timeout, if any,
 	 * to the given JDBC Statement object.
+	 *
 	 * @param stmt the JDBC Statement object
-	 * @param ds DataSource that the connection came from
+	 * @param ds   DataSource that the connection came from
 	 */
 	public static void applyTransactionTimeout(Statement stmt, DataSource ds) throws SQLException {
 		ConnectionHolder holder = (ConnectionHolder) TransactionSynchronizationManager.getResource(ds);
@@ -159,15 +160,16 @@ public abstract class DataSourceUtils {
 	/**
 	 * Close the given connection if necessary, i.e. if it is not bound to the thread
 	 * and it is not created by a SmartDataSource returning shouldClose=false.
+	 *
 	 * @param con connection to close if necessary
-	 * (if this is null, the call will be ignored)
-	 * @param ds DataSource that the connection came from
+	 *            (if this is null, the call will be ignored)
+	 * @param ds  DataSource that the connection came from
 	 * @throws CannotCloseJdbcConnectionException if the attempt to close the
-	 * Connection failed
+	 *                                            Connection failed
 	 * @see SmartDataSource#shouldClose
 	 */
 	public static void closeConnectionIfNecessary(Connection con, DataSource ds)
-	    throws CannotCloseJdbcConnectionException {
+		throws CannotCloseJdbcConnectionException {
 		if (con == null || TransactionSynchronizationManager.hasResource(ds)) {
 			return;
 		}
@@ -176,8 +178,7 @@ public abstract class DataSourceUtils {
 		if (!(ds instanceof SmartDataSource) || ((SmartDataSource) ds).shouldClose(con)) {
 			try {
 				con.close();
-			}
-			catch (SQLException ex) {
+			} catch (SQLException ex) {
 				throw new CannotCloseJdbcConnectionException("Could not close JDBC connection", ex);
 			}
 		}
@@ -187,19 +188,21 @@ public abstract class DataSourceUtils {
 	 * Wrap the given connection with a proxy that delegates every method call to it
 	 * but suppresses close calls. This is useful for allowing application code to
 	 * handle a special framework connection just like an ordinary DataSource connection.
+	 *
 	 * @param source original connection
 	 * @return the wrapped connection
 	 * @see SingleConnectionDataSource
 	 */
 	static Connection getCloseSuppressingConnectionProxy(Connection source) {
 		return (Connection) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-		                                           new Class[] {Connection.class},
-		                                           new CloseSuppressingInvocationHandler(source));
+			new Class[]{Connection.class},
+			new CloseSuppressingInvocationHandler(source));
 	}
 
 
 	/**
 	 * Invocation handler that suppresses close calls on JDBC connections.
+	 *
 	 * @see #getCloseSuppressingConnectionProxy
 	 */
 	private static class CloseSuppressingInvocationHandler implements InvocationHandler {
@@ -217,8 +220,7 @@ public abstract class DataSourceUtils {
 			}
 			try {
 				return method.invoke(this.source, args);
-			}
-			catch (InvocationTargetException ex) {
+			} catch (InvocationTargetException ex) {
 				throw ex.getTargetException();
 			}
 		}

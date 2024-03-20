@@ -1,26 +1,24 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.orm.jdo;
 
 import javax.jdo.PersistenceManager;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
@@ -83,8 +81,7 @@ public class JdoInterceptor extends JdoAccessor implements MethodInterceptor {
 		if (TransactionSynchronizationManager.hasResource(getPersistenceManagerFactory())) {
 			logger.debug("Found thread-bound PersistenceManager for JDO interceptor");
 			existingTransaction = true;
-		}
-		else {
+		} else {
 			logger.debug("Using new PersistenceManager for JDO interceptor");
 			TransactionSynchronizationManager.bindResource(getPersistenceManagerFactory(), new PersistenceManagerHolder(pm));
 		}
@@ -92,12 +89,10 @@ public class JdoInterceptor extends JdoAccessor implements MethodInterceptor {
 			Object retVal = methodInvocation.proceed();
 			flushIfNecessary(pm, existingTransaction);
 			return retVal;
-		}
-		finally {
+		} finally {
 			if (existingTransaction) {
 				logger.debug("Not closing pre-bound JDO PersistenceManager after interceptor");
-			}
-			else {
+			} else {
 				TransactionSynchronizationManager.unbindResource(getPersistenceManagerFactory());
 				PersistenceManagerFactoryUtils.closePersistenceManagerIfNecessary(pm, getPersistenceManagerFactory());
 			}

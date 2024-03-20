@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.object;
 
@@ -59,7 +59,17 @@ public abstract class SqlCall extends RdbmsOperation {
 	private String callString;
 
 	/**
+	 * Get the flag used to indicate that this call is for a function.
+	 *
+	 * @return boolean
+	 */
+	public boolean isFunction() {
+		return function;
+	}
+
+	/**
 	 * Set the flag used to indicate that this call is for a function
+	 *
 	 * @param function true or false
 	 */
 	public void setFunction(boolean function) {
@@ -68,14 +78,7 @@ public abstract class SqlCall extends RdbmsOperation {
 
 	/**
 	 * Get the flag used to indicate that this call is for a function.
-	 * @return boolean
-	 */
-	public boolean isFunction() {
-		return function;
-	}
-
-	/**
-	 * Get the flag used to indicate that this call is for a function.
+	 *
 	 * @return boolean
 	 */
 	public String getCallString() {
@@ -85,6 +88,7 @@ public abstract class SqlCall extends RdbmsOperation {
 	/**
 	 * Return a CallableStatementCreator to perform an operation
 	 * with this parameters.
+	 *
 	 * @param inParams parameters. May be null.
 	 */
 	protected CallableStatementCreator newCallableStatementCreator(Map inParams) {
@@ -94,6 +98,7 @@ public abstract class SqlCall extends RdbmsOperation {
 	/**
 	 * Return a CallableStatementCreator to perform an operation
 	 * with the parameters returned from this ParameterMapper.
+	 *
 	 * @param inParamMapper parametermapper. May not be null.
 	 */
 	protected CallableStatementCreator newCallableStatementCreator(ParameterMapper inParamMapper) {
@@ -103,6 +108,7 @@ public abstract class SqlCall extends RdbmsOperation {
 	/**
 	 * Overridden method to configure the CallableStatementCreatorFactory
 	 * based on our declared parameters.
+	 *
 	 * @see RdbmsOperation#compileInternal()
 	 */
 	protected final void compileInternal() {
@@ -111,16 +117,14 @@ public abstract class SqlCall extends RdbmsOperation {
 		if (isFunction()) {
 			this.callString = "{? = call " + getSql() + "(";
 			firstParameter = 1;
-		}
-		else {
+		} else {
 			this.callString = "{call " + getSql() + "(";
 		}
 		for (int i = firstParameter; i < parameters.size(); i++) {
 			SqlParameter p = (SqlParameter) parameters.get(i);
 			if ((p instanceof SqlReturnResultSet)) {
 				firstParameter++;
-			}
-			else {
+			} else {
 				if (i > firstParameter) {
 					this.callString += ", ";
 				}

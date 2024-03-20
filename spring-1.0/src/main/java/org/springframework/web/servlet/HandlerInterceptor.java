@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet;
 
@@ -53,7 +53,6 @@ import javax.servlet.http.HttpServletResponse;
  * filter to certain content types (e.g. images), or to all requests.
  *
  * @author Juergen Hoeller
- * @since 20.06.2003
  * @see HandlerExecutionChain#getInterceptors
  * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter
  * @see org.springframework.web.servlet.handler.AbstractHandlerMapping#setInterceptors
@@ -61,6 +60,7 @@ import javax.servlet.http.HttpServletResponse;
  * @see org.springframework.web.servlet.i18n.LocaleChangeInterceptor
  * @see org.springframework.web.servlet.theme.ThemeChangeInterceptor
  * @see javax.servlet.Filter
+ * @since 20.06.2003
  */
 public interface HandlerInterceptor {
 
@@ -71,16 +71,17 @@ public interface HandlerInterceptor {
 	 * of any number of interceptors, with the handler itself at the end.
 	 * With this method, each interceptor can decide to abort the execution chain,
 	 * typically sending a HTTP error or writing a custom response.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
-	 * @param handler chosen handler to execute, for type and/or instance evaluation
+	 * @param handler  chosen handler to execute, for type and/or instance evaluation
 	 * @return <code>true</code> if the execution chain should proceed with the
 	 * next interceptor respectively the handler itself. Else, DispatcherServlet
 	 * assumes that this interceptor has already dealt with the response itself.
 	 * @throws Exception in case of errors
 	 */
 	boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-										Object handler) throws Exception;
+					  Object handler) throws Exception;
 
 	/**
 	 * Intercept the execution of a handler. Called after HandlerAdapter actually
@@ -90,14 +91,15 @@ public interface HandlerInterceptor {
 	 * of any number of interceptors, with the handler itself at the end.
 	 * With this method, each interceptor can post-process an execution,
 	 * getting applied in inverse order of the execution chain.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @param handler chosen handler to execute, for type and/or instance examination
+	 *
+	 * @param request      current HTTP request
+	 * @param response     current HTTP response
+	 * @param handler      chosen handler to execute, for type and/or instance examination
 	 * @param modelAndView the ModelAndView that the handler returned, can also be null
 	 * @throws Exception in case of errors
 	 */
 	void postHandle(HttpServletRequest request, HttpServletResponse response,
-									Object handler, ModelAndView modelAndView) throws Exception;
+					Object handler, ModelAndView modelAndView) throws Exception;
 
 	/**
 	 * Callback after completion of request processing, i.e. after rendering the view.
@@ -105,13 +107,14 @@ public interface HandlerInterceptor {
 	 * resource cleanup.
 	 * <p>Note: Will only be called if this interceptor's preHandle method has
 	 * successfully completed and returned true!
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
-	 * @param handler chosen handler to execute, for type and/or instance examination
-	 * @param ex exception thrown on handler execution
+	 * @param handler  chosen handler to execute, for type and/or instance examination
+	 * @param ex       exception thrown on handler execution
 	 * @throws Exception in case of errors
 	 */
 	void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-											 Object handler, Exception ex) throws Exception;
+						 Object handler, Exception ex) throws Exception;
 
 }

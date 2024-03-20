@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans.factory.xml;
 
@@ -23,16 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -47,10 +39,17 @@ import org.springframework.beans.factory.support.ManagedSet;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * Default implementation of the XmlBeanDefinitionParser interface.
- * Parses bean definitions according to the "spring-beans" DTD. 
+ * Parses bean definitions according to the "spring-beans" DTD.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 18.12.2003
@@ -128,7 +127,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 
 
 	public void registerBeanDefinitions(BeanDefinitionRegistry beanFactory, ClassLoader beanClassLoader,
-																			Document doc, Resource resource) {
+										Document doc, Resource resource) {
 		this.beanFactory = beanFactory;
 		this.beanClassLoader = beanClassLoader;
 		this.resource = resource;
@@ -203,16 +202,15 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 			if (beanDefinition instanceof RootBeanDefinition) {
 				id = ((RootBeanDefinition) beanDefinition).getBeanClassName();
 				logger.debug("Neither XML 'id' nor 'name' specified - using bean class name [" + id + "] as ID");
-			}
-			else {
+			} else {
 				throw new BeanDefinitionStoreException(this.resource, "",
-																							 "Child bean definition has neither 'id' nor 'name'");
+					"Child bean definition has neither 'id' nor 'name'");
 			}
 		}
 
 		logger.debug("Registering bean definition with id '" + id + "'");
 		this.beanFactory.registerBeanDefinition(id, beanDefinition);
-		for (Iterator it = aliases.iterator(); it.hasNext();) {
+		for (Iterator it = aliases.iterator(); it.hasNext(); ) {
 			this.beanFactory.registerAlias(id, (String) it.next());
 		}
 	}
@@ -244,8 +242,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				if (this.beanClassLoader != null) {
 					Class clazz = Class.forName(className, true, this.beanClassLoader);
 					rbd = new RootBeanDefinition(clazz, cargs, pvs);
-				}
-				else {
+				} else {
 					rbd = new RootBeanDefinition(className, cargs, pvs);
 				}
 
@@ -276,8 +273,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				}
 
 				bd = rbd;
-			}
-			else {
+			} else {
 				bd = new ChildBeanDefinition(parent, pvs);
 			}
 
@@ -295,14 +291,12 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 			bd.setResourceDescription(this.resource.getDescription());
 
 			return bd;
-		}
-		catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			throw new BeanDefinitionStoreException(this.resource, beanName,
-																						 "Bean class [" + className + "] not found", ex);
-		}
-		catch (NoClassDefFoundError err) {
+				"Bean class [" + className + "] not found", ex);
+		} catch (NoClassDefFoundError err) {
 			throw new BeanDefinitionStoreException(this.resource, beanName,
-																						 "Class that bean class [" + className + "] depends on not found", err);
+				"Class that bean class [" + className + "] depends on not found", err);
 		}
 	}
 
@@ -310,7 +304,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 	 * Parse constructor argument subelements of the given bean element.
 	 */
 	protected ConstructorArgumentValues getConstructorArgSubElements(String beanName, Element beanEle)
-			throws ClassNotFoundException {
+		throws ClassNotFoundException {
 		NodeList nl = beanEle.getChildNodes();
 		ConstructorArgumentValues cargs = new ConstructorArgumentValues();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -341,7 +335,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 	 * Parse a constructor-arg element.
 	 */
 	protected void parseConstructorArgElement(String beanName, ConstructorArgumentValues cargs, Element ele)
-			throws DOMException, ClassNotFoundException {
+		throws DOMException, ClassNotFoundException {
 		Object val = getPropertyValue(ele, beanName);
 		String indexAttr = ele.getAttribute(INDEX_ATTRIBUTE);
 		String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
@@ -353,21 +347,17 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				}
 				if (!"".equals(typeAttr)) {
 					cargs.addIndexedArgumentValue(index, val, typeAttr);
-				}
-				else {
+				} else {
 					cargs.addIndexedArgumentValue(index, val);
 				}
-			}
-			catch (NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				throw new BeanDefinitionStoreException(this.resource, beanName,
-																							 "Attribute 'index' of tag 'constructor-arg' must be an integer");
+					"Attribute 'index' of tag 'constructor-arg' must be an integer");
 			}
-		}
-		else {
+		} else {
 			if (!"".equals(typeAttr)) {
 				cargs.addGenericArgumentValue(val, typeAttr);
-			}
-			else {
+			} else {
 				cargs.addGenericArgumentValue(val);
 			}
 		}
@@ -377,11 +367,11 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 	 * Parse a property element.
 	 */
 	protected void parsePropertyElement(String beanName, MutablePropertyValues pvs, Element ele)
-			throws DOMException {
+		throws DOMException {
 		String propertyName = ele.getAttribute(NAME_ATTRIBUTE);
 		if ("".equals(propertyName)) {
 			throw new BeanDefinitionStoreException(this.resource, beanName,
-																						 "Tag 'property' must have a 'name' attribute");
+				"Tag 'property' must have a 'name' attribute");
 		}
 		Object val = getPropertyValue(ele, beanName);
 		pvs.addPropertyValue(new PropertyValue(propertyName, val));
@@ -389,6 +379,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 
 	/**
 	 * Get the value of a property element. May be a list.
+	 *
 	 * @param ele property element
 	 */
 	protected Object getPropertyValue(Element ele, String beanName) {
@@ -400,8 +391,7 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				Element candidateEle = (Element) nl.item(i);
 				if (DESCRIPTION_ELEMENT.equals(candidateEle.getTagName())) {
 					// keep going: we don't use this value for now
-				}
-				else {
+				} else {
 					// child element is what we're looking for
 					valueRefOrCollectionElement = candidateEle;
 				}
@@ -409,20 +399,20 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 		}
 		if (valueRefOrCollectionElement == null) {
 			throw new BeanDefinitionStoreException(this.resource, beanName,
-																						 "<property> element must have a subelement like 'value' or 'ref'");
+				"<property> element must have a subelement like 'value' or 'ref'");
 		}
 		return parsePropertySubelement(valueRefOrCollectionElement, beanName);
 	}
 
 	/**
 	 * Parse a value, ref or collection subelement of a property element
+	 *
 	 * @param ele subelement of property element; we don't know which yet
 	 */
 	protected Object parsePropertySubelement(Element ele, String beanName) {
 		if (ele.getTagName().equals(BEAN_ELEMENT)) {
 			return parseBeanDefinition(ele, "(inner bean definition)");
-		}
-		else if (ele.getTagName().equals(REF_ELEMENT)) {
+		} else if (ele.getTagName().equals(REF_ELEMENT)) {
 			// a generic reference to any name of any bean
 			String beanRef = ele.getAttribute(BEAN_REF_ATTRIBUTE);
 			if ("".equals(beanRef)) {
@@ -430,12 +420,11 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				beanRef = ele.getAttribute(LOCAL_REF_ATTRIBUTE);
 				if ("".equals(beanRef)) {
 					throw new BeanDefinitionStoreException(this.resource, beanName,
-																								 "Either 'bean' or 'local' is required for a reference");
+						"Either 'bean' or 'local' is required for a reference");
 				}
 			}
 			return new RuntimeBeanReference(beanRef);
-		}
-		else if (ele.getTagName().equals(IDREF_ELEMENT)) {
+		} else if (ele.getTagName().equals(IDREF_ELEMENT)) {
 			// a generic reference to any name of any bean
 			String beanRef = ele.getAttribute(BEAN_REF_ATTRIBUTE);
 			if ("".equals(beanRef)) {
@@ -443,33 +432,27 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 				beanRef = ele.getAttribute(LOCAL_REF_ATTRIBUTE);
 				if ("".equals(beanRef)) {
 					throw new BeanDefinitionStoreException(this.resource, beanName,
-																								 "Either 'bean' or 'local' is required for an idref");
+						"Either 'bean' or 'local' is required for an idref");
 				}
 			}
 			return beanRef;
-		}
-		else if (ele.getTagName().equals(LIST_ELEMENT)) {
+		} else if (ele.getTagName().equals(LIST_ELEMENT)) {
 			return getList(ele, beanName);
-		}
-		else if (ele.getTagName().equals(SET_ELEMENT)) {
+		} else if (ele.getTagName().equals(SET_ELEMENT)) {
 			return getSet(ele, beanName);
-		}
-		else if (ele.getTagName().equals(MAP_ELEMENT)) {
+		} else if (ele.getTagName().equals(MAP_ELEMENT)) {
 			return getMap(ele, beanName);
-		}
-		else if (ele.getTagName().equals(PROPS_ELEMENT)) {
+		} else if (ele.getTagName().equals(PROPS_ELEMENT)) {
 			return getProps(ele, beanName);
-		}
-		else if (ele.getTagName().equals(VALUE_ELEMENT)) {
+		} else if (ele.getTagName().equals(VALUE_ELEMENT)) {
 			// it's a literal value
 			return getTextValue(ele, beanName);
-		}
-		else if (ele.getTagName().equals(NULL_ELEMENT)) {
+		} else if (ele.getTagName().equals(NULL_ELEMENT)) {
 			// it's a distinguished null value
 			return null;
 		}
 		throw new BeanDefinitionStoreException(this.resource, beanName,
-																					 "Unknown subelement of <property>: <" + ele.getTagName() + ">");
+			"Unknown subelement of <property>: <" + ele.getTagName() + ">");
 	}
 
 	protected List getList(Element collectionEle, String beanName) {
@@ -551,8 +534,8 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 		}
 		if (nl.getLength() != 1 || !(nl.item(0) instanceof Text)) {
 			throw new BeanDefinitionStoreException(this.resource, beanName,
-																						 "Unexpected element or type mismatch: expected single node of " +
-																						 nl.item(0).getClass() + " to be of type Text: " + "found " + ele, null);
+				"Unexpected element or type mismatch: expected single node of " +
+				nl.item(0).getClass() + " to be of type Text: " + "found " + ele, null);
 		}
 		Text t = (Text) nl.item(0);
 		// This will be a String
@@ -563,11 +546,9 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 		int dependencyCheckCode = RootBeanDefinition.DEPENDENCY_CHECK_NONE;
 		if (DEPENDENCY_CHECK_ALL_ATTRIBUTE_VALUE.equals(att)) {
 			dependencyCheckCode = RootBeanDefinition.DEPENDENCY_CHECK_ALL;
-		}
-		else if (DEPENDENCY_CHECK_SIMPLE_ATTRIBUTE_VALUE.equals(att)) {
+		} else if (DEPENDENCY_CHECK_SIMPLE_ATTRIBUTE_VALUE.equals(att)) {
 			dependencyCheckCode = RootBeanDefinition.DEPENDENCY_CHECK_SIMPLE;
-		}
-		else if (DEPENDENCY_CHECK_OBJECTS_ATTRIBUTE_VALUE.equals(att)) {
+		} else if (DEPENDENCY_CHECK_OBJECTS_ATTRIBUTE_VALUE.equals(att)) {
 			dependencyCheckCode = RootBeanDefinition.DEPENDENCY_CHECK_OBJECTS;
 		}
 		// else leave default value
@@ -578,14 +559,11 @@ public class DefaultXmlBeanDefinitionParser implements XmlBeanDefinitionParser {
 		int autowire = RootBeanDefinition.AUTOWIRE_NO;
 		if (AUTOWIRE_BY_NAME_VALUE.equals(att)) {
 			autowire = RootBeanDefinition.AUTOWIRE_BY_NAME;
-		}
-		else if (AUTOWIRE_BY_TYPE_VALUE.equals(att)) {
+		} else if (AUTOWIRE_BY_TYPE_VALUE.equals(att)) {
 			autowire = RootBeanDefinition.AUTOWIRE_BY_TYPE;
-		}
-		else if (AUTOWIRE_CONSTRUCTOR_VALUE.equals(att)) {
+		} else if (AUTOWIRE_CONSTRUCTOR_VALUE.equals(att)) {
 			autowire = RootBeanDefinition.AUTOWIRE_CONSTRUCTOR;
-		}
-		else if (AUTOWIRE_AUTODETECT_VALUE.equals(att)) {
+		} else if (AUTOWIRE_AUTODETECT_VALUE.equals(att)) {
 			autowire = RootBeanDefinition.AUTOWIRE_AUTODETECT;
 		}
 		// else leave default value

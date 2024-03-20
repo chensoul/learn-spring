@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -35,7 +34,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
-
 import org.springframework.core.io.InputStreamSource;
 
 /**
@@ -69,13 +67,13 @@ import org.springframework.core.io.InputStreamSource;
  * </code>
  *
  * @author Juergen Hoeller
- * @since 19.01.2004
  * @see javax.mail.internet.MimeMessage
  * @see #getMimeMessage
  * @see MimeMessagePreparator
  * @see JavaMailSender
  * @see JavaMailSenderImpl
  * @see org.springframework.mail.SimpleMailMessage
+ * @since 19.01.2004
  */
 public class MimeMessageHelper {
 
@@ -89,6 +87,7 @@ public class MimeMessageHelper {
 	/**
 	 * Create new MimeMessageHelper for the given MimeMessage,
 	 * assuming a simple text message (no multipart content).
+	 *
 	 * @param mimeMessage MimeMessage to work on
 	 * @see #MimeMessageHelper(javax.mail.internet.MimeMessage, boolean)
 	 */
@@ -99,9 +98,10 @@ public class MimeMessageHelper {
 	/**
 	 * Create new MimeMessageHelper for the given MimeMessage,
 	 * in multipart mode (supporting attachments) if requested.
+	 *
 	 * @param mimeMessage MimeMessage to work on
-	 * @param multipart whether to create a multipart message that
-	 * supports attachments
+	 * @param multipart   whether to create a multipart message that
+	 *                    supports attachments
 	 */
 	public MimeMessageHelper(MimeMessage mimeMessage, boolean multipart) throws MessagingException {
 		this.mimeMessage = mimeMessage;
@@ -114,8 +114,9 @@ public class MimeMessageHelper {
 	/**
 	 * Create new MimeMessageHelper for the given MimeMessage,
 	 * assuming a simple text message (no multipart content).
+	 *
 	 * @param mimeMessage MimeMessage to work on
-	 * @param encoding the character encoding to use for the message
+	 * @param encoding    the character encoding to use for the message
 	 * @see #MimeMessageHelper(javax.mail.internet.MimeMessage, boolean)
 	 */
 	public MimeMessageHelper(MimeMessage mimeMessage, String encoding) {
@@ -126,13 +127,14 @@ public class MimeMessageHelper {
 	/**
 	 * Create new MimeMessageHelper for the given MimeMessage,
 	 * in multipart mode (supporting attachments) if requested.
+	 *
 	 * @param mimeMessage MimeMessage to work on
-	 * @param multipart whether to create a multipart message that
-	 * supports attachments
-	 * @param encoding the character encoding to use for the message
+	 * @param multipart   whether to create a multipart message that
+	 *                    supports attachments
+	 * @param encoding    the character encoding to use for the message
 	 */
 	public MimeMessageHelper(MimeMessage mimeMessage, boolean multipart, String encoding)
-	    throws MessagingException {
+		throws MessagingException {
 		this(mimeMessage, multipart);
 		this.encoding = encoding;
 	}
@@ -162,8 +164,8 @@ public class MimeMessageHelper {
 
 	public void setFrom(String from, String personal) throws MessagingException, UnsupportedEncodingException {
 		this.mimeMessage.setFrom(this.encoding != null ?
-		                         new InternetAddress(from, personal, this.encoding) :
-		                         new InternetAddress(from, personal));
+			new InternetAddress(from, personal, this.encoding) :
+			new InternetAddress(from, personal));
 	}
 
 
@@ -197,9 +199,9 @@ public class MimeMessageHelper {
 
 	public void addTo(String to, String personal) throws MessagingException, UnsupportedEncodingException {
 		this.mimeMessage.addRecipient(Message.RecipientType.TO,
-		                              this.encoding != null ?
-		                              new InternetAddress(to, personal, this.encoding) :
-		                              new InternetAddress(to, personal));
+			this.encoding != null ?
+				new InternetAddress(to, personal, this.encoding) :
+				new InternetAddress(to, personal));
 	}
 
 
@@ -233,9 +235,9 @@ public class MimeMessageHelper {
 
 	public void addCc(String cc, String personal) throws MessagingException, UnsupportedEncodingException {
 		this.mimeMessage.addRecipient(Message.RecipientType.CC,
-		                              this.encoding != null ?
-		                              new InternetAddress(cc, personal, this.encoding) :
-		                              new InternetAddress(cc, personal));
+			this.encoding != null ?
+				new InternetAddress(cc, personal, this.encoding) :
+				new InternetAddress(cc, personal));
 	}
 
 
@@ -269,17 +271,16 @@ public class MimeMessageHelper {
 
 	public void addBcc(String bcc, String personal) throws MessagingException, UnsupportedEncodingException {
 		this.mimeMessage.addRecipient(Message.RecipientType.BCC,
-		                              this.encoding != null ?
-		                              new InternetAddress(bcc, personal, this.encoding) :
-		                              new InternetAddress(bcc, personal));
+			this.encoding != null ?
+				new InternetAddress(bcc, personal, this.encoding) :
+				new InternetAddress(bcc, personal));
 	}
 
 
 	public void setSubject(String subject) throws MessagingException {
 		if (this.encoding != null) {
 			this.mimeMessage.setSubject(subject, this.encoding);
-		}
-		else {
+		} else {
 			this.mimeMessage.setSubject(subject);
 		}
 	}
@@ -291,9 +292,10 @@ public class MimeMessageHelper {
 	/**
 	 * Set the given text directly as content in non-multipart mode
 	 * respectively as default body part in multipart mode.
+	 *
 	 * @param text text to set
 	 * @param html whether to apply content type "text/html" for an
-	 * HTML mail, using default content type ("text/plain") else
+	 *             HTML mail, using default content type ("text/plain") else
 	 */
 	public void setText(final String text, boolean html) throws MessagingException {
 		MimePart partToUse = null;
@@ -311,8 +313,7 @@ public class MimeMessageHelper {
 				bodyPart = mimeBodyPart;
 			}
 			partToUse = bodyPart;
-		}
-		else {
+		} else {
 			partToUse = this.mimeMessage;
 		}
 
@@ -320,27 +321,28 @@ public class MimeMessageHelper {
 			// need to use a javax.activation.DataSource (!) to set a text
 			// with content type "text/html"
 			partToUse.setDataHandler(new DataHandler(
-			    new DataSource() {
-						public InputStream getInputStream() throws IOException {
-							return new ByteArrayInputStream(encoding != null ? text.getBytes(encoding) : text.getBytes());
-						}
-						public OutputStream getOutputStream() throws IOException {
-							throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
-						}
-						public String getContentType() {
-							return "text/html";
-						}
-						public String getName() {
-							return "text";
-						}
-			    }
+				new DataSource() {
+					public InputStream getInputStream() throws IOException {
+						return new ByteArrayInputStream(encoding != null ? text.getBytes(encoding) : text.getBytes());
+					}
+
+					public OutputStream getOutputStream() throws IOException {
+						throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+					}
+
+					public String getContentType() {
+						return "text/html";
+					}
+
+					public String getName() {
+						return "text";
+					}
+				}
 			));
-		}
-		else {
+		} else {
 			if (this.encoding != null) {
 				partToUse.setText(text, this.encoding);
-			}
-			else {
+			} else {
 				partToUse.setText(text);
 			}
 		}
@@ -353,9 +355,10 @@ public class MimeMessageHelper {
 	 * <p>The content type will be determined by the name of the given
 	 * content file. Do not use this for temporary files with arbitrary
 	 * filenames (possibly ending in ".tmp" or the like)!
+	 *
 	 * @param attachmentFilename the name of the attachment as it will
-	 * appear in the mail
-	 * @param file the File resource to take the content from
+	 *                           appear in the mail
+	 * @param file               the File resource to take the content from
 	 * @throws MessagingException
 	 * @see #addAttachment(String, InputStreamSource)
 	 * @see #addAttachment(String, DataSource)
@@ -370,29 +373,33 @@ public class MimeMessageHelper {
 	 * <p>The content type will be determined by the given filename for
 	 * the attachment. Thus, any content source will be fine, including
 	 * temporary files with arbitrary filenames.
+	 *
 	 * @param attachmentFilename the name of the attachment as it will
-	 * appear in the mail
-	 * @param inputStreamSource the resource to take the content from
+	 *                           appear in the mail
+	 * @param inputStreamSource  the resource to take the content from
 	 * @see #addAttachment(String, File)
 	 * @see #addAttachment(String, DataSource)
 	 */
 	public void addAttachment(final String attachmentFilename, final InputStreamSource inputStreamSource)
-	    throws MessagingException {
+		throws MessagingException {
 		addAttachment(attachmentFilename,
-		              new DataSource() {
-			              public InputStream getInputStream() throws IOException {
-											return inputStreamSource.getInputStream();
-										}
-										public OutputStream getOutputStream() {
-											throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
-										}
-										public String getContentType() {
-											return FileTypeMap.getDefaultFileTypeMap().getContentType(attachmentFilename);
-										}
-										public String getName() {
-											return attachmentFilename;
-										}
-									});
+			new DataSource() {
+				public InputStream getInputStream() throws IOException {
+					return inputStreamSource.getInputStream();
+				}
+
+				public OutputStream getOutputStream() {
+					throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+				}
+
+				public String getContentType() {
+					return FileTypeMap.getDefaultFileTypeMap().getContentType(attachmentFilename);
+				}
+
+				public String getName() {
+					return attachmentFilename;
+				}
+			});
 	}
 
 	/**
@@ -401,10 +408,11 @@ public class MimeMessageHelper {
 	 * <p>Note that the InputStream returned by the DataSource implementation
 	 * needs to be a <i>fresh one on each call</i>, as JavaMail will invoke
 	 * getInputStream() multiple times.
+	 *
 	 * @param attachmentFilename the name of the attachment as it will
-	 * appear in the mail (the content type will be determined by this)
-	 * @param dataSource the <code>javax.activation.DataSource</code> to take
-	 * the content from, determining the InputStream and the content type
+	 *                           appear in the mail (the content type will be determined by this)
+	 * @param dataSource         the <code>javax.activation.DataSource</code> to take
+	 *                           the content from, determining the InputStream and the content type
 	 * @throws MessagingException in case of errors
 	 * @see #addAttachment(String, File)
 	 * @see #addAttachment(String, InputStreamSource)

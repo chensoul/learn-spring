@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet;
 
@@ -40,7 +40,9 @@ import java.util.Map;
  */
 public class ModelAndView {
 
-	/** View if we hold an object reference */
+	/**
+	 * View if we hold an object reference
+	 */
 	private View view;
 
 	/**
@@ -49,11 +51,14 @@ public class ModelAndView {
 	 */
 	private String viewName;
 
-	/** Model */
+	/**
+	 * Model
+	 */
 	private Map model;
 
 	/**
 	 * Convenient constructor when there is no model data to expose.
+	 *
 	 * @param view View object to render
 	 */
 	public ModelAndView(View view) {
@@ -63,8 +68,9 @@ public class ModelAndView {
 
 	/**
 	 * Convenient constructor when there is no model data to expose.
+	 *
 	 * @param viewName name of the View to render, to be resolved
-	 * by the DispatcherServlet
+	 *                 by the DispatcherServlet
 	 */
 	public ModelAndView(String viewName) {
 		this.viewName = viewName;
@@ -73,23 +79,25 @@ public class ModelAndView {
 
 	/**
 	 * Creates new ModelAndView given a View object and a model.
-	 * @param view View object to render
+	 *
+	 * @param view  View object to render
 	 * @param model Map of model names (Strings) to model objects
-	 * (Objects). Model entries may not be null, but the model Map
-	 * may be null if there is no model data.
+	 *              (Objects). Model entries may not be null, but the model Map
+	 *              may be null if there is no model data.
 	 */
 	public ModelAndView(View view, Map model) {
 		this.view = view;
 		this.model = model;
 	}
 
-	/** 
+	/**
 	 * Creates new ModelAndView given a view name and a model.
+	 *
 	 * @param viewName name of the View to render, to be resolved
-	 * by the DispatcherServlet
-	 * @param model Map of model names (Strings) to model objects
-	 * (Objects). Model entries may not be null, but the model Map
-	 * may be null if there is no model data.
+	 *                 by the DispatcherServlet
+	 * @param model    Map of model names (Strings) to model objects
+	 *                 (Objects). Model entries may not be null, but the model Map
+	 *                 may be null if there is no model data.
 	 */
 	public ModelAndView(String viewName, Map model) {
 		this.viewName = viewName;
@@ -98,8 +106,9 @@ public class ModelAndView {
 
 	/**
 	 * Convenient constructor to take a single model object.
-	 * @param view View object to render
-	 * @param modelName name of the single entry in the model
+	 *
+	 * @param view        View object to render
+	 * @param modelName   name of the single entry in the model
 	 * @param modelObject the single model object
 	 */
 	public ModelAndView(View view, String modelName, Object modelObject) {
@@ -109,9 +118,10 @@ public class ModelAndView {
 
 	/**
 	 * Convenient constructor to take a single model object.
-	 * @param viewName name of the View to render, to be resolved
-	 * by the DispatcherServlet
-	 * @param modelName name of the single entry in the model
+	 *
+	 * @param viewName    name of the View to render, to be resolved
+	 *                    by the DispatcherServlet
+	 * @param modelName   name of the single entry in the model
 	 * @param modelObject the single model object
 	 */
 	public ModelAndView(String viewName, String modelName, Object modelObject) {
@@ -121,7 +131,8 @@ public class ModelAndView {
 
 	/**
 	 * Add an object to the model.
-	 * @param modelName name of the object to add to the model
+	 *
+	 * @param modelName   name of the object to add to the model
 	 * @param modelObject object to add to the model. May not be null.
 	 * @return this ModelAndView, convenient to allow usages like
 	 * return modelAndView.addObject("foo", bar);
@@ -129,6 +140,14 @@ public class ModelAndView {
 	public ModelAndView addObject(String modelName, Object modelObject) {
 		this.model.put(modelName, modelObject);
 		return this;
+	}
+
+	/**
+	 * Return the View object, or null if we are using a view name
+	 * to be resolved by the DispatcherServlet via a ViewResolver.
+	 */
+	public View getView() {
+		return view;
 	}
 
 	/**
@@ -141,11 +160,11 @@ public class ModelAndView {
 	}
 
 	/**
-	 * Return the View object, or null if we are using a view name
-	 * to be resolved by the DispatcherServlet via a ViewResolver.
+	 * Return the view name to be resolved by the DispatcherServlet
+	 * via a ViewResolver, or null if we are using a View object.
 	 */
-	public View getView() {
-		return view;
+	public String getViewName() {
+		return viewName;
 	}
 
 	/**
@@ -156,14 +175,6 @@ public class ModelAndView {
 	public void setViewName(String viewName) {
 		this.viewName = viewName;
 		this.view = null;
-	}
-
-	/**
-	 * Return the view name to be resolved by the DispatcherServlet
-	 * via a ViewResolver, or null if we are using a View object.
-	 */
-	public String getViewName() {
-		return viewName;
 	}
 
 	/**
@@ -189,8 +200,7 @@ public class ModelAndView {
 		StringBuffer buf = new StringBuffer("ModelAndView: ");
 		if (isReference()) {
 			buf.append("reference to view with name [").append(this.viewName).append(']');
-		}
-		else {
+		} else {
 			buf.append("materialized View is [").append(this.view).append(']');
 		}
 		buf.append("; model=[").append(this.model).append(']');

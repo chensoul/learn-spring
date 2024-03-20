@@ -61,7 +61,8 @@ public abstract class MappingSqlQueryWithParameters extends SqlQuery {
 
 	/**
 	 * Convenient constructor with DataSource and SQL string.
-	 * @param ds DataSource to use to get connections
+	 *
+	 * @param ds  DataSource to use to get connections
 	 * @param sql SQL to run
 	 */
 	public MappingSqlQueryWithParameters(DataSource ds, String sql) {
@@ -79,20 +80,21 @@ public abstract class MappingSqlQueryWithParameters extends SqlQuery {
 	/**
 	 * Subclasses must implement this method to convert each row
 	 * of the ResultSet into an object of the result type.
-	 * @param rs ResultSet we're working through
-	 * @param rowNum row number (from 0) we're up to
+	 *
+	 * @param rs         ResultSet we're working through
+	 * @param rowNum     row number (from 0) we're up to
 	 * @param parameters to the query (passed to the execute() method).
-	 * Subclasses are rarely interested in these.
-	 * It can be null if there are no parameters.
-	 * @param context passed to the execute() method.
-	 * It can be null if no contextual information is need.
+	 *                   Subclasses are rarely interested in these.
+	 *                   It can be null if there are no parameters.
+	 * @param context    passed to the execute() method.
+	 *                   It can be null if no contextual information is need.
 	 * @return an object of the result type
 	 * @throws SQLException if there's an error extracting data.
-	 * Subclasses can simply not catch SQLExceptions, relying on the
-	 * framework to clean up.
+	 *                      Subclasses can simply not catch SQLExceptions, relying on the
+	 *                      framework to clean up.
 	 */
 	protected abstract Object mapRow(ResultSet rs, int rowNum, Object[] parameters, Map context)
-			throws SQLException;
+		throws SQLException;
 
 
 	/**
@@ -101,7 +103,9 @@ public abstract class MappingSqlQueryWithParameters extends SqlQuery {
 	 */
 	protected class ResultReaderImpl implements ResultReader {
 
-		/** List to save results in */
+		/**
+		 * List to save results in
+		 */
 		private List results;
 
 		private Object[] params;

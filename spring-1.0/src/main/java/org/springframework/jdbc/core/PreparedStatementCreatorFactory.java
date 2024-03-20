@@ -32,17 +32,20 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
  * Helper class that can efficiently create multiple PreparedStatementCreator
  * objects with different parameters based on a SQL statement and a single
  * set of parameter declarations.
+ *
  * @author Rod Johnson
  * @version $Id: PreparedStatementCreatorFactory.java,v 1.9 2004/03/18 02:46:08 trisberg Exp $
  */
 public class PreparedStatementCreatorFactory {
 
-	/** The SQL, which won't change when the parameters change. */
-	private String sql;
-
-	/** List of SqlParameter objects. May not be null. */
+	/**
+	 * List of SqlParameter objects. May not be null.
+	 */
 	private final List declaredParameters;
-
+	/**
+	 * The SQL, which won't change when the parameters change.
+	 */
+	private String sql;
 	private int resultSetType = ResultSet.TYPE_FORWARD_ONLY;
 
 	private boolean updatableResults = false;
@@ -58,7 +61,8 @@ public class PreparedStatementCreatorFactory {
 
 	/**
 	 * Create a new factory with the given SQL and JDBC types.
-	 * @param sql SQL to execute
+	 *
+	 * @param sql   SQL to execute
 	 * @param types int array of JDBC types
 	 */
 	public PreparedStatementCreatorFactory(String sql, int[] types) {
@@ -67,7 +71,8 @@ public class PreparedStatementCreatorFactory {
 
 	/**
 	 * Create a new factory with the given SQL and parameters.
-	 * @param sql SQL
+	 *
+	 * @param sql                SQL
 	 * @param declaredParameters list of SqlParameter objects
 	 * @see SqlParameter
 	 */
@@ -87,6 +92,7 @@ public class PreparedStatementCreatorFactory {
 	/**
 	 * Set whether to use prepared statements that return a
 	 * specific type of ResultSet.
+	 *
 	 * @param resultSetType the ResultSet type
 	 * @see ResultSet#TYPE_FORWARD_ONLY
 	 * @see ResultSet#TYPE_SCROLL_INSENSITIVE
@@ -106,6 +112,7 @@ public class PreparedStatementCreatorFactory {
 
 	/**
 	 * Return a new PreparedStatementCreator given these parameters.
+	 *
 	 * @param params parameter array. May be null.
 	 */
 	public PreparedStatementCreator newPreparedStatementCreator(Object[] params) {
@@ -114,6 +121,7 @@ public class PreparedStatementCreatorFactory {
 
 	/**
 	 * Return a new PreparedStatementCreator instance given this parameters.
+	 *
 	 * @param params List of parameters. May be null.
 	 */
 	public PreparedStatementCreator newPreparedStatementCreator(List params) {
@@ -130,23 +138,23 @@ public class PreparedStatementCreatorFactory {
 
 		/**
 		 * Create a new PreparedStatementCreatorImpl.
+		 *
 		 * @param params list of SqlParameter objects. May not be null.
 		 */
 		private PreparedStatementCreatorImpl(List params) {
 			this.parameters = params;
 			if (this.parameters.size() != declaredParameters.size())
-				throw new InvalidDataAccessApiUsageException("SQL='" + sql + "': given " + this. parameters.size() +
-				                                             " parameter but expected " + declaredParameters.size());
+				throw new InvalidDataAccessApiUsageException("SQL='" + sql + "': given " + this.parameters.size() +
+															 " parameter but expected " + declaredParameters.size());
 		}
 
 		public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 			PreparedStatement ps = null;
 			if (resultSetType == ResultSet.TYPE_FORWARD_ONLY && !updatableResults) {
 				ps = con.prepareStatement(sql);
-			}
-			else {
+			} else {
 				ps = con.prepareStatement(sql, resultSetType,
-																	updatableResults ? ResultSet.CONCUR_UPDATABLE : ResultSet.CONCUR_READ_ONLY);
+					updatableResults ? ResultSet.CONCUR_UPDATABLE : ResultSet.CONCUR_READ_ONLY);
 			}
 
 			// Set arguments: does nothing if there are no parameters
@@ -155,15 +163,14 @@ public class PreparedStatementCreatorFactory {
 				// We need SQL type to be able to set null
 				if (this.parameters.get(i) == null) {
 					ps.setNull(i + 1, declaredParameter.getSqlType());
-				}
-				else {
+				} else {
 					// Documentation?
 					// PARAMETERIZE THIS TO A TYPE MAP INTERFACE?
 					switch (declaredParameter.getSqlType()) {
-						case Types.VARCHAR :
+						case Types.VARCHAR:
 							ps.setString(i + 1, (String) this.parameters.get(i));
 							break;
-						default :
+						default:
 							ps.setObject(i + 1, this.parameters.get(i), declaredParameter.getSqlType());
 							break;
 					}

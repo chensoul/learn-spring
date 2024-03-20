@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
  * in terms of the spec's suggestions regarding simple BLOB and CLOB handling.
  *
  * @author Juergen Hoeller
- * @since 04.12.2003
  * @see ResultSet#getBytes
  * @see ResultSet#getBinaryStream
  * @see ResultSet#getString
@@ -44,6 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * @see PreparedStatement#setString
  * @see PreparedStatement#setAsciiStream
  * @see PreparedStatement#setCharacterStream
+ * @since 04.12.2003
  */
 public class DefaultLobHandler implements LobHandler {
 
@@ -82,47 +82,47 @@ public class DefaultLobHandler implements LobHandler {
 	protected class DefaultLobCreator implements LobCreator {
 
 		public void setBlobAsBytes(PreparedStatement ps, int parameterIndex, byte[] content)
-				throws SQLException {
+			throws SQLException {
 			ps.setBytes(parameterIndex, content);
 			logger.debug(content != null ?
-			             "Set bytes for BLOB with length " + content.length :
-			             "Set BLOB to null");
+				"Set bytes for BLOB with length " + content.length :
+				"Set BLOB to null");
 		}
 
 		public void setBlobAsBinaryStream(PreparedStatement ps, int parameterIndex, InputStream binaryStream,
-		                                  int contentLength)
-				throws SQLException {
+										  int contentLength)
+			throws SQLException {
 			ps.setBinaryStream(parameterIndex, binaryStream, contentLength);
 			logger.debug(binaryStream != null ?
-			             "Set binary stream for BLOB with length " + contentLength :
-			             "Set BLOB to null");
+				"Set binary stream for BLOB with length " + contentLength :
+				"Set BLOB to null");
 		}
 
 		public void setClobAsString(PreparedStatement ps, int parameterIndex, String content)
-		    throws SQLException {
+			throws SQLException {
 			ps.setString(parameterIndex, content);
 			logger.debug(content != null ?
-			             "Set string for CLOB with length " + content.length() :
-			             "Set CLOB to null");
+				"Set string for CLOB with length " + content.length() :
+				"Set CLOB to null");
 		}
 
 		public void setClobAsAsciiStream(PreparedStatement ps, int parameterIndex, InputStream asciiStream,
-		                                 int contentLength)
-		    throws SQLException {
+										 int contentLength)
+			throws SQLException {
 			ps.setAsciiStream(parameterIndex, asciiStream, contentLength);
 			logger.debug(asciiStream != null ?
-			             "Set ASCII stream for CLOB with length " + contentLength :
-			             "Set CLOB to null");
+				"Set ASCII stream for CLOB with length " + contentLength :
+				"Set CLOB to null");
 		}
 
 
 		public void setClobAsCharacterStream(PreparedStatement ps, int parameterIndex, Reader characterStream,
-		                                     int contentLength)
-		    throws SQLException {
+											 int contentLength)
+			throws SQLException {
 			ps.setCharacterStream(parameterIndex, characterStream, contentLength);
 			logger.debug(characterStream != null ?
-			             "Set character stream for CLOB with length " + contentLength :
-			             "Set CLOB to null");
+				"Set character stream for CLOB with length " + contentLength :
+				"Set CLOB to null");
 		}
 
 		public void close() {

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.theme;
 
@@ -41,6 +41,7 @@ public class CookieThemeResolver extends AbstractThemeResolver {
 	 * for overriding a cookie value if the theme has been changed in the
 	 * course of the current request! Use RequestContext.getTheme() to
 	 * retrieve the current theme in controllers or views.
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContext#getTheme
 	 */
 	public static final String THEME_REQUEST_ATTRIBUTE_NAME = CookieThemeResolver.class.getName() + ".THEME";
@@ -56,7 +57,11 @@ public class CookieThemeResolver extends AbstractThemeResolver {
 	private int cookieMaxAge = DEFAULT_COOKIE_MAX_AGE;
 
 	private String cookiePath = DEFAULT_COOKIE_PATH;
-	
+
+	public String getCookieName() {
+		return cookieName;
+	}
+
 	/**
 	 * Use the given name for theme cookies, containing the theme name.
 	 */
@@ -64,13 +69,9 @@ public class CookieThemeResolver extends AbstractThemeResolver {
 		this.cookieName = cookieName;
 	}
 
-	public String getCookieName() {
-		return cookieName;
-	}
-
 	/**
 	 * Use the given path for theme cookies.
-	 * The cookie is only visible for URLs in the path and below. 
+	 * The cookie is only visible for URLs in the path and below.
 	 */
 	public String getCookiePath() {
 		return cookiePath;
@@ -80,16 +81,16 @@ public class CookieThemeResolver extends AbstractThemeResolver {
 		this.cookiePath = cookiePath;
 	}
 
+	public int getCookieMaxAge() {
+		return cookieMaxAge;
+	}
+
 	/**
 	 * Use the given maximum age, specified in seconds, for locale cookies.
 	 * Useful special value: -1 ... not persistent, deleted when client shuts down
 	 */
 	public void setCookieMaxAge(int cookieMaxAge) {
 		this.cookieMaxAge = cookieMaxAge;
-	}
-
-	public int getCookieMaxAge() {
-		return cookieMaxAge;
 	}
 
 	public String resolveThemeName(HttpServletRequest request) {
@@ -117,8 +118,7 @@ public class CookieThemeResolver extends AbstractThemeResolver {
 			cookie = new Cookie(getCookieName(), themeName);
 			cookie.setMaxAge(getCookieMaxAge());
 			cookie.setPath(cookiePath);
-		}
-		else {
+		} else {
 			// set request attribute to fallback theme and remove cookie
 			request.setAttribute(THEME_REQUEST_ATTRIBUTE_NAME, getDefaultThemeName());
 			cookie = new Cookie(getCookieName(), "");

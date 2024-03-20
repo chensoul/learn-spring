@@ -30,9 +30,9 @@ import org.springframework.web.util.UrlPathHelper;
  * URL lookup. For information on the latter, see alwaysUseFullPath property.
  *
  * @author Juergen Hoeller
- * @since 14.01.2004
  * @see #setAlwaysUseFullPath
  * @see #setUrlDecode
+ * @since 14.01.2004
  */
 public abstract class AbstractUrlMethodNameResolver implements MethodNameResolver {
 
@@ -45,6 +45,7 @@ public abstract class AbstractUrlMethodNameResolver implements MethodNameResolve
 	 * context. Else, the path within the current servlet mapping is used
 	 * if applicable (i.e. in the case of a ".../*" servlet mapping in web.xml).
 	 * Default is false.
+	 *
 	 * @see UrlPathHelper#setAlwaysUseFullPath
 	 */
 	public void setAlwaysUseFullPath(boolean alwaysUseFullPath) {
@@ -59,6 +60,7 @@ public abstract class AbstractUrlMethodNameResolver implements MethodNameResolve
 	 * to the Servlet spec (ISO-8859-1).
 	 * <p>Note: Setting this to true requires J2SE 1.4, as J2SE 1.3's
 	 * URLDecoder class does not offer a way to specify the encoding.
+	 *
 	 * @see UrlPathHelper#setUrlDecode
 	 */
 	public void setUrlDecode(boolean urlDecode) {
@@ -70,6 +72,7 @@ public abstract class AbstractUrlMethodNameResolver implements MethodNameResolve
 	 * <p>Use this to override the default UrlPathHelper with a custom subclass,
 	 * or to share common UrlPathHelper settings across multiple MethodNameResolvers
 	 * and HandlerMappings.
+	 *
 	 * @see org.springframework.web.servlet.handler.AbstractUrlHandlerMapping#setUrlPathHelper
 	 */
 	public void setUrlPathHelper(UrlPathHelper urlPathHelper) {
@@ -94,8 +97,9 @@ public abstract class AbstractUrlMethodNameResolver implements MethodNameResolve
 	/**
 	 * Return a method name that can handle this request, based on the
 	 * given lookup path. Called by this class' getHandlerMethodName.
+	 *
 	 * @param urlPath the URL path to use for lookup,
-	 * according to the settings in this class
+	 *                according to the settings in this class
 	 * @return a method name that can handle this request.
 	 * Should return null if no matching method found.
 	 * @see #getHandlerMethodName

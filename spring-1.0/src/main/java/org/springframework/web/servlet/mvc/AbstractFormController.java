@@ -163,6 +163,7 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * or via a BeanFactory: commandName, commandClass, bindOnNewForm, sessionForm.
 	 * Note that commandClass doesn't need to be set when overriding
 	 * formBackingObject, as the latter determines the class anyway.
+	 *
 	 * @see #setCommandName
 	 * @see #setCommandClass
 	 * @see #setBindOnNewForm
@@ -174,6 +175,13 @@ public abstract class AbstractFormController extends BaseCommandController {
 	}
 
 	/**
+	 * Return if request parameters should be bound in case of a new form.
+	 */
+	protected final boolean isBindOnNewForm() {
+		return bindOnNewForm;
+	}
+
+	/**
 	 * Set if request parameters should be bound to the form object
 	 * in case of a non-submitting request, i.e. a new form.
 	 */
@@ -182,10 +190,10 @@ public abstract class AbstractFormController extends BaseCommandController {
 	}
 
 	/**
-	 * Return if request parameters should be bound in case of a new form.
+	 * Return if session form mode is activated.
 	 */
-	protected final boolean isBindOnNewForm() {
-		return bindOnNewForm;
+	protected final boolean isSessionForm() {
+		return sessionForm;
 	}
 
 	/**
@@ -201,15 +209,9 @@ public abstract class AbstractFormController extends BaseCommandController {
 	}
 
 	/**
-	 * Return if session form mode is activated.
-	 */
-	protected final boolean isSessionForm() {
-		return sessionForm;
-	}
-
-	/**
 	 * Return the name of the session attribute that holds
 	 * the form object for this controller.
+	 *
 	 * @return the name of the form session attribute,
 	 * or null if not in session form mode.
 	 */
@@ -224,18 +226,17 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * as new form when using session form mode.
 	 */
 	protected final ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+		throws Exception {
 		if (isFormSubmission(request)) {
-		  if (isSessionForm() && request.getSession().getAttribute(getFormSessionAttributeName()) == null) {
-			  // cannot submit a session form if no form object is in the session
-			  return handleInvalidSubmit(request, response);
-		  }
+			if (isSessionForm() && request.getSession().getAttribute(getFormSessionAttributeName()) == null) {
+				// cannot submit a session form if no form object is in the session
+				return handleInvalidSubmit(request, response);
+			}
 			// process submit
 			Object command = getCommand(request);
 			ServletRequestDataBinder binder = bindAndValidate(request, command);
 			return processFormSubmission(request, response, command, binder.getErrors());
-		}
-		else {
+		} else {
 			return showNewForm(request, response);
 		}
 	}
@@ -247,6 +248,7 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * mode, the request is always treated as new form by handleRequestInternal.
 	 * <p>Subclasses can override this to use a custom strategy, e.g. a specific
 	 * request parameter (assumably a hidden field or submit button name).
+	 *
 	 * @param request current HTTP request
 	 * @return if the request represents a form submission
 	 */
@@ -257,13 +259,14 @@ public abstract class AbstractFormController extends BaseCommandController {
 	/**
 	 * Show a new form. Prepares a backing object for the current form
 	 * and the given request, including checking its validity.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
 	 * @return the prepared form view
 	 * @throws Exception in case of an invalid new form object
 	 */
 	protected final ModelAndView showNewForm(HttpServletRequest request, HttpServletResponse response)
-	    throws Exception {
+		throws Exception {
 		// show new form
 		logger.debug("Displaying new form");
 		Object formObject = formBackingObject(request);
@@ -296,6 +299,7 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * <p>Default implementation calls BaseCommandController.createCommand,
 	 * creating a new empty instance of the command class.
 	 * Subclasses can override this to provide a preinitialized backing object.
+	 *
 	 * @param request current HTTP request
 	 * @return the backing objact
 	 * @throws Exception in case of invalid state or arguments
@@ -314,30 +318,32 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * to prepare the form view for a specific view name.
 	 * <p>Note: If you decide to have a "formView" property specifying the
 	 * view name, consider using SimpleFormController.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
-	 * @param errors validation errors holder
+	 * @param errors   validation errors holder
 	 * @return the prepared form view, or null if handled directly
 	 * @throws Exception in case of invalid state or arguments
 	 * @see #showForm(HttpServletRequest, BindException, String)
 	 * @see SimpleFormController#setFormView
 	 */
 	protected abstract ModelAndView showForm(HttpServletRequest request, HttpServletResponse response,
-	                                         BindException errors) throws Exception;
+											 BindException errors) throws Exception;
 
 	/**
 	 * Prepare model and view for the given form, including reference and errors.
 	 * In session form mode: Re-puts the form object in the session when returning
 	 * to the form, as it has been removed by getCommand.
 	 * Can be used in subclasses to redirect back to a specific form page.
-	 * @param request current HTTP request
-	 * @param errors validation errors holder
+	 *
+	 * @param request  current HTTP request
+	 * @param errors   validation errors holder
 	 * @param viewName name of the form view
 	 * @return the prepared form view
 	 * @throws Exception in case of invalid state or arguments
 	 */
 	protected final ModelAndView showForm(HttpServletRequest request, BindException errors, String viewName)
-	    throws Exception {
+		throws Exception {
 		return showForm(request, errors, viewName, null);
 	}
 
@@ -347,16 +353,17 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * In session form mode: Re-puts the form object in the session when returning
 	 * to the form, as it has been removed by getCommand.
 	 * Can be used in subclasses to redirect back to a specific form page.
-	 * @param request current HTTP request
-	 * @param errors validation errors holder
-	 * @param viewName name of the form view
+	 *
+	 * @param request      current HTTP request
+	 * @param errors       validation errors holder
+	 * @param viewName     name of the form view
 	 * @param controlModel model map containing controller-specific control data
-	 * (e.g. current page in wizard-style controllers).
+	 *                     (e.g. current page in wizard-style controllers).
 	 * @return the prepared form view
 	 * @throws Exception in case of invalid state or arguments
 	 */
 	protected final ModelAndView showForm(HttpServletRequest request, BindException errors, String viewName,
-	                                      Map controlModel) throws Exception {
+										  Map controlModel) throws Exception {
 		if (isSessionForm()) {
 			request.getSession().setAttribute(getFormSessionAttributeName(), errors.getTarget());
 		}
@@ -376,9 +383,10 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * bean name/bean instance pairs as expected by ModelAndView.
 	 * <p>Default implementation returns null.
 	 * Subclasses can override this to set reference data used in the view.
+	 *
 	 * @param request current HTTP request
 	 * @param command form object with request parameters bound onto it
-	 * @param errors validation errors holder
+	 * @param errors  validation errors holder
 	 * @return a Map with reference data entries, or null if none
 	 * @throws Exception in case of invalid state or arguments
 	 * @see ModelAndView
@@ -397,7 +405,8 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * Either show some "invalid submit" message, or call showNewForm for resetting the
 	 * form (prepopulating it with the current values if "bindOnNewForm" is true).
 	 * In this case, the form object in the session serves as transaction token.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
 	 * @return a prepared view, or null if handled directly
 	 * @throws Exception in case of errors
@@ -405,7 +414,7 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * @see #setBindOnNewForm
 	 */
 	protected ModelAndView handleInvalidSubmit(HttpServletRequest request, HttpServletResponse response)
-	    throws Exception {
+		throws Exception {
 		Object command = formBackingObject(request);
 		ServletRequestDataBinder binder = bindAndValidate(request, command);
 		return processFormSubmission(request, response, command, binder.getErrors());
@@ -416,6 +425,7 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * <p>Calls formBackingObject if not in session form mode. Else, retrieves the
 	 * form object from the session. Note that the form object gets removed from
 	 * the session, but it will be re-added when showing the form for resubmission.
+	 *
 	 * @param request current HTTP request
 	 * @return object form to bind onto
 	 * @throws Exception in case of invalid state or arguments
@@ -445,18 +455,19 @@ public abstract class AbstractFormController extends BaseCommandController {
 	 * and call showForm or proceed with the submission accordingly.
 	 * <p>Can call errors.getModel() to populate the ModelAndView model with the command
 	 * and the Errors instance, under the specified bean name.
-	 * @param request current servlet request
+	 *
+	 * @param request  current servlet request
 	 * @param response current servlet response
-	 * @param command form object with request parameters bound onto it
-	 * @param errors holder without errors (subclass can add errors if it wants to)
+	 * @param command  form object with request parameters bound onto it
+	 * @param errors   holder without errors (subclass can add errors if it wants to)
 	 * @return the prepared model and view, or null
 	 * @throws Exception in case of errors
 	 * @see #isFormSubmission
 	 * @see #showForm
 	 * @see Errors
 	 */
-	protected abstract ModelAndView processFormSubmission(HttpServletRequest request,	HttpServletResponse response,
-	                                                      Object command, BindException errors)
-			throws Exception;
+	protected abstract ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response,
+														  Object command, BindException errors)
+		throws Exception;
 
 }

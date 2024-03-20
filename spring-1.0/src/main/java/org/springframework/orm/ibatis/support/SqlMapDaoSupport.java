@@ -16,34 +16,26 @@
 
 package org.springframework.orm.ibatis.support;
 
-import javax.sql.DataSource;
-
 import com.ibatis.db.sqlmap.SqlMap;
+import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.orm.ibatis.SqlMapTemplate;
 
 /**
  * Convenient super class for iBATIS SqlMap data access objects.
  * Requires a DataSource to be set, providing a SqlMapTemplate
  * based on it to subclasses.
+ *
  * @author Juergen Hoeller
- * @since 29.11.2003
  * @see SqlMapTemplate
+ * @since 29.11.2003
  */
 public class SqlMapDaoSupport {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private SqlMapTemplate sqlMapTemplate = new SqlMapTemplate();
-
-	/**
-	 * Set the JDBC DataSource to be used by this DAO.
-	 */
-	public final void setDataSource(DataSource dataSource) {
-	  this.sqlMapTemplate.setDataSource(dataSource);
-	}
 
 	/**
 	 * Return the JDBC DataSource used by this DAO.
@@ -53,10 +45,10 @@ public class SqlMapDaoSupport {
 	}
 
 	/**
-	 * Set the iBATIS Database Layer SqlMap to work with.
+	 * Set the JDBC DataSource to be used by this DAO.
 	 */
-	public final void setSqlMap(SqlMap sqlMap) {
-		this.sqlMapTemplate.setSqlMap(sqlMap);
+	public final void setDataSource(DataSource dataSource) {
+		this.sqlMapTemplate.setDataSource(dataSource);
 	}
 
 	/**
@@ -67,11 +59,10 @@ public class SqlMapDaoSupport {
 	}
 
 	/**
-	 * Set the JdbcTemplate for this DAO explicitly,
-	 * as an alternative to specifying a DataSource.
+	 * Set the iBATIS Database Layer SqlMap to work with.
 	 */
-	public final void setSqlMapTemplate(SqlMapTemplate sqlMapTemplate) {
-		this.sqlMapTemplate = sqlMapTemplate;
+	public final void setSqlMap(SqlMap sqlMap) {
+		this.sqlMapTemplate.setSqlMap(sqlMap);
 	}
 
 	/**
@@ -79,7 +70,15 @@ public class SqlMapDaoSupport {
 	 * pre-initialized with the DataSource or set explicitly.
 	 */
 	protected final SqlMapTemplate getSqlMapTemplate() {
-	  return sqlMapTemplate;
+		return sqlMapTemplate;
+	}
+
+	/**
+	 * Set the JdbcTemplate for this DAO explicitly,
+	 * as an alternative to specifying a DataSource.
+	 */
+	public final void setSqlMapTemplate(SqlMapTemplate sqlMapTemplate) {
+		this.sqlMapTemplate = sqlMapTemplate;
 	}
 
 	public final void afterPropertiesSet() throws Exception {
@@ -90,6 +89,7 @@ public class SqlMapDaoSupport {
 	/**
 	 * Subclasses can override this for custom initialization behavior.
 	 * Gets called after population of this instance's bean properties.
+	 *
 	 * @throws Exception if initialization fails
 	 */
 	protected void initDao() throws Exception {

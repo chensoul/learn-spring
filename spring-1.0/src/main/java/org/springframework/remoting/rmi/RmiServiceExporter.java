@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.remoting.rmi;
 
@@ -26,10 +26,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.remoting.support.RemoteExporter;
@@ -49,14 +47,14 @@ import org.springframework.remoting.support.RemoteInvocation;
  * <p>The major advantage of RMI, compared to Hessian and Burlap, is serialization.
  * Effectively, any serializable Java object can be transported without hassle.
  * Hessian and Burlap have their own (de-)serialization mechanisms, but are
- * HTTP-based and thus much easier to setup than RMI. 
+ * HTTP-based and thus much easier to setup than RMI.
  *
  * @author Juergen Hoeller
- * @since 13.05.2003
  * @see RmiClientInterceptor
  * @see RmiProxyFactoryBean
  * @see org.springframework.remoting.caucho.HessianServiceExporter
  * @see org.springframework.remoting.caucho.BurlapServiceExporter
+ * @since 13.05.2003
  */
 public class RmiServiceExporter extends RemoteExporter implements InitializingBean, DisposableBean {
 
@@ -104,6 +102,7 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 	 * Set a custom RMI client socket factory to use for exporting.
 	 * If the given object also implement RMIServerSocketFactory,
 	 * it will automatically be registered as server socket factory too.
+	 *
 	 * @see #setServerSocketFactory
 	 * @see UnicastRemoteObject#exportObject(Remote, int, RMIClientSocketFactory, RMIServerSocketFactory)
 	 */
@@ -113,6 +112,7 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 
 	/**
 	 * Set a custom RMI server socket factory to use for exporting.
+	 *
 	 * @see #setClientSocketFactory
 	 */
 	public void setServerSocketFactory(RMIServerSocketFactory serverSocketFactory) {
@@ -134,7 +134,7 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 			this.serverSocketFactory = (RMIServerSocketFactory) this.clientSocketFactory;
 		}
 		if ((this.clientSocketFactory != null && this.serverSocketFactory == null) ||
-				(this.clientSocketFactory == null && this.serverSocketFactory != null)) {
+			(this.clientSocketFactory == null && this.serverSocketFactory != null)) {
 			throw new IllegalArgumentException("Both RMIClientSocketFactory and RMIServerSocketFactory or none required");
 		}
 
@@ -144,8 +144,7 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 			// retrieve registry
 			registry = LocateRegistry.getRegistry(this.registryPort);
 			registry.list();
-		}
-		catch (RemoteException ex) {
+		} catch (RemoteException ex) {
 			logger.debug("RMI registry access threw exception", ex);
 			logger.warn("Could not detect RMI registry - creating new one");
 			// assume no registry found -> create new one
@@ -156,8 +155,7 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 		if (getService() instanceof Remote) {
 			// conventional RMI service
 			this.exportedObject = (Remote) getService();
-		}
-		else {
+		} else {
 			// RMI invoker
 			logger.info("RMI object '" + this.serviceName + "' is an RMI invoker");
 			this.exportedObject = new RmiInvocationWrapper(getProxyForService(), this);
@@ -167,9 +165,8 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 		logger.info("Binding RMI service '" + this.serviceName + "' to registry at port '" + this.registryPort + "'");
 		if (this.clientSocketFactory != null) {
 			UnicastRemoteObject.exportObject(this.exportedObject, this.servicePort,
-																			 this.clientSocketFactory, this.serverSocketFactory);
-		}
-		else {
+				this.clientSocketFactory, this.serverSocketFactory);
+		} else {
 			UnicastRemoteObject.exportObject(this.exportedObject, this.servicePort);
 		}
 		registry.rebind(this.serviceName, this.exportedObject);
@@ -182,18 +179,19 @@ public class RmiServiceExporter extends RemoteExporter implements InitializingBe
 	 * possibly for applying additional invocation parameters from a
 	 * custom RemoteInvocation subclass. Will typically match a corresponding
 	 * custom invoke implementation in RmiClientInterceptor/RmiProxyFactoryBean.
-	 * @param invocation the remote invocation
+	 *
+	 * @param invocation   the remote invocation
 	 * @param targetObject the target object to apply the invocation to
 	 * @return the invocation result
-	 * @throws NoSuchMethodException if the method name could not be resolved
-	 * @throws IllegalAccessException if the method could not be accessed
+	 * @throws NoSuchMethodException     if the method name could not be resolved
+	 * @throws IllegalAccessException    if the method could not be accessed
 	 * @throws InvocationTargetException if the method invocation resulted in an exception
 	 * @see RmiClientInterceptor#invoke
 	 */
 	protected Object invoke(RemoteInvocation invocation, Object targetObject)
-	    throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		Method method = targetObject.getClass().getMethod(invocation.getMethodName(),
-		                                                  invocation.getParameterTypes());
+			invocation.getParameterTypes());
 		return method.invoke(targetObject, invocation.getArguments());
 	}
 

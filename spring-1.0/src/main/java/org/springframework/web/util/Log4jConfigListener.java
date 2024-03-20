@@ -31,12 +31,12 @@ import javax.servlet.ServletContextListener;
  * See the ContextLoaderServlet javadoc for details.
  *
  * @author Juergen Hoeller
- * @since 13.03.2003
  * @see Log4jWebConfigurer
  * @see Log4jConfigServlet
  * @see org.springframework.web.context.ContextLoaderListener
  * @see org.springframework.web.context.ContextLoaderServlet
  * @see WebAppRootListener
+ * @since 13.03.2003
  */
 public class Log4jConfigListener implements ServletContextListener {
 

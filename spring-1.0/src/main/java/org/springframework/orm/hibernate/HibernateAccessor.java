@@ -17,7 +17,6 @@
 package org.springframework.orm.hibernate;
 
 import java.sql.SQLException;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Interceptor;
 import net.sf.hibernate.JDBCException;
@@ -25,7 +24,6 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.Constants;
 import org.springframework.dao.DataAccessException;
@@ -39,10 +37,10 @@ import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
  * <p>Not intended to be used directly. See HibernateTemplate and HibernateInterceptor.
  *
  * @author Juergen Hoeller
- * @since 29.07.2003
  * @see HibernateTemplate
  * @see HibernateInterceptor
  * @see #setFlushMode
+ * @since 29.07.2003
  */
 public abstract class HibernateAccessor implements InitializingBean {
 
@@ -50,6 +48,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * Never flush is a good strategy for read-only units of work.
 	 * Hibernate will not track and look for changes in this case,
 	 * avoiding any overhead of modification detection.
+	 *
 	 * @see #setFlushMode
 	 */
 	public static final int FLUSH_NEVER = 0;
@@ -59,6 +58,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * A session will get flushed on transaction commit or session closing,
 	 * and on certain find operations that might involve already modified
 	 * instances, but not after each unit of work like with eager flushing.
+	 *
 	 * @see #setFlushMode
 	 */
 	public static final int FLUSH_AUTO = 1;
@@ -75,11 +75,14 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * <li>the fact that an actual database rollback is needed if the Hibernate
 	 * transaction rolls back (due to already submitted SQL statements).
 	 * </ul>
+	 *
 	 * @see #setFlushMode
 	 */
 	public static final int FLUSH_EAGER = 2;
 
-	/** Constants instance for HibernateAccessor */
+	/**
+	 * Constants instance for HibernateAccessor
+	 */
 	private static final Constants constants = new Constants(HibernateAccessor.class);
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -93,6 +96,14 @@ public abstract class HibernateAccessor implements InitializingBean {
 	private int flushMode = FLUSH_AUTO;
 
 	/**
+	 * Return the Hibernate SessionFactory that should be used to create
+	 * Hibernate Sessions.
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	/**
 	 * Set the Hibernate SessionFactory that should be used to create
 	 * Hibernate Sessions.
 	 */
@@ -101,11 +112,10 @@ public abstract class HibernateAccessor implements InitializingBean {
 	}
 
 	/**
-	 * Return the Hibernate SessionFactory that should be used to create
-	 * Hibernate Sessions.
+	 * Return the current Hibernate entity interceptor, or null if none.
 	 */
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
+	public Interceptor getEntityInterceptor() {
+		return entityInterceptor;
 	}
 
 	/**
@@ -117,31 +127,12 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * HibernateTemplate, HibernateInterceptor, and HibernateTransactionManager.
 	 * It's preferable to set it on LocalSessionFactoryBean or HibernateTransactionManager
 	 * to avoid repeated configuration and guarantee consistent behavior in transactions.
+	 *
 	 * @see LocalSessionFactoryBean#setEntityInterceptor
 	 * @see HibernateTransactionManager#setEntityInterceptor
 	 */
 	public void setEntityInterceptor(Interceptor entityInterceptor) {
 		this.entityInterceptor = entityInterceptor;
-	}
-
-	/**
-	 * Return the current Hibernate entity interceptor, or null if none.
-	 */
-	public Interceptor getEntityInterceptor() {
-		return entityInterceptor;
-	}
-
-	/**
-	 * Set the JDBC exception translator for this instance.
-	 * Applied to SQLExceptions thrown by callback code, be it direct
-	 * SQLExceptions or wrapped HibernateJDBCExceptions.
-	 * <p>The default exception translator evaluates the exception's SQLState.
-	 * @param jdbcExceptionTranslator exception translator
-	 * @see SQLStateSQLExceptionTranslator
-	 * @see org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator
-	 */
-	public void setJdbcExceptionTranslator(SQLExceptionTranslator jdbcExceptionTranslator) {
-		this.jdbcExceptionTranslator = jdbcExceptionTranslator;
 	}
 
 	/**
@@ -152,9 +143,24 @@ public abstract class HibernateAccessor implements InitializingBean {
 	}
 
 	/**
+	 * Set the JDBC exception translator for this instance.
+	 * Applied to SQLExceptions thrown by callback code, be it direct
+	 * SQLExceptions or wrapped HibernateJDBCExceptions.
+	 * <p>The default exception translator evaluates the exception's SQLState.
+	 *
+	 * @param jdbcExceptionTranslator exception translator
+	 * @see SQLStateSQLExceptionTranslator
+	 * @see org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator
+	 */
+	public void setJdbcExceptionTranslator(SQLExceptionTranslator jdbcExceptionTranslator) {
+		this.jdbcExceptionTranslator = jdbcExceptionTranslator;
+	}
+
+	/**
 	 * Set the flush behavior by the name of the respective constant
 	 * in this class, e.g. "FLUSH_AUTO". Default is FLUSH_AUTO.
 	 * Will get applied to any <b>new</b> Session created by this object.
+	 *
 	 * @param constantName name of the constant
 	 * @see #setFlushMode
 	 * @see #FLUSH_AUTO
@@ -164,21 +170,22 @@ public abstract class HibernateAccessor implements InitializingBean {
 	}
 
 	/**
+	 * Return if a flush should be forced after executing the callback code.
+	 */
+	public int getFlushMode() {
+		return flushMode;
+	}
+
+	/**
 	 * Set the flush behavior to one of the constants in this class.
 	 * Default is FLUSH_AUTO. Will get applied to any <b>new</b> Session
 	 * created by this object.
+	 *
 	 * @see #setFlushModeName
 	 * @see #FLUSH_AUTO
 	 */
 	public void setFlushMode(int flushMode) {
 		this.flushMode = flushMode;
-	}
-
-	/**
-	 * Return if a flush should be forced after executing the callback code.
-	 */
-	public int getFlushMode() {
-		return flushMode;
 	}
 
 	public void afterPropertiesSet() {
@@ -189,7 +196,8 @@ public abstract class HibernateAccessor implements InitializingBean {
 
 	/**
 	 * Flush the given Hibernate session if necessary.
-	 * @param session the current Hibernate session
+	 *
+	 * @param session             the current Hibernate session
 	 * @param existingTransaction if executing within an existing transaction
 	 * @throws HibernateException in case of Hibernate flushing errors
 	 */
@@ -206,6 +214,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * wrapped SQLExceptions and convert them accordingly.
 	 * <p>The default implementation delegates to SessionFactoryUtils
 	 * and convertJdbcAccessException. Can be overridden in subclasses.
+	 *
 	 * @param ex HibernateException that occured
 	 * @return the corresponding DataAccessException instance
 	 * @see #convertJdbcAccessException
@@ -214,8 +223,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	public DataAccessException convertHibernateAccessException(HibernateException ex) {
 		if (ex instanceof JDBCException) {
 			return convertJdbcAccessException(((JDBCException) ex).getSQLException());
-		}
-		else {
+		} else {
 			return SessionFactoryUtils.convertHibernateAccessException(ex);
 		}
 	}
@@ -226,6 +234,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	 * and a generic HibernateJdbcException else. Can be overridden in subclasses.
 	 * <p>Note that SQLException can just occur here when callback code
 	 * performs direct JDBC access via Session.connection().
+	 *
 	 * @param ex SQLException that occured
 	 * @return the corresponding DataAccessException instance
 	 * @see #setJdbcExceptionTranslator
@@ -233,8 +242,7 @@ public abstract class HibernateAccessor implements InitializingBean {
 	protected DataAccessException convertJdbcAccessException(SQLException ex) {
 		if (this.jdbcExceptionTranslator != null) {
 			return this.jdbcExceptionTranslator.translate("HibernateAccessor", null, ex);
-		}
-		else {
+		} else {
 			return new HibernateJdbcException(ex);
 		}
 	}

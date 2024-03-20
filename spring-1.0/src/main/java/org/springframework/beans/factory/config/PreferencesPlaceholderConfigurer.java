@@ -18,7 +18,6 @@ package org.springframework.beans.factory.config;
 
 import java.util.Properties;
 import java.util.prefs.Preferences;
-
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -34,10 +33,10 @@ import org.springframework.beans.factory.InitializingBean;
  * Uses the respective root nodes if not specified.
  *
  * @author Juergen Hoeller
- * @since 16.02.2004
  * @see #setSystemTreePath
  * @see #setUserTreePath
  * @see Preferences
+ * @since 16.02.2004
  */
 public class PreferencesPlaceholderConfigurer extends PropertyPlaceholderConfigurer implements InitializingBean {
 
@@ -71,9 +70,9 @@ public class PreferencesPlaceholderConfigurer extends PropertyPlaceholderConfigu
 	 */
 	public void afterPropertiesSet() {
 		this.systemPrefs = (this.systemTreePath != null) ?
-		    Preferences.systemRoot().node(this.systemTreePath) : Preferences.systemRoot();
+			Preferences.systemRoot().node(this.systemTreePath) : Preferences.systemRoot();
 		this.userPrefs = (this.userTreePath != null) ?
-		    Preferences.userRoot().node(this.userTreePath) : Preferences.userRoot();
+			Preferences.userRoot().node(this.userTreePath) : Preferences.userRoot();
 	}
 
 	/**

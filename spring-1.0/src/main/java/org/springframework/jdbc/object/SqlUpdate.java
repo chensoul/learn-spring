@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.object;
 
@@ -63,7 +63,8 @@ public class SqlUpdate extends SqlOperation {
 	/**
 	 * Constructs an update object with a given DataSource and SQL
 	 * to keep consistent with the
-	 * @param ds DataSource to use to obtain connections
+	 *
+	 * @param ds  DataSource to use to obtain connections
 	 * @param sql SQL
 	 */
 	public SqlUpdate(DataSource ds, String sql) {
@@ -73,8 +74,9 @@ public class SqlUpdate extends SqlOperation {
 	/**
 	 * Construct an update object with a given DataSource, SQL
 	 * and anonymous parameters
-	 * @param ds DataSource to use to obtain connections
-	 * @param sql SQL
+	 *
+	 * @param ds    DataSource to use to obtain connections
+	 * @param sql   SQL
 	 * @param types anonymous parameter declarations.
 	 */
 	public SqlUpdate(DataSource ds, String sql, int[] types) {
@@ -85,11 +87,12 @@ public class SqlUpdate extends SqlOperation {
 	 * Construct an update object with a given DataSource, SQL,
 	 * anonymous parameters and specifying the maximum number of rows that may
 	 * be affected.
-	 * @param ds DataSource to use to obtain connections
-	 * @param sql SQL
-	 * @param types anonymous parameter declarations.
+	 *
+	 * @param ds              DataSource to use to obtain connections
+	 * @param sql             SQL
+	 * @param types           anonymous parameter declarations.
 	 * @param maxRowsAffected the maximum number of rows that may
-	 * be affected by the update.
+	 *                        be affected by the update.
 	 */
 	public SqlUpdate(DataSource ds, String sql, int[] types, int maxRowsAffected) {
 		setDataSource(ds);
@@ -103,9 +106,10 @@ public class SqlUpdate extends SqlOperation {
 	 * Set the maximum number of rows that may be affected
 	 * by this update. The default value is 0, which does not
 	 * limit the number of rows affected.
+	 *
 	 * @param max the maximum number of rows that can be affected
-	 * by this update without this class's update() method considering
-	 * it an error.
+	 *            by this update without this class's update() method considering
+	 *            it an error.
 	 */
 	public void setMaxRowsAffected(int max) {
 		this.maxRowsAffected = max;
@@ -116,8 +120,9 @@ public class SqlUpdate extends SqlOperation {
 	 * The default value is 0, which allows any number of rows to be affected.
 	 * An alternative to setting the <i>maximum</i> number of rows that
 	 * may be affected.
+	 *
 	 * @param rowsAffected the exact number of rows that must be
-	 * affected by this update.
+	 *                     affected by this update.
 	 */
 	public void setRequiredRowsAffected(int rowsAffected) {
 		this.requiredRowsAffected = rowsAffected;
@@ -127,6 +132,7 @@ public class SqlUpdate extends SqlOperation {
 	/**
 	 * Generic method to execute the update given arguments.
 	 * All other update() methods invoke this method.
+	 *
 	 * @param args array of object arguments
 	 * @return the number of rows affected by the update
 	 */

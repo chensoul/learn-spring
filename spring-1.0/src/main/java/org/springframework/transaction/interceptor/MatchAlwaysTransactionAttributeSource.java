@@ -24,11 +24,12 @@ import java.lang.reflect.Method;
  * may be specified, but will otherwise default to PROPOGATION_REQUIRED. This may be
  * used in the cases where you want to use the same transaction attribute with all
  * methods being handled by a transaction interceptor.
+ *
  * @author Colin Sampaleanu
- * @since 15.10.2003
  * @version $Id: MatchAlwaysTransactionAttributeSource.java,v 1.5 2004/03/18 02:46:05 trisberg Exp $
  * @see TransactionProxyFactoryBean
  * @see org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator
+ * @since 15.10.2003
  */
 public class MatchAlwaysTransactionAttributeSource implements TransactionAttributeSource {
 
@@ -37,6 +38,7 @@ public class MatchAlwaysTransactionAttributeSource implements TransactionAttribu
 	/**
 	 * Allows a transaction attribute to be specified, using the String form, for
 	 * example, "PROPOGATION_REQUIRED".
+	 *
 	 * @param transactionAttribute The String form of the transactionAttribute to use.
 	 * @see TransactionAttributeEditor
 	 */

@@ -108,6 +108,7 @@ public class SimpleFormController extends AbstractFormController {
 	 * or via a BeanFactory: commandName, commandClass, sessionForm, formView,
 	 * successView. Note that commandClass doesn't need to be set when overriding
 	 * formBackingObject, as this determines the class anyway.
+	 *
 	 * @see #setCommandClass
 	 * @see #setCommandName
 	 * @see #setSessionForm
@@ -119,13 +120,6 @@ public class SimpleFormController extends AbstractFormController {
 	}
 
 	/**
-	 * Set the name of the view that should be used for form display.
-	 */
-	public final void setFormView(String formView) {
-		this.formView = formView;
-	}
-
-	/**
 	 * Return the name of the view that should be used for form display.
 	 */
 	protected final String getFormView() {
@@ -133,10 +127,10 @@ public class SimpleFormController extends AbstractFormController {
 	}
 
 	/**
-	 * Set the name of the view that should be shown on successful submit.
+	 * Set the name of the view that should be used for form display.
 	 */
-	public final void setSuccessView(String successView) {
-		this.successView = successView;
+	public final void setFormView(String formView) {
+		this.formView = formView;
 	}
 
 	/**
@@ -147,13 +141,21 @@ public class SimpleFormController extends AbstractFormController {
 	}
 
 	/**
+	 * Set the name of the view that should be shown on successful submit.
+	 */
+	public final void setSuccessView(String successView) {
+		this.successView = successView;
+	}
+
+	/**
 	 * Create a reference data map for the given request and command,
 	 * consisting of bean name/bean instance pairs as expected by ModelAndView.
 	 * <p>Default implementation delegates to referenceData(request).
 	 * Subclasses can override this to set reference data used in the view.
+	 *
 	 * @param request current HTTP request
 	 * @param command form object with request parameters bound onto it
-	 * @param errors validation errors holder
+	 * @param errors  validation errors holder
 	 * @return a Map with reference data entries, or null if none
 	 * @throws Exception in case of invalid state or arguments
 	 * @see ModelAndView
@@ -167,6 +169,7 @@ public class SimpleFormController extends AbstractFormController {
 	 * Called by referenceData version with all parameters.
 	 * <p>Default implementation returns null.
 	 * Subclasses can override this to set reference data used in the view.
+	 *
 	 * @param request current HTTP request
 	 * @return a Map with reference data entries, or null if none
 	 * @throws Exception in case of invalid state or arguments
@@ -181,10 +184,11 @@ public class SimpleFormController extends AbstractFormController {
 	 * This implementation shows the configured form view.
 	 * Can be called within onSubmit implementations, to redirect back to the form
 	 * in case of custom validation errors (i.e. not determined by the validator).
+	 *
 	 * @see #setFormView
 	 */
 	protected final ModelAndView showForm(HttpServletRequest request, HttpServletResponse response,
-	                                      BindException errors) throws Exception {
+										  BindException errors) throws Exception {
 		return showForm(request, errors, getFormView());
 	}
 
@@ -194,16 +198,16 @@ public class SimpleFormController extends AbstractFormController {
 	 * <p>This can only be overridden to check for an action that should be executed
 	 * without respect to binding errors, like a cancel action. To just handle successful
 	 * submissions without binding errors, override one of the onSubmit methods.
+	 *
 	 * @see #showForm
 	 * @see #onSubmit(HttpServletRequest, HttpServletResponse, Object, BindException)
 	 */
 	protected ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response,
-	                                             Object command, BindException errors) throws Exception {
+												 Object command, BindException errors) throws Exception {
 		if (errors.hasErrors()) {
 			logger.debug("Data binding errors: " + errors.getErrorCount());
 			return showForm(request, response, errors);
-		}
-		else {
+		} else {
 			logger.debug("No errors -> processing submit");
 			return onSubmit(request, response, command, errors);
 		}
@@ -221,24 +225,24 @@ public class SimpleFormController extends AbstractFormController {
 	 * methods: In that case, just this method will be called by the controller.
 	 * <p>Call errors.getModel() to populate the ModelAndView model with the command and
 	 * the Errors instance, under the command name, as expected by the "spring:bind" tag.
-	 * @param request current servlet request
+	 *
+	 * @param request  current servlet request
 	 * @param response current servlet response
-	 * @param command form object with request parameters bound onto it
-	 * @param errors Errors instance without errors (subclass can add errors if it wants to)
+	 * @param command  form object with request parameters bound onto it
+	 * @param errors   Errors instance without errors (subclass can add errors if it wants to)
 	 * @return the prepared model and view, or null
 	 * @throws Exception in case of errors
 	 * @see #onSubmit(Object)
 	 * @see #showForm
 	 * @see Errors
 	 */
-	protected ModelAndView onSubmit(HttpServletRequest request,	HttpServletResponse response,
-																	Object command,	BindException errors) throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+									Object command, BindException errors) throws Exception {
 		ModelAndView mv = onSubmit(command);
 		if (mv != null) {
 			// simple onSubmit version implemented in custom subclass
 			return mv;
-		}
-		else {
+		} else {
 			// default behavior: render success view
 			if (getSuccessView() == null) {
 				throw new ServletException("successView isn't set");
@@ -254,6 +258,7 @@ public class SimpleFormController extends AbstractFormController {
 	 * its default rendering of the success view.
 	 * <p>Subclasses can override this to provide custom submission handling that
 	 * just needs the command object.
+	 *
 	 * @param command form object with request parameters bound onto it
 	 * @return the prepared model and view, or null
 	 * @throws Exception in case of errors

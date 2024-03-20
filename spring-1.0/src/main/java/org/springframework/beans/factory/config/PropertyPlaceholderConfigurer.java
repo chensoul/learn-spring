@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
@@ -81,7 +80,7 @@ import org.springframework.util.ObjectUtils;
  * this is immediately obvious when looking at the XML definition file.
  *
  * @author Juergen Hoeller
- * @since 02.10.2003
+ * @version $Id: PropertyPlaceholderConfigurer.java,v 1.10 2004/03/19 17:52:29 jhoeller Exp $
  * @see PropertyOverrideConfigurer
  * @see #setLocations
  * @see #setProperties
@@ -89,7 +88,7 @@ import org.springframework.util.ObjectUtils;
  * @see #setPlaceholderSuffix
  * @see #setSystemPropertiesMode
  * @see System#getProperty(String)
- * @version $Id: PropertyPlaceholderConfigurer.java,v 1.10 2004/03/19 17:52:29 jhoeller Exp $
+ * @since 02.10.2003
  */
 public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 
@@ -98,7 +97,9 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	public static final String DEFAULT_PLACEHOLDER_SUFFIX = "}";
 
 
-	/** Never check system properties. */
+	/**
+	 * Never check system properties.
+	 */
 	public static final int SYSTEM_PROPERTIES_MODE_NEVER = 0;
 
 	/**
@@ -128,6 +129,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	/**
 	 * Set the prefix that a placeholder string starts with.
 	 * The default is "${".
+	 *
 	 * @see #DEFAULT_PLACEHOLDER_PREFIX
 	 */
 	public void setPlaceholderPrefix(String placeholderPrefix) {
@@ -137,6 +139,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	/**
 	 * Set the suffix that a placeholder string ends with.
 	 * The default is "}".
+	 *
 	 * @see #DEFAULT_PLACEHOLDER_SUFFIX
 	 */
 	public void setPlaceholderSuffix(String placeholderSuffix) {
@@ -150,6 +153,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	 * with the specified properties, a system property will be tried.
 	 * "override" will check for a system property first, before trying the
 	 * specified properties. "never" will not check system properties at all.
+	 *
 	 * @see #SYSTEM_PROPERTIES_MODE_NEVER
 	 * @see #SYSTEM_PROPERTIES_MODE_FALLBACK
 	 * @see #SYSTEM_PROPERTIES_MODE_OVERRIDE
@@ -161,6 +165,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	/**
 	 * Set the system property mode by the name of the corresponding constant,
 	 * e.g. "SYSTEM_PROPERTIES_MODE_OVERRIDE".
+	 *
 	 * @param constantName name of the constant
 	 * @throws IllegalArgumentException if an invalid constant was specified
 	 * @see #setSystemPropertiesMode
@@ -179,14 +184,13 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 
 
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)
-			throws BeansException {
+		throws BeansException {
 		String[] beanNames = beanFactory.getBeanDefinitionNames();
 		for (int i = 0; i < beanNames.length; i++) {
 			BeanDefinition bd = beanFactory.getBeanDefinition(beanNames[i]);
 			try {
 				parseBeanDefinition(props, bd);
-			}
-			catch (BeanDefinitionStoreException ex) {
+			} catch (BeanDefinitionStoreException ex) {
 				throw new BeanDefinitionStoreException(bd.getResourceDescription(), beanNames[i], ex.getMessage());
 			}
 		}
@@ -215,7 +219,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	}
 
 	protected void parseIndexedArgumentValues(Properties props, Map ias) {
-		for (Iterator it = ias.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = ias.keySet().iterator(); it.hasNext(); ) {
 			Integer index = (Integer) it.next();
 			ConstructorArgumentValues.ValueHolder valueHolder = (ConstructorArgumentValues.ValueHolder) ias.get(index);
 			Object newVal = parseValue(props, valueHolder.getValue());
@@ -226,7 +230,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	}
 
 	protected void parseGenericArgumentValues(Properties props, Set gas) {
-		for (Iterator it = gas.iterator(); it.hasNext();) {
+		for (Iterator it = gas.iterator(); it.hasNext(); ) {
 			ConstructorArgumentValues.ValueHolder valueHolder = (ConstructorArgumentValues.ValueHolder) it.next();
 			Object newVal = parseValue(props, valueHolder.getValue());
 			if (!ObjectUtils.nullSafeEquals(newVal, valueHolder.getValue())) {
@@ -238,24 +242,19 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	protected Object parseValue(Properties props, Object value) {
 		if (value instanceof String) {
 			return parseString(props, (String) value, null);
-		}
-		else if (value instanceof RuntimeBeanReference) {
-      RuntimeBeanReference ref = (RuntimeBeanReference) value;
-      String newBeanName = parseString(props, ref.getBeanName(), null);
+		} else if (value instanceof RuntimeBeanReference) {
+			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			String newBeanName = parseString(props, ref.getBeanName(), null);
 			if (!newBeanName.equals(ref.getBeanName())) {
 				return new RuntimeBeanReference(newBeanName);
 			}
-		}
-		else if (value instanceof List) {
+		} else if (value instanceof List) {
 			parseList(props, (List) value);
-		}
-		else if (value instanceof Set) {
+		} else if (value instanceof Set) {
 			parseSet(props, (Set) value);
-		}
-		else if (value instanceof Map) {
+		} else if (value instanceof Map) {
 			parseMap(props, (Map) value);
-		}
-		else if (value instanceof BeanDefinition) {
+		} else if (value instanceof BeanDefinition) {
 			parseBeanDefinition(props, (BeanDefinition) value);
 		}
 		return value;
@@ -278,7 +277,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	 * Parse the given Set, exchanging its values if necessary.
 	 */
 	protected void parseSet(Properties props, Set setVal) {
-		for (Iterator it = new HashSet(setVal).iterator(); it.hasNext();) {
+		for (Iterator it = new HashSet(setVal).iterator(); it.hasNext(); ) {
 			Object elem = it.next();
 			Object newVal = parseValue(props, elem);
 			if (!ObjectUtils.nullSafeEquals(newVal, elem)) {
@@ -292,7 +291,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	 * Parse the given Map, exchanging its values if necessary.
 	 */
 	protected void parseMap(Properties props, Map mapVal) {
-		for (Iterator it = new HashMap(mapVal).keySet().iterator(); it.hasNext();) {
+		for (Iterator it = new HashMap(mapVal).keySet().iterator(); it.hasNext(); ) {
 			Object key = it.next();
 			Object elem = mapVal.get(key);
 			Object newVal = parseValue(props, elem);
@@ -306,7 +305,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	 * Parse values recursively to be able to resolve cross-references between placeholder values.
 	 */
 	protected String parseString(Properties props, String strVal, String originalPlaceholder)
-	    throws BeansException {
+		throws BeansException {
 		int startIndex = strVal.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
 			int endIndex = strVal.indexOf(this.placeholderSuffix, startIndex + this.placeholderPrefix.length());
@@ -314,10 +313,9 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 				String placeholder = strVal.substring(startIndex + this.placeholderPrefix.length(), endIndex);
 				if (originalPlaceholder == null) {
 					originalPlaceholder = placeholder;
-				}
-				else if (placeholder.equals(originalPlaceholder)) {
+				} else if (placeholder.equals(originalPlaceholder)) {
 					throw new BeanDefinitionStoreException("Circular placeholder reference '" + placeholder +
-																								 "' in property definitions [" + props + "]");
+														   "' in property definitions [" + props + "]");
 				}
 				String propVal = null;
 				if (this.systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
@@ -332,18 +330,15 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 				if (propVal != null) {
 					propVal = parseString(props, propVal, originalPlaceholder);
 					logger.debug("Resolving placeholder '" + placeholder + "' to [" + propVal + "]");
-					strVal = strVal.substring(0, startIndex) + propVal + strVal.substring(endIndex+1);
+					strVal = strVal.substring(0, startIndex) + propVal + strVal.substring(endIndex + 1);
 					startIndex = strVal.indexOf(this.placeholderPrefix, startIndex + propVal.length());
-				}
-				else if (this.ignoreUnresolvablePlaceholders) {
+				} else if (this.ignoreUnresolvablePlaceholders) {
 					// return unprocessed value
 					return strVal;
-				}
-				else {
+				} else {
 					throw new BeanDefinitionStoreException("Could not resolve placeholder '" + placeholder + "'");
 				}
-			}
-			else {
+			} else {
 				startIndex = -1;
 			}
 		}
@@ -358,8 +353,9 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer {
 	 * as fallback.
 	 * <p>Note that system properties will still be checked before respectively
 	 * after this method is invoked, according to the system properties mode.
+	 *
 	 * @param placeholder the placeholder to resolve
-	 * @param props the merged properties of this configurer
+	 * @param props       the merged properties of this configurer
 	 * @return the resolved value
 	 * @see #setSystemPropertiesMode
 	 */

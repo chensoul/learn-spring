@@ -17,16 +17,13 @@
 package org.springframework.orm.hibernate.support;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-
 import org.springframework.dao.CleanupFailureDataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate.SessionFactoryUtils;
@@ -67,27 +64,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * invoke flush on the Session before closing it.
  *
  * @author Juergen Hoeller
- * @since 06.12.2003
  * @see OpenSessionInViewInterceptor
  * @see #closeSession
  * @see org.springframework.orm.hibernate.HibernateInterceptor
  * @see org.springframework.orm.hibernate.HibernateTransactionManager
  * @see SessionFactoryUtils#getSession
  * @see TransactionSynchronizationManager
+ * @since 06.12.2003
  */
 public class OpenSessionInViewFilter extends OncePerRequestFilter {
 
 	public static final String DEFAULT_SESSION_FACTORY_BEAN_NAME = "sessionFactory";
 
 	private String sessionFactoryBeanName = DEFAULT_SESSION_FACTORY_BEAN_NAME;
-
-	/**
-	 * Set the bean name of the SessionFactory to fetch from Spring's
-	 * root application context.
-	 */
-	public void setSessionFactoryBeanName(String sessionFactoryBeanName) {
-		this.sessionFactoryBeanName = sessionFactoryBeanName;
-	}
 
 	/**
 	 * Return the bean name of the SessionFactory to fetch from Spring's
@@ -98,9 +87,18 @@ public class OpenSessionInViewFilter extends OncePerRequestFilter {
 	}
 
 	/**
+	 * Set the bean name of the SessionFactory to fetch from Spring's
+	 * root application context.
+	 */
+	public void setSessionFactoryBeanName(String sessionFactoryBeanName) {
+		this.sessionFactoryBeanName = sessionFactoryBeanName;
+	}
+
+	/**
 	 * This implementation appends the SessionFactory bean name to the class name,
 	 * to be executed one per SessionFactory. Can be overridden in subclasses,
 	 * e.g. when also overriding lookupSessionFactory.
+	 *
 	 * @see #lookupSessionFactory
 	 */
 	protected String getAlreadyFilteredAttributeName() {
@@ -108,15 +106,14 @@ public class OpenSessionInViewFilter extends OncePerRequestFilter {
 	}
 
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-																	FilterChain filterChain) throws ServletException, IOException {
+									FilterChain filterChain) throws ServletException, IOException {
 		SessionFactory sessionFactory = lookupSessionFactory();
 		logger.debug("Opening Hibernate Session in OpenSessionInViewFilter");
 		Session session = getSession(sessionFactory);
 		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
 		try {
 			filterChain.doFilter(request, response);
-		}
-		finally {
+		} finally {
 			TransactionSynchronizationManager.unbindResource(sessionFactory);
 			logger.debug("Closing Hibernate Session in OpenSessionInViewFilter");
 			closeSession(session, sessionFactory);
@@ -127,6 +124,7 @@ public class OpenSessionInViewFilter extends OncePerRequestFilter {
 	 * Look up the SessionFactory that this filter should use.
 	 * The default implementation looks for a bean with the specified name
 	 * in Spring's root application context.
+	 *
 	 * @return the SessionFactory to use
 	 * @see #getSessionFactoryBeanName
 	 */
@@ -142,13 +140,14 @@ public class OpenSessionInViewFilter extends OncePerRequestFilter {
 	 * and sets the Session's flushMode to NEVER.
 	 * <p>Can be overridden in subclasses for creating a Session with a custom
 	 * entity interceptor or JDBC exception translator.
+	 *
 	 * @param sessionFactory the SessionFactory that this filter uses
 	 * @return the Session to use
 	 * @throws DataAccessResourceFailureException if the Session could not be created
 	 * @see SessionFactoryUtils#getSession(SessionFactory, boolean)
 	 */
 	protected Session getSession(SessionFactory sessionFactory)
-			throws DataAccessResourceFailureException {
+		throws DataAccessResourceFailureException {
 		Session session = SessionFactoryUtils.getSession(sessionFactory, true);
 		session.setFlushMode(FlushMode.NEVER);
 		return session;
@@ -159,12 +158,13 @@ public class OpenSessionInViewFilter extends OncePerRequestFilter {
 	 * The default implementation invokes SessionFactoryUtils.closeSessionIfNecessary.
 	 * <p>Can be overridden in subclasses, e.g. for flushing the Session before
 	 * closing it. See class-level javadoc for a discussion of flush handling.
-	 * @param session the Session used for filtering
+	 *
+	 * @param session        the Session used for filtering
 	 * @param sessionFactory the SessionFactory that this filter uses
 	 * @throws DataAccessResourceFailureException if the Session could not be closed
 	 */
 	protected void closeSession(Session session, SessionFactory sessionFactory)
-			throws CleanupFailureDataAccessException {
+		throws CleanupFailureDataAccessException {
 		SessionFactoryUtils.closeSessionIfNecessary(session, sessionFactory);
 	}
 

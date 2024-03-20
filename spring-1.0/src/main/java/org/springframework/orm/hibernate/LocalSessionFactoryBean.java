@@ -22,10 +22,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Interceptor;
 import net.sf.hibernate.Session;
@@ -36,7 +34,6 @@ import net.sf.hibernate.dialect.Dialect;
 import net.sf.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -86,14 +83,27 @@ import org.springframework.jdbc.support.lob.LobHandler;
  * <p>Note: Spring's Hibernate support requires Hibernate 2.1 (as of Spring 1.0).
  *
  * @author Juergen Hoeller
- * @since 05.05.2003
  * @see HibernateTemplate#setSessionFactory
  * @see HibernateTransactionManager#setSessionFactory
  * @see org.springframework.jndi.JndiObjectFactoryBean
+ * @since 05.05.2003
  */
 public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, DisposableBean {
 
 	private static ThreadLocal configTimeLobHandlerHolder = new ThreadLocal();
+	protected final Log logger = LogFactory.getLog(getClass());
+	private Resource configLocation;
+	private Resource[] mappingLocations;
+	private Resource[] mappingJarLocations;
+	private Resource[] mappingDirectoryLocations;
+	private Properties hibernateProperties;
+	private DataSource dataSource;
+	private TransactionManager jtaTransactionManager;
+	private LobHandler lobHandler;
+	private Interceptor entityInterceptor;
+	private boolean schemaUpdate = false;
+	private Configuration configuration;
+	private SessionFactory sessionFactory;
 
 	/**
 	 * Return the LobHandler for the currently configured Hibernate SessionFactory,
@@ -101,6 +111,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <p>This instance will be set before initialization of the corresponding
 	 * SessionFactory, and reset immediately afterwards. It is thus only available
 	 * in constructors of UserType implementations.
+	 *
 	 * @see #setLobHandler
 	 * @see org.springframework.orm.hibernate.support.ClobStringType
 	 * @see net.sf.hibernate.type.Type
@@ -109,39 +120,12 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 		return (LobHandler) configTimeLobHandlerHolder.get();
 	}
 
-
-	protected final Log logger = LogFactory.getLog(getClass());
-
-	private Resource configLocation;
-
-	private Resource[] mappingLocations;
-
-	private Resource[] mappingJarLocations;
-
-	private Resource[] mappingDirectoryLocations;
-
-	private Properties hibernateProperties;
-
-	private DataSource dataSource;
-
-	private TransactionManager jtaTransactionManager;
-
-	private LobHandler lobHandler;
-
-	private Interceptor entityInterceptor;
-
-	private boolean schemaUpdate = false;
-
-	private Configuration configuration;
-
-	private SessionFactory sessionFactory;
-
-
 	/**
 	 * Set the location of the Hibernate XML config file, for example as
 	 * classpath resource "classpath:hibernate.cfg.xml".
 	 * <p>Note: Can be omitted when all necessary properties and mapping
 	 * resources are specified locally via this bean.
+	 *
 	 * @see net.sf.hibernate.cfg.Configuration#configure(java.net.URL)
 	 */
 	public void setConfigLocation(Resource configLocation) {
@@ -155,6 +139,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * Alternative to the more generic setMappingLocations method.
 	 * <p>Can be used to add to mappings from a Hibernate XML config file,
 	 * or to specify all mappings locally.
+	 *
 	 * @see #setMappingLocations
 	 * @see net.sf.hibernate.cfg.Configuration#addResource
 	 */
@@ -172,6 +157,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * "WEB-INF/mappings/example.hbm.xml" when running in an application context.
 	 * <p>Can be used to add to mappings from a Hibernate XML config file,
 	 * or to specify all mappings locally.
+	 *
 	 * @see net.sf.hibernate.cfg.Configuration#addInputStream
 	 */
 	public void setMappingLocations(Resource[] mappingLocations) {
@@ -183,6 +169,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * like "WEB-INF/lib/example.hbm.jar".
 	 * <p>Can be used to add to mappings from a Hibernate XML config file,
 	 * or to specify all mappings locally.
+	 *
 	 * @see net.sf.hibernate.cfg.Configuration#addJar(File)
 	 */
 	public void setMappingJarLocations(Resource[] mappingJarLocations) {
@@ -194,6 +181,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * like "WEB-INF/mappings".
 	 * <p>Can be used to add to mappings from a Hibernate XML config file,
 	 * or to specify all mappings locally.
+	 *
 	 * @see net.sf.hibernate.cfg.Configuration#addDirectory(File)
 	 */
 	public void setMappingDirectoryLocations(Resource[] mappingDirectoryLocations) {
@@ -207,6 +195,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <p>Note: Do not specify a transaction provider here when using
 	 * Spring-driven transactions. It is also advisable to omit connection
 	 * provider settings and use a Spring-set DataSource instead.
+	 *
 	 * @see #setDataSource
 	 */
 	public void setHibernateProperties(Properties hibernateProperties) {
@@ -218,6 +207,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * If set, this will override corresponding settings in Hibernate properties.
 	 * <p>Note: If this is set, the Hibernate settings should not define
 	 * a connection provider to avoid meaningless double configuration.
+	 *
 	 * @see LocalDataSourceConnectionProvider
 	 */
 	public void setDataSource(DataSource dataSource) {
@@ -231,6 +221,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * JTA TransactionManager for Hibernate's cache synchronization.
 	 * <p>Note: If this is set, the Hibernate settings should not define a
 	 * transaction manager lookup to avoid meaningless double configuration.
+	 *
 	 * @see LocalTransactionManagerLookup
 	 */
 	public void setJtaTransactionManager(TransactionManager jtaTransactionManager) {
@@ -240,6 +231,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	/**
 	 * Set the LobHandler to be used by the SessionFactory.
 	 * Will be exposed at config time for Type implementations.
+	 *
 	 * @see #getConfigTimeLobHandler
 	 * @see org.springframework.orm.hibernate.support.ClobStringType
 	 * @see net.sf.hibernate.type.Type
@@ -257,6 +249,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * HibernateInterceptor, and HibernateTransactionManager. It's preferable to set
 	 * it on LocalSessionFactoryBean or HibernateTransactionManager to avoid repeated
 	 * configuration and guarantee consistent behavior in transactions.
+	 *
 	 * @see HibernateTemplate#setEntityInterceptor
 	 * @see HibernateInterceptor#setEntityInterceptor
 	 * @see HibernateTransactionManager#setEntityInterceptor
@@ -270,6 +263,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <p>For details on how to make schema update scripts work, see the Hibernate
 	 * documentation, as this class leverages the same schema update script support
 	 * in net.sf.hibernate.cfg.Configuration as Hibernate's own SchemaUpdate tool.
+	 *
 	 * @see net.sf.hibernate.cfg.Configuration#generateSchemaUpdateScript
 	 * @see net.sf.hibernate.tool.hbm2ddl.SchemaUpdate
 	 */
@@ -280,8 +274,9 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 
 	/**
 	 * Initialize the SessionFactory for the given or the default location.
+	 *
 	 * @throws IllegalArgumentException in case of illegal property values
-	 * @throws HibernateException in case of Hibernate initialization errors
+	 * @throws HibernateException       in case of Hibernate initialization errors
 	 */
 	public void afterPropertiesSet() throws IllegalArgumentException, HibernateException, IOException {
 		// create Configuration instance
@@ -319,7 +314,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 				File file = this.mappingDirectoryLocations[i].getFile();
 				if (!file.isDirectory()) {
 					throw new IllegalArgumentException("Mapping directory location [" + this.mappingDirectoryLocations[i] +
-																						 "] does not denote a directory");
+													   "] does not denote a directory");
 				}
 				config.addDirectory(file);
 			}
@@ -383,6 +378,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <p>The default implementation creates a new Configuration instance.
 	 * A custom implementation could prepare the instance in a specific way,
 	 * or use a custom Configuration subclass.
+	 *
 	 * @return the Configuration instance
 	 * @throws HibernateException in case of Hibernate initialization errors
 	 * @see net.sf.hibernate.cfg.Configuration#Configuration()
@@ -395,6 +391,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * To be implemented by subclasses that want to to perform custom
 	 * post-processing of the Configuration object after this FactoryBean
 	 * performed its default initialization.
+	 *
 	 * @param config the current Configuration object
 	 * @throws HibernateException in case of Hibernate initialization errors
 	 */
@@ -408,6 +405,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <p>The default implementation invokes Configuration's buildSessionFactory.
 	 * A custom implementation could prepare the instance in a specific way,
 	 * or use a custom SessionFactoryImpl subclass.
+	 *
 	 * @param config Configuration prepared by this LocalSessionFactoryBean
 	 * @return the SessionFactory instance
 	 * @throws HibernateException in case of Hibernate initialization errors
@@ -427,6 +425,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <code>LocalSessionFactoryBean lsfb = ctx.getBean("&mySessionFactory");</code>.
 	 * <p>Uses the SessionFactory that this bean generates for accessing a JDBC
 	 * connection to perform the script.
+	 *
 	 * @throws DataAccessException in case of script execution errors
 	 * @see net.sf.hibernate.cfg.Configuration#generateDropSchemaScript
 	 * @see net.sf.hibernate.tool.hbm2ddl.SchemaExport#drop
@@ -456,6 +455,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <code>LocalSessionFactoryBean lsfb = ctx.getBean("&mySessionFactory");</code>.
 	 * <p>Uses the SessionFactory that this bean generates for accessing a JDBC
 	 * connection to perform the script.
+	 *
 	 * @throws DataAccessException in case of script execution errors
 	 * @see net.sf.hibernate.cfg.Configuration#generateSchemaCreationScript
 	 * @see net.sf.hibernate.tool.hbm2ddl.SchemaExport#create
@@ -486,6 +486,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	 * <code>LocalSessionFactoryBean lsfb = ctx.getBean("&mySessionFactory");</code>.
 	 * <p>Uses the SessionFactory that this bean generates for accessing a JDBC
 	 * connection to perform the script.
+	 *
 	 * @throws HibernateException in case of Hibernate initialization errors
 	 * @see #setSchemaUpdate
 	 * @see net.sf.hibernate.cfg.Configuration#generateSchemaUpdateScript
@@ -511,6 +512,7 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 	/**
 	 * Execute the given schema script on the given JDBC Connection.
 	 * Will log unsuccessful statements and continue to execute.
+	 *
 	 * @param con the JDBC Connection to execute the script on
 	 * @param sql the SQL statements to execute
 	 * @throws SQLException if thrown by JDBC methods
@@ -522,13 +524,11 @@ public class LocalSessionFactoryBean implements FactoryBean, InitializingBean, D
 				logger.debug("Executing schema statement: " + sql[i]);
 				try {
 					stmt.executeUpdate(sql[i]);
-				}
-				catch (SQLException ex) {
+				} catch (SQLException ex) {
 					logger.info("Unsuccessful schema statement: " + sql[i], ex);
 				}
 			}
-		}
-		finally {
+		} finally {
 			JdbcUtils.closeStatement(stmt);
 		}
 	}

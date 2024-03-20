@@ -25,8 +25,8 @@ import javax.sql.DataSource;
  * <p>Not intended to be used directly. See JdbcTemplate.
  *
  * @author Juergen Hoeller
- * @since 28.11.2003
  * @see org.springframework.jdbc.core.JdbcTemplate
+ * @since 28.11.2003
  */
 public class JdbcAccessor {
 
@@ -36,15 +36,10 @@ public class JdbcAccessor {
 	 **/
 	private DataSource dataSource;
 
-	/** Helper to translate SQL exceptions to DataAccessExceptions */
-	private SQLExceptionTranslator exceptionTranslator;
-
 	/**
-	 * Set the JDBC DataSource to obtain connections from.
+	 * Helper to translate SQL exceptions to DataAccessExceptions
 	 */
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+	private SQLExceptionTranslator exceptionTranslator;
 
 	/**
 	 * Return the DataSource used by this template.
@@ -54,15 +49,10 @@ public class JdbcAccessor {
 	}
 
 	/**
-	 * Set the exception translator for this instance.
-	 * If no custom translator is provided, a default is used
-	 * which examines the SQLException's vendor-specific error code.
-	 * @param exceptionTranslator exception translator
-	 * @see SQLErrorCodeSQLExceptionTranslator
-	 * @see SQLStateSQLExceptionTranslator
+	 * Set the JDBC DataSource to obtain connections from.
 	 */
-	public void setExceptionTranslator(SQLExceptionTranslator exceptionTranslator) {
-		this.exceptionTranslator = exceptionTranslator;
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	/**
@@ -74,6 +64,19 @@ public class JdbcAccessor {
 			this.exceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
 		}
 		return this.exceptionTranslator;
+	}
+
+	/**
+	 * Set the exception translator for this instance.
+	 * If no custom translator is provided, a default is used
+	 * which examines the SQLException's vendor-specific error code.
+	 *
+	 * @param exceptionTranslator exception translator
+	 * @see SQLErrorCodeSQLExceptionTranslator
+	 * @see SQLStateSQLExceptionTranslator
+	 */
+	public void setExceptionTranslator(SQLExceptionTranslator exceptionTranslator) {
+		this.exceptionTranslator = exceptionTranslator;
 	}
 
 	/**

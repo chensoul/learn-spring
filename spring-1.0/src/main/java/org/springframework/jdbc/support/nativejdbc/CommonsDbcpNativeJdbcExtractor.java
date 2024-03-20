@@ -47,8 +47,8 @@ import org.apache.commons.dbcp.DelegatingStatement;
  * will already have returned the underlying delegate before.
  *
  * @author Juergen Hoeller
- * @since 25.08.2003
  * @see org.springframework.jdbc.core.JdbcTemplate#setNativeJdbcExtractor
+ * @since 25.08.2003
  */
 public class CommonsDbcpNativeJdbcExtractor implements NativeJdbcExtractor {
 

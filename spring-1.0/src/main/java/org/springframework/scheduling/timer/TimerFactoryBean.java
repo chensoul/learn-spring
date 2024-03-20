@@ -17,10 +17,8 @@
 package org.springframework.scheduling.timer;
 
 import java.util.Timer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,10 +36,10 @@ import org.springframework.beans.factory.InitializingBean;
  * for each execution.
  *
  * @author Juergen Hoeller
- * @since 19.02.2004
  * @see ScheduledTimerTask
  * @see Timer
  * @see java.util.TimerTask
+ * @since 19.02.2004
  */
 public class TimerFactoryBean implements FactoryBean, InitializingBean, DisposableBean {
 
@@ -56,6 +54,7 @@ public class TimerFactoryBean implements FactoryBean, InitializingBean, Disposab
 	/**
 	 * Register a list of ScheduledTimerTask objects with the Timer that
 	 * this FactoryBean creates.
+	 *
 	 * @see Timer#schedule(java.util.TimerTask, long, long)
 	 * @see Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)
 	 */
@@ -68,6 +67,7 @@ public class TimerFactoryBean implements FactoryBean, InitializingBean, Disposab
 	 * just executing as long as the application itself is running.
 	 * Default is true: In a J2EE environment, the container is in
 	 * control of the application lifecycle.
+	 *
 	 * @see Timer#Timer(boolean)
 	 */
 	public void setDaemon(boolean daemon) {
@@ -81,11 +81,10 @@ public class TimerFactoryBean implements FactoryBean, InitializingBean, Disposab
 			ScheduledTimerTask scheduledTask = this.scheduledTimerTasks[i];
 			if (scheduledTask.isFixedRate()) {
 				this.timer.scheduleAtFixedRate(scheduledTask.getTimerTask(), scheduledTask.getDelay(),
-																			 scheduledTask.getPeriod());
-			}
-			else {
+					scheduledTask.getPeriod());
+			} else {
 				this.timer.schedule(scheduledTask.getTimerTask(), scheduledTask.getDelay(),
-														scheduledTask.getPeriod());
+					scheduledTask.getPeriod());
 			}
 		}
 	}
@@ -93,6 +92,7 @@ public class TimerFactoryBean implements FactoryBean, InitializingBean, Disposab
 	/**
 	 * Create a new Timer instance. Called by afterPropertiesSet.
 	 * Can be overridden in subclasses to provide custom Timer subclasses.
+	 *
 	 * @return a new Timer instance
 	 * @see #afterPropertiesSet
 	 * @see Timer#Timer(boolean)

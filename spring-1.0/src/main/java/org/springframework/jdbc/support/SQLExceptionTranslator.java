@@ -30,17 +30,18 @@ import org.springframework.dao.DataAccessException;
  * error codes) for greater precision.
  *
  * @author Rod Johnson
- * @see DataAccessException
  * @version $Id: SQLExceptionTranslator.java,v 1.2 2004/03/18 02:46:15 trisberg Exp $
+ * @see DataAccessException
  */
 public interface SQLExceptionTranslator {
 
 	/**
 	 * Translate the given SQL exception into a generic
 	 * data access exception.
-	 * @param task readable text describing the task being attempted
-	 * @param sql SQL query or update that caused the problem.
-	 * May be null.
+	 *
+	 * @param task  readable text describing the task being attempted
+	 * @param sql   SQL query or update that caused the problem.
+	 *              May be null.
 	 * @param sqlex SQLException encountered by JDBC implementation
 	 */
 	DataAccessException translate(String task, String sql, SQLException sqlex);

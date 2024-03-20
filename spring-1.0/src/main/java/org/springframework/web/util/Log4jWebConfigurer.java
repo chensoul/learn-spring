@@ -17,9 +17,7 @@
 package org.springframework.web.util;
 
 import java.io.FileNotFoundException;
-
 import javax.servlet.ServletContext;
-
 import org.springframework.util.Log4jConfigurer;
 
 /**
@@ -55,17 +53,21 @@ import org.springframework.util.Log4jConfigurer;
  * respectively Log4jConfigListener or Log4jConfigServlet in such an environment!
  *
  * @author Juergen Hoeller
- * @since 12.08.2003
  * @see Log4jConfigurer
  * @see Log4jConfigListener
  * @see Log4jConfigServlet
+ * @since 12.08.2003
  */
 public abstract class Log4jWebConfigurer {
 
-	/** Parameter specifying the location of the Log4J config file */
+	/**
+	 * Parameter specifying the location of the Log4J config file
+	 */
 	public static final String CONFIG_LOCATION_PARAM = "log4jConfigLocation";
 
-	/** Parameter specifying the refresh interval for checking the Log4J config file */
+	/**
+	 * Parameter specifying the refresh interval for checking the Log4J config file
+	 */
 	public static final String REFRESH_INTERVAL_PARAM = "log4jRefreshInterval";
 
 	public static void initLogging(ServletContext servletContext) {
@@ -95,8 +97,7 @@ public abstract class Log4jWebConfigurer {
 			// perform actual Log4J initialization
 			try {
 				Log4jConfigurer.initLogging(location, refreshInterval);
-			}
-			catch (FileNotFoundException ex) {
+			} catch (FileNotFoundException ex) {
 				throw new IllegalArgumentException("Invalid log4jConfigLocation parameter: " + ex.getMessage());
 			}
 		}

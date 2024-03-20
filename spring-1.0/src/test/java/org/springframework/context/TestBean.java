@@ -1,4 +1,4 @@
-package org.springframework.config;
+package org.springframework.context;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 public class TestBean implements BeanFactoryAware, BeanNameAware, InitializingBean, DisposableBean {
 	private String name;
-
 	private BeanFactory beanFactory;
 	private String beanName;
 

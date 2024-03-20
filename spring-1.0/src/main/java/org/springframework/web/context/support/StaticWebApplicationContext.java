@@ -17,7 +17,6 @@
 package org.springframework.web.context.support;
 
 import javax.servlet.ServletContext;
-
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ui.context.Theme;
@@ -38,7 +37,7 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
  * @see ThemeSource
  */
 public class StaticWebApplicationContext extends StaticApplicationContext
-		implements ConfigurableWebApplicationContext {
+	implements ConfigurableWebApplicationContext {
 
 	private ServletContext servletContext;
 
@@ -46,20 +45,20 @@ public class StaticWebApplicationContext extends StaticApplicationContext
 
 	private ThemeSource themeSource;
 
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
-
 	public ServletContext getServletContext() {
 		return servletContext;
 	}
 
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 	protected String getNamespace() {
 		return this.namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	public void setConfigLocations(String[] configLocations) {
@@ -69,8 +68,7 @@ public class StaticWebApplicationContext extends StaticApplicationContext
 	public void refresh() throws BeansException {
 		if (this.namespace != null) {
 			setDisplayName("StaticWebApplicationContext for namespace '" + this.namespace + "'");
-		}
-		else {
+		} else {
 			setDisplayName("Root StaticWebApplicationContext");
 		}
 		super.refresh();

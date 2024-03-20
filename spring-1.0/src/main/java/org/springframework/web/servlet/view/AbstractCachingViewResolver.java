@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet.view;
 
@@ -39,11 +39,22 @@ import org.springframework.web.servlet.ViewResolver;
  */
 public abstract class AbstractCachingViewResolver extends WebApplicationObjectSupport implements ViewResolver {
 
-	/** View name --> View instance */
+	/**
+	 * View name --> View instance
+	 */
 	private final Map viewMap = Collections.synchronizedMap(new HashMap());
 
-	/** Whether we should cache views, once resolved */
+	/**
+	 * Whether we should cache views, once resolved
+	 */
 	private boolean cache = true;
+
+	/**
+	 * Return if caching is enabled.
+	 */
+	public boolean isCache() {
+		return cache;
+	}
 
 	/**
 	 * Enable respectively disable caching. Disable this only for debugging
@@ -56,20 +67,12 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 		this.cache = cache;
 	}
 
-	/**
-	 * Return if caching is enabled.
-	 */
-	public boolean isCache() {
-		return cache;
-	}
-
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		View view = null;
 		if (!this.cache) {
 			logger.warn("View caching is SWITCHED OFF -- DEVELOPMENT SETTING ONLY: This can severely impair performance");
 			view = loadAndConfigureView(viewName, locale);
-		}
-		else {
+		} else {
 			String cacheKey = getCacheKey(viewName, locale);
 			view = (View) this.viewMap.get(cacheKey);
 			if (view == null) {
@@ -86,6 +89,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * Load and configure the given View. Only invoked once per View.
 	 * Delegates to the loadView template method for actual loading.
 	 * <p>Sets the ApplicationContext on the View if necessary.
+	 *
 	 * @see #loadView
 	 */
 	private View loadAndConfigureView(String viewName, Locale locale) throws Exception {
@@ -109,8 +113,9 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * Subclasses must implement this method. There need be no concern for efficiency,
 	 * as this class will cache views. Not all subclasses may support internationalization:
 	 * A subclass that doesn't can simply ignore the locale parameter.
+	 *
 	 * @param viewName the name of the view to retrieve
-	 * @param locale the Locale to retrieve the view for
+	 * @param locale   the Locale to retrieve the view for
 	 * @return the View instance
 	 * @throws Exception if the view couldn't be resolved
 	 */

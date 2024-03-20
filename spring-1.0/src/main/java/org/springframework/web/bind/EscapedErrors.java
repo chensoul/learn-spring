@@ -1,25 +1,24 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.bind;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -35,9 +34,9 @@ import org.springframework.web.util.HtmlUtils;
  * copied into the respective BindStatus instance.
  *
  * @author Juergen Hoeller
- * @since 01.03.2003
  * @see org.springframework.web.servlet.support.RequestContext#getErrors
  * @see org.springframework.web.servlet.tags.BindTag
+ * @since 01.03.2003
  */
 public class EscapedErrors implements Errors {
 
@@ -126,12 +125,12 @@ public class EscapedErrors implements Errors {
 		return (value instanceof String ? HtmlUtils.htmlEscape((String) value) : value);
 	}
 
-	public void setNestedPath(String nestedPath) {
-		this.source.setNestedPath(nestedPath);
-	}
-
 	public String getNestedPath() {
 		return this.source.getNestedPath();
+	}
+
+	public void setNestedPath(String nestedPath) {
+		this.source.setNestedPath(nestedPath);
 	}
 
 	private ObjectError escapeObjectError(ObjectError source) {
@@ -145,16 +144,16 @@ public class EscapedErrors implements Errors {
 				value = HtmlUtils.htmlEscape((String) fieldError.getRejectedValue());
 			}
 			return new FieldError(fieldError.getObjectName(), fieldError.getField(), value, fieldError.isBindingFailure(),
-														fieldError.getCode(), fieldError.getArguments(), HtmlUtils.htmlEscape(fieldError.getDefaultMessage()));
+				fieldError.getCode(), fieldError.getArguments(), HtmlUtils.htmlEscape(fieldError.getDefaultMessage()));
 		}
 		return new ObjectError(source.getObjectName(), source.getCode(), source.getArguments(),
-													 HtmlUtils.htmlEscape(source.getDefaultMessage()));
+			HtmlUtils.htmlEscape(source.getDefaultMessage()));
 	}
 
 	private List escapeObjectErrors(List source) {
 		List escaped = new ArrayList();
-		for (Iterator it = source.iterator(); it.hasNext();) {
-			ObjectError objectError = (ObjectError)it.next();
+		for (Iterator it = source.iterator(); it.hasNext(); ) {
+			ObjectError objectError = (ObjectError) it.next();
 			escaped.add(escapeObjectError(objectError));
 		}
 		return escaped;

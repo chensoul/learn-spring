@@ -25,10 +25,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
@@ -40,10 +38,11 @@ import org.springframework.core.io.Resource;
  * Bean definition reader for a simple properties format.
  * Provides bean definition registration methods for Map/Properties and
  * ResourceBundle. Typically applied to a DefaultListableBeanFactory.
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 26.11.2003
  * @see DefaultListableBeanFactory
+ * @since 26.11.2003
  */
 public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
@@ -97,7 +96,9 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Name of default parent bean */
+	/**
+	 * Name of default parent bean
+	 */
 	private String defaultParentBean;
 
 
@@ -106,6 +107,13 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	 */
 	public PropertiesBeanDefinitionReader(BeanDefinitionRegistry beanFactory) {
 		super(beanFactory);
+	}
+
+	/**
+	 * Return the default parent bean for this bean factory.
+	 */
+	public String getDefaultParentBean() {
+		return defaultParentBean;
 	}
 
 	/**
@@ -121,16 +129,9 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	}
 
 	/**
-	 * Return the default parent bean for this bean factory.
-	 */
-	public String getDefaultParentBean() {
-		return defaultParentBean;
-	}
-
-
-	/**
 	 * Load bean definitions from the specified properties file,
 	 * using all property keys (i.e. not filtering by prefix).
+	 *
 	 * @param resource the resource descriptor for the properties file
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
@@ -142,6 +143,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 
 	/**
 	 * Load bean definitions from the specified properties file.
+	 *
 	 * @param resource the resource descriptor for the properties file
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
@@ -152,13 +154,11 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 			InputStream is = resource.getInputStream();
 			try {
 				props.load(is);
-			}
-			finally {
+			} finally {
 				is.close();
 			}
 			return registerBeanDefinitions(props, prefix, resource.getDescription());
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new BeanDefinitionStoreException("IOException parsing properties from " + resource, ex);
 		}
 	}
@@ -166,6 +166,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	/**
 	 * Register bean definitions contained in a resource bundle,
 	 * using all property keys (i.e. not filtering by prefix).
+	 *
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
 	 * @see #registerBeanDefinitions(ResourceBundle, String)
@@ -178,6 +179,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	 * Register bean definitions contained in a ResourceBundle.
 	 * <p>Similar syntax as for a Map. This method is useful to enable
 	 * standard Java internationalization support.
+	 *
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
 	 */
@@ -195,6 +197,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	/**
 	 * Register bean definitions contained in a Map,
 	 * using all property keys (i.e. not filtering by prefix).
+	 *
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
 	 * @see #registerBeanDefinitions(Map, String, String)
@@ -206,24 +209,25 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	/**
 	 * Register bean definitions contained in a Map.
 	 * Ignore ineligible properties.
-	 * @param m Map name -> property (String or Object). Property values
-	 * will be strings if coming from a Properties file etc. Property names
-	 * (keys) <b>must</b> be strings. Class keys must be Strings.
-	 * <code>
-	 * employee.class=MyClass              // special property
-	 * //employee.abstract=true              // this prototype can't be instantiated directly
-	 * employee.group=Insurance Services   // real property
-	 * employee.usesDialUp=false           // default unless overriden
 	 *
-	 * employee.manager(ref)=tony		   // reference to another prototype defined in the same file
-	 *									   // cyclic and unresolved references will be detected
-	 * salesrep.parent=employee
-	 * salesrep.department=Sales and Marketing
-	 *
-	 * techie.parent=employee
-	 * techie.department=Software Engineering
-	 * techie.usesDialUp=true              // overridden property
-	 * </code>
+	 * @param m      Map name -> property (String or Object). Property values
+	 *               will be strings if coming from a Properties file etc. Property names
+	 *               (keys) <b>must</b> be strings. Class keys must be Strings.
+	 *               <code>
+	 *               employee.class=MyClass              // special property
+	 *               //employee.abstract=true              // this prototype can't be instantiated directly
+	 *               employee.group=Insurance Services   // real property
+	 *               employee.usesDialUp=false           // default unless overriden
+	 *               <p>
+	 *               employee.manager(ref)=tony		   // reference to another prototype defined in the same file
+	 *               // cyclic and unresolved references will be detected
+	 *               salesrep.parent=employee
+	 *               salesrep.department=Sales and Marketing
+	 *               <p>
+	 *               techie.parent=employee
+	 *               techie.department=Software Engineering
+	 *               techie.usesDialUp=true              // overridden property
+	 *               </code>
 	 * @param prefix The match or filter within the keys in the map: e.g. 'beans.'
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
@@ -235,12 +239,13 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	/**
 	 * Register bean definitions contained in a Map.
 	 * Ignore ineligible properties.
-	 * @param m Map name -> property (String or Object). Property values
-	 * will be strings if coming from a Properties file etc. Property names
-	 * (keys) <b>must</b> be strings. Class keys must be Strings.
-	 * @param prefix The match or filter within the keys in the map: e.g. 'beans.'
+	 *
+	 * @param m                   Map name -> property (String or Object). Property values
+	 *                            will be strings if coming from a Properties file etc. Property names
+	 *                            (keys) <b>must</b> be strings. Class keys must be Strings.
+	 * @param prefix              The match or filter within the keys in the map: e.g. 'beans.'
 	 * @param resourceDescription description of the resource that the Map came from
-	 * (for logging purposes)
+	 *                            (for logging purposes)
 	 * @return the number of bean definitions found
 	 * @throws BeansException in case of loading or parsing errors
 	 * @see #registerBeanDefinitions(Map, String)
@@ -267,14 +272,13 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 						registerBeanDefinition(beanName, m, prefix + beanName, resourceDescription);
 						++beanCount;
 					}
-				}
-				else {
+				} else {
 					// Ignore it: it wasn't a valid bean name and property,
 					// although it did start with the required prefix
 					logger.debug("Invalid bean name and property [" + nameAndProperty + "]");
 				}
-			}	// if the key started with the prefix we're looking for
-		}	// while there are more keys
+			}    // if the key started with the prefix we're looking for
+		}    // while there are more keys
 
 		return beanCount;
 	}
@@ -282,15 +286,16 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 	/**
 	 * Get all property values, given a prefix (which will be stripped)
 	 * and add the bean they define to the factory with the given name
-	 * @param beanName name of the bean to define
-	 * @param m Map containing string pairs
-	 * @param prefix prefix of each entry, which will be stripped
+	 *
+	 * @param beanName            name of the bean to define
+	 * @param m                   Map containing string pairs
+	 * @param prefix              prefix of each entry, which will be stripped
 	 * @param resourceDescription description of the resource that the Map came from
-	 * (for logging purposes)
+	 *                            (for logging purposes)
 	 * @throws BeansException if the bean definition could not be parsed or registered
 	 */
 	protected void registerBeanDefinition(String beanName, Map m, String prefix, String resourceDescription)
-			throws BeansException {
+		throws BeansException {
 		String className = null;
 		String parent = null;
 		boolean singleton = true;
@@ -305,19 +310,15 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 				String property = key.substring(prefix.length() + SEPARATOR.length());
 				if (property.equals(CLASS_KEY)) {
 					className = (String) m.get(key);
-				}
-				else if (property.equals(SINGLETON_KEY)) {
+				} else if (property.equals(SINGLETON_KEY)) {
 					String val = (String) m.get(key);
 					singleton = (val == null) || val.equals(TRUE_VALUE);
-				}
-				else if (property.equals(LAZY_INIT_KEY)) {
+				} else if (property.equals(LAZY_INIT_KEY)) {
 					String val = (String) m.get(key);
 					lazyInit = val.equals(TRUE_VALUE);
-				}
-				else if (property.equals(PARENT_KEY)) {
+				} else if (property.equals(PARENT_KEY)) {
 					parent = (String) m.get(key);
-				}
-				else if (property.endsWith(REF_SUFFIX)) {
+				} else if (property.endsWith(REF_SUFFIX)) {
 					// This isn't a real property, but a reference to another prototype
 					// Extract property name: property is of form dog(ref)
 					property = property.substring(0, property.length() - REF_SUFFIX.length());
@@ -328,8 +329,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 					// Default is not to use singleton
 					Object val = new RuntimeBeanReference(ref);
 					pvs.addPropertyValue(new PropertyValue(property, val));
-				}
-				else{
+				} else {
 					// normal bean property
 					Object val = m.get(key);
 					if (val instanceof String) {
@@ -341,8 +341,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 							if (targetName.startsWith(REF_PREFIX)) {
 								// escaped prefix -> use plain value
 								val = targetName;
-							}
-							else {
+							} else {
 								val = new RuntimeBeanReference(targetName);
 							}
 						}
@@ -362,7 +361,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 
 		if (className == null && parent == null) {
 			throw new BeanDefinitionStoreException(resourceDescription, beanName,
-																						 "Either 'class' or 'parent' is required");
+				"Either 'class' or 'parent' is required");
 		}
 
 		try {
@@ -372,16 +371,14 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 				// Otherwise rely on the thread context classloader.
 				Class clazz = Class.forName(className, true, getBeanClassLoader());
 				beanDefinition = new RootBeanDefinition(clazz, pvs);
-			}
-			else {
+			} else {
 				beanDefinition = new ChildBeanDefinition(parent, pvs);
 			}
 
 			beanDefinition.setSingleton(singleton);
 			beanDefinition.setLazyInit(lazyInit);
 			getBeanFactory().registerBeanDefinition(beanName, beanDefinition);
-		}
-		catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException ex) {
 			throw new BeanDefinitionStoreException(resourceDescription, beanName, "Class [" + className + "] not found", ex);
 		}
 	}

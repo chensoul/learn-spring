@@ -22,29 +22,31 @@ import org.springframework.beans.factory.BeanFactory;
 /**
  * Class used to track a reference to a BeanFactory obtained through
  * a BeanFactoryLocator.
+ *
  * @author Colin Sampaleanu
  * @version $Revision: 1.5 $
  * @see BeanFactoryLocator
  */
 public interface BeanFactoryReference {
 
-  /**
-   * Returns the BeanFactory instance held by this reference
-   */
-  BeanFactory getFactory();
+	/**
+	 * Returns the BeanFactory instance held by this reference
+	 */
+	BeanFactory getFactory();
 
-  /**
-   * <p>Indicate that the BeanFactory instance referred to by this object is not
-   * needed any longer by the client code which obtained the ref object. Depending
-   * on the actual implementation of BeanFactoryLocator, and the actual type of
-   * BeanFactory, this may possibly not actually do anything; alternately in the
-   * case of a 'closeable' BeanFactory or derived class (such as ApplicationContext)
-   * may 'close' it, or may 'close' it once no more references remain.</p>
-   * <p>In an EJB usage scenario this would normally be called from ejbRemove and
-   * ejbPassivate.
-   * @throws FatalBeanException if the BeanFactory cannot be released
-   * @see BeanFactoryLocator
-   */
-  void release() throws FatalBeanException;
+	/**
+	 * <p>Indicate that the BeanFactory instance referred to by this object is not
+	 * needed any longer by the client code which obtained the ref object. Depending
+	 * on the actual implementation of BeanFactoryLocator, and the actual type of
+	 * BeanFactory, this may possibly not actually do anything; alternately in the
+	 * case of a 'closeable' BeanFactory or derived class (such as ApplicationContext)
+	 * may 'close' it, or may 'close' it once no more references remain.</p>
+	 * <p>In an EJB usage scenario this would normally be called from ejbRemove and
+	 * ejbPassivate.
+	 *
+	 * @throws FatalBeanException if the BeanFactory cannot be released
+	 * @see BeanFactoryLocator
+	 */
+	void release() throws FatalBeanException;
 
 }

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet;
 
@@ -45,10 +45,10 @@ import org.springframework.beans.PropertyValues;
  * @see #initServletBean
  */
 public abstract class HttpServletBean extends HttpServlet {
-	
+
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** 
+	/**
 	 * List of required properties (Strings) that must be supplied as
 	 * config parameters to this servlet.
 	 */
@@ -58,17 +58,19 @@ public abstract class HttpServletBean extends HttpServlet {
 	 * Subclasses can invoke this method to specify that this property
 	 * (which must match a JavaBean property they expose) is mandatory,
 	 * and must be supplied as a config parameter.
+	 *
 	 * @param property name of the required property
 	 */
 	protected final void setRequiredProperty(String property) {
 		this.requiredProperties.add(property);
 	}
-	
+
 	/**
 	 * Map config parameters onto bean properties of this servlet, and
 	 * invoke subclass initialization.
+	 *
 	 * @throws ServletException if bean properties are invalid (or required
-	 * properties are missing), or if subclass initialization fails.
+	 *                          properties are missing), or if subclass initialization fails.
 	 */
 	public final void init() throws ServletException {
 		logger.info("Initializing servlet '" + getServletName() + "'");
@@ -79,8 +81,7 @@ public abstract class HttpServletBean extends HttpServlet {
 			PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), reqPropArray);
 			BeanWrapper bw = new BeanWrapperImpl(this);
 			bw.setPropertyValues(pvs);
-		}
-		catch (BeansException ex) {
+		} catch (BeansException ex) {
 			logger.error("Failed to set bean properties on servlet '" + getServletName() + "'", ex);
 			throw ex;
 		}
@@ -89,14 +90,15 @@ public abstract class HttpServletBean extends HttpServlet {
 		initServletBean();
 		logger.info("Servlet '" + getServletName() + "' configured successfully");
 	}
-	
+
 	/**
 	 * Subclasses may override this to perform custom initialization.
 	 * All bean properties of this servlet will have been set before this
 	 * method is invoked. This default implementation does nothing.
+	 *
 	 * @throws ServletException if subclass initialization fails
 	 */
 	protected void initServletBean() throws ServletException {
 	}
-	
+
 }

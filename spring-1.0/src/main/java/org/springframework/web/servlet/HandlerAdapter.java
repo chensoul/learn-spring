@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.web.servlet;
 
@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  * @see org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter
  */
 public interface HandlerAdapter {
-	
+
 	/**
 	 * Given a handler instance, return whether or not this HandlerAdapter can
 	 * support it. Usually HandlerAdapters will base the decision on the handler
@@ -50,29 +50,32 @@ public interface HandlerAdapter {
 	 * <code>
 	 * return handler != null && MyHandler.class.isAssignableFrom(handler.getClass());
 	 * </code>
+	 *
 	 * @param handler handler object to check
 	 * @return whether or not this object can use the given handler
 	 */
-	boolean supports(Object handler); 
-	
+	boolean supports(Object handler);
+
 	/**
 	 * Use the given handler to handle this request.
 	 * The workflow that is required may vary widely.
-	 * @param request current HTTP request
+	 *
+	 * @param request  current HTTP request
 	 * @param response current HTTP response
-	 * @param handler handler to use. This object must have previously been passed
-	 * to the supports() method of this interface, which must have returned true.
-	 * Implementations that generate output themselves (and return null
-	 * from this method) may encounter IOExceptions.
-	 * @throws Exception in case of errors
+	 * @param handler  handler to use. This object must have previously been passed
+	 *                 to the supports() method of this interface, which must have returned true.
+	 *                 Implementations that generate output themselves (and return null
+	 *                 from this method) may encounter IOExceptions.
 	 * @return ModelAndView object with the name of the view and the required
 	 * model data, or null if the request has been handled directly
+	 * @throws Exception in case of errors
 	 */
 	ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception;
 
 	/**
 	 * Same contract as for HttpServlet.getLastModified.
 	 * Can simply return -1 if there's no support in the handler class.
+	 *
 	 * @param request current HTTP request
 	 * @param handler handler to use
 	 * @return the lastModified value for the given handler

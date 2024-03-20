@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.beans;
 
@@ -30,15 +30,19 @@ import java.io.PrintWriter;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 18 April 2001
  * @version $Id: PropertyAccessExceptionsException.java,v 1.5 2004/03/18 02:46:12 trisberg Exp $
+ * @since 18 April 2001
  */
 public class PropertyAccessExceptionsException extends BeansException {
 
-	/** BeanWrapper wrapping the target object for binding */
+	/**
+	 * BeanWrapper wrapping the target object for binding
+	 */
 	private final BeanWrapper beanWrapper;
 
-	/** List of PropertyAccessException objects */
+	/**
+	 * List of PropertyAccessException objects
+	 */
 	private final PropertyAccessException[] propertyAccessExceptions;
 
 	/**
@@ -46,7 +50,7 @@ public class PropertyAccessExceptionsException extends BeansException {
 	 * We'll add errors to it as we attempt to bind properties.
 	 */
 	protected PropertyAccessExceptionsException(BeanWrapper beanWrapper,
-	                                            PropertyAccessException[] propertyAccessExceptions) {
+												PropertyAccessException[] propertyAccessExceptions) {
 		super("");
 		this.beanWrapper = beanWrapper;
 		this.propertyAccessExceptions = propertyAccessExceptions;

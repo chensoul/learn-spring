@@ -72,17 +72,17 @@ public class SqlMapClientTemplate extends JdbcAccessor implements SqlMapClientOp
 	}
 
 	/**
-	 * Set the iBATIS Database Layer SqlMapClient that defines the mapped statements.
-	 */
-	public void setSqlMapClient(SqlMapClient sqlMapClient) {
-		this.sqlMapClient = sqlMapClient;
-	}
-
-	/**
 	 * Return the iBATIS Database Layer SqlMapClient that this template works with.
 	 */
 	public SqlMapClient getSqlMapClient() {
 		return sqlMapClient;
+	}
+
+	/**
+	 * Set the iBATIS Database Layer SqlMapClient that defines the mapped statements.
+	 */
+	public void setSqlMapClient(SqlMapClient sqlMapClient) {
+		this.sqlMapClient = sqlMapClient;
 	}
 
 	public void afterPropertiesSet() {

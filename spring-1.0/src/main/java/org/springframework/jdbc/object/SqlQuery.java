@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.jdbc.object;
 
@@ -60,9 +60,10 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient constructor with DataSource and SQL string.
-	 * @param ds DataSource to use to get connections
+	 *
+	 * @param ds  DataSource to use to get connections
 	 * @param sql to execute. SQL can also be supplied at runtime
-	 * by overriding the getSql() method.
+	 *            by overriding the getSql() method.
 	 */
 	public SqlQuery(DataSource ds, String sql) {
 		setDataSource(ds);
@@ -75,19 +76,19 @@ public abstract class SqlQuery extends SqlOperation {
 	//-------------------------------------------------------------------------
 
 	/**
+	 * Get the number of rows expected.
+	 */
+	public int getRowsExpected() {
+		return rowsExpected;
+	}
+
+	/**
 	 * Set the number of rows expected. This can be used to ensure
 	 * efficient storage of results. The default behavior is not to
 	 * expect any specific number of rows.
 	 */
 	public void setRowsExpected(int rowsExpected) {
 		this.rowsExpected = rowsExpected;
-	}
-
-	/**
-	 * Get the number of rows expected.
-	 */
-	public int getRowsExpected() {
-		return rowsExpected;
 	}
 
 
@@ -97,12 +98,13 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * All execution goes through this method
+	 *
 	 * @param parameters parameters, as to JDO queries. Primitive parameters must
-	 * be represented by their Object wrapper type. The ordering of parameters is
-	 * significant.
-	 * @param context contextual information passed to the callback mapRow method.
-	 * This parameter don't rely on the Jdbc request itself, but can be useful for
-	 * creating the objects of the list.
+	 *                   be represented by their Object wrapper type. The ordering of parameters is
+	 *                   significant.
+	 * @param context    contextual information passed to the callback mapRow method.
+	 *                   This parameter don't rely on the Jdbc request itself, but can be useful for
+	 *                   creating the objects of the list.
 	 * @return a list of objects, one per row of the ResultSet. Normally all these
 	 * will be of the same class, although it is possible to use different types.
 	 */
@@ -114,9 +116,10 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute without context.
+	 *
 	 * @param parameters parameters, as to JDO queries. Primitive parameters must
-	 * be represented by their Object wrapper type. The ordering of parameters is
-	 * significant.
+	 *                   be represented by their Object wrapper type. The ordering of parameters is
+	 *                   significant.
 	 */
 	public List execute(final Object[] parameters) throws DataAccessException {
 		return execute(parameters, null);
@@ -124,6 +127,7 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute without parameters.
+	 *
 	 * @param context The contextual information for object creation
 	 */
 	public List execute(Map context) throws DataAccessException {
@@ -139,7 +143,8 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single int parameter and context.
-	 * @param p1 single int parameter
+	 *
+	 * @param p1      single int parameter
 	 * @param context The contextual information for object creation
 	 */
 	public List execute(int p1, Map context) throws DataAccessException {
@@ -148,6 +153,7 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single int parameter.
+	 *
 	 * @param p1 single int parameter
 	 */
 	public List execute(int p1) throws DataAccessException {
@@ -156,8 +162,9 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with two int parameters and context.
-	 * @param p1 first int parameter
-	 * @param p2 second int parameter
+	 *
+	 * @param p1      first int parameter
+	 * @param p2      second int parameter
 	 * @param context The contextual information for object creation
 	 */
 	public List execute(int p1, int p2, Map context) throws DataAccessException {
@@ -166,6 +173,7 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with two int parameters.
+	 *
 	 * @param p1 first int parameter
 	 * @param p2 second int parameter
 	 */
@@ -175,7 +183,8 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single long parameter and context.
-	 * @param p1 single long parameter
+	 *
+	 * @param p1      single long parameter
 	 * @param context The contextual information for object creation
 	 */
 	public List execute(long p1, Map context) throws DataAccessException {
@@ -184,6 +193,7 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single long parameter.
+	 *
 	 * @param p1 single long parameter
 	 */
 	public List execute(long p1) throws DataAccessException {
@@ -192,7 +202,8 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single String parameter and context.
-	 * @param p1 single String parameter
+	 *
+	 * @param p1      single String parameter
 	 * @param context The contextual information for object creation
 	 */
 	public List execute(String p1, Map context) throws DataAccessException {
@@ -201,6 +212,7 @@ public abstract class SqlQuery extends SqlOperation {
 
 	/**
 	 * Convenient method to execute with a single String parameter.
+	 *
 	 * @param p1 single String parameter
 	 */
 	public List execute(String p1) throws DataAccessException {
@@ -211,6 +223,7 @@ public abstract class SqlQuery extends SqlOperation {
 	 * Generic findObject method, used by all other findObject() methods.
 	 * findObject() methods are like EJB entity bean finders, in that it is
 	 * considered an error if they return more than one result.
+	 *
 	 * @return null if not found. Subclasses may choose to treat this
 	 * as an error and throw an exception.
 	 */
@@ -300,12 +313,13 @@ public abstract class SqlQuery extends SqlOperation {
 	/**
 	 * Subclasses must implement this method to save a List of objects
 	 * returned by the execute method.
+	 *
 	 * @param rowsExpected If 0, we don't know how many rows to expect.
-	 * This parameter can be ignored, but may help some implementations
-	 * choose the most efficient Collection type: e.g. ArrayList
-	 * instead of LinkedList for large result sets.
-	 * @param parameters parameters to the execute() method, in case subclass is interested.
-	 * May be null if there were no parameters.
+	 *                     This parameter can be ignored, but may help some implementations
+	 *                     choose the most efficient Collection type: e.g. ArrayList
+	 *                     instead of LinkedList for large result sets.
+	 * @param parameters   parameters to the execute() method, in case subclass is interested.
+	 *                     May be null if there were no parameters.
 	 * @see #execute
 	 */
 	protected abstract ResultReader newResultReader(int rowsExpected, Object[] parameters, Map context);

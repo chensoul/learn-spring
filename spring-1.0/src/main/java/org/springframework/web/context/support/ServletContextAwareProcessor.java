@@ -17,10 +17,8 @@
 package org.springframework.web.context.support;
 
 import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.web.context.ServletContextAware;
@@ -34,9 +32,9 @@ import org.springframework.web.context.ServletContextAware;
  * underlying bean factory. Applications do not use this directly.
  *
  * @author Juergen Hoeller
- * @since 12.03.2004
  * @see ServletContextAware
  * @see XmlWebApplicationContext#postProcessBeanFactory
+ * @since 12.03.2004
  */
 public class ServletContextAwareProcessor implements BeanPostProcessor {
 

@@ -18,7 +18,6 @@ package org.springframework.beans.factory.config;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Simple factory for shared List instances. Allows for central setup
  * of Lists via the "list" element in XML bean definitions.
+ *
  * @author Juergen Hoeller
  * @since 09.12.2003
  */
@@ -49,6 +49,7 @@ public class ListFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * Set the class to use for the target List.
 	 * Default is <code>java.util.ArrayList</code>.
+	 *
 	 * @see ArrayList
 	 */
 	public void setTargetListClass(Class targetListClass) {
@@ -59,14 +60,6 @@ public class ListFactoryBean implements FactoryBean, InitializingBean {
 			throw new IllegalArgumentException("targetListClass must implement java.util.List");
 		}
 		this.targetListClass = targetListClass;
-	}
-
-	/**
-	 * Set if a singleton should be created, or a new object
-	 * on each request else. Default is true.
-	 */
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
 	}
 
 	public void afterPropertiesSet() {
@@ -82,8 +75,7 @@ public class ListFactoryBean implements FactoryBean, InitializingBean {
 	public Object getObject() {
 		if (this.singleton) {
 			return this.targetList;
-		}
-		else {
+		} else {
 			List result = (List) BeanUtils.instantiateClass(this.targetListClass);
 			result.addAll(this.sourceList);
 			return result;
@@ -96,6 +88,14 @@ public class ListFactoryBean implements FactoryBean, InitializingBean {
 
 	public boolean isSingleton() {
 		return singleton;
+	}
+
+	/**
+	 * Set if a singleton should be created, or a new object
+	 * on each request else. Default is true.
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
 	}
 
 }

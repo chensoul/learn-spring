@@ -21,16 +21,21 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 /**
  * Transaction attribute that takes the EJB approach to rolling
  * back on runtime, but not checked, exceptions.
+ *
  * @author Rod Johnson
- * @since 16-Mar-2003
  * @version $Id: DefaultTransactionAttribute.java,v 1.4 2004/03/18 02:46:05 trisberg Exp $
+ * @since 16-Mar-2003
  */
 public class DefaultTransactionAttribute extends DefaultTransactionDefinition implements TransactionAttribute {
 
-	/** Prefix for rollback-on-exception rules in description strings */
+	/**
+	 * Prefix for rollback-on-exception rules in description strings
+	 */
 	public static final String ROLLBACK_RULE_PREFIX = "-";
 
-	/** Prefix for commit-on-exception rules in description strings */
+	/**
+	 * Prefix for commit-on-exception rules in description strings
+	 */
 	public static final String COMMIT_RULE_PREFIX = "+";
 
 	public DefaultTransactionAttribute() {
@@ -53,6 +58,7 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 	 * Return a description of this transaction attribute.
 	 * The format matches the one used by TransactionAttributeEditor,
 	 * to be able to feed toString results into TransactionAttribute properties.
+	 *
 	 * @see TransactionAttributeEditor
 	 */
 	public String toString() {

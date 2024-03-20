@@ -19,10 +19,8 @@ package org.springframework.transaction.interceptor;
 import java.beans.PropertyEditorSupport;
 import java.util.Iterator;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 
 /**
@@ -45,9 +43,9 @@ import org.springframework.beans.propertyeditors.PropertiesEditor;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 26-Apr-2003
  * @version $Id: TransactionAttributeSourceEditor.java,v 1.4 2004/03/18 02:46:05 trisberg Exp $
  * @see TransactionAttributeEditor
+ * @since 26-Apr-2003
  */
 public class TransactionAttributeSourceEditor extends PropertyEditorSupport {
 
@@ -57,8 +55,7 @@ public class TransactionAttributeSourceEditor extends PropertyEditorSupport {
 		MethodMapTransactionAttributeSource source = new MethodMapTransactionAttributeSource();
 		if (s == null || "".equals(s)) {
 			// Leave value in property editor null
-		}
-		else {
+		} else {
 			// Use properties editor to tokenize the hold string
 			PropertiesEditor propertiesEditor = new PropertiesEditor();
 			propertiesEditor.setAsText(s);
@@ -66,7 +63,7 @@ public class TransactionAttributeSourceEditor extends PropertyEditorSupport {
 
 			// Now we have properties, process each one individually
 			TransactionAttributeEditor tae = new TransactionAttributeEditor();
-			for (Iterator iter = props.keySet().iterator(); iter.hasNext();) {
+			for (Iterator iter = props.keySet().iterator(); iter.hasNext(); ) {
 				String name = (String) iter.next();
 				String value = props.getProperty(name);
 

@@ -1,18 +1,18 @@
 /*
  * Copyright 2002-2004 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 package org.springframework.core.io;
 
@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
  * <p>Delegates to a ResourceLoader, by default DefaultResourceLoader.
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see #PLACEHOLDER_PREFIX
  * @see #PLACEHOLDER_SUFFIX
  * @see #getResourceLoader
@@ -39,14 +38,13 @@ import org.apache.commons.logging.LogFactory;
  * @see ResourceLoader
  * @see DefaultResourceLoader
  * @see System#getProperty(String)
+ * @since 28.12.2003
  */
 public class ResourceEditor extends PropertyEditorSupport {
 
-	protected static final Log logger = LogFactory.getLog(ResourceEditor.class);
-
 	public static final String PLACEHOLDER_PREFIX = "${";
-
 	public static final String PLACEHOLDER_SUFFIX = "}";
+	protected static final Log logger = LogFactory.getLog(ResourceEditor.class);
 
 	public void setAsText(String text) {
 		setValue(getResourceLoader().getResource(resolvePath(text)));
@@ -55,6 +53,7 @@ public class ResourceEditor extends PropertyEditorSupport {
 	/**
 	 * Resolve the given path, replacing placeholders with corresponding
 	 * system property values if necessary.
+	 *
 	 * @param path the original file path
 	 * @return the resolved file path
 	 * @see #PLACEHOLDER_PREFIX
@@ -68,11 +67,10 @@ public class ResourceEditor extends PropertyEditorSupport {
 				String placeholder = path.substring(startIndex + PLACEHOLDER_PREFIX.length(), endIndex);
 				String propVal = System.getProperty(placeholder);
 				if (propVal != null) {
-					return path.substring(0, startIndex) + propVal + path.substring(endIndex+1);
-				}
-				else {
+					return path.substring(0, startIndex) + propVal + path.substring(endIndex + 1);
+				} else {
 					logger.warn("Could not resolve placeholder '" + placeholder +
-					            "' in file path [" + path + "] as system property");
+								"' in file path [" + path + "] as system property");
 				}
 			}
 		}
@@ -82,6 +80,7 @@ public class ResourceEditor extends PropertyEditorSupport {
 	/**
 	 * Determine the ResourceLoader to use for converting the
 	 * property text to a Resource. Default is DefaultResourceLoader.
+	 *
 	 * @see DefaultResourceLoader
 	 */
 	protected ResourceLoader getResourceLoader() {
